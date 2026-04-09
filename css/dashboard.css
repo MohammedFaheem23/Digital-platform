@@ -597,3 +597,39 @@
   .stats-grid { grid-template-columns: 1fr; }
   .dashboard-greeting h1 { font-size: 1.4rem; }
 }
+
+/* ---- Light Mode Dashboard Overrides ---- */
+html.light-mode .sidebar {
+  background: #f8fafc !important;
+  border-right-color: rgba(0,0,0,0.1) !important;
+}
+html.light-mode .sidebar-link:hover {
+  background: rgba(0,0,0,0.05) !important;
+  color: #0f172a !important;
+}
+html.light-mode .sidebar-link.active {
+  background: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+}
+html.light-mode .dashboard-topbar {
+  background: rgba(248, 250, 252, 0.95) !important;
+  border-bottom-color: rgba(0,0,0,0.1) !important;
+}
+html.light-mode .topbar-icon-btn,
+html.light-mode .user-avatar-btn {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+html.light-mode .topbar-icon-btn:hover,
+html.light-mode .user-avatar-btn:hover {
+  background: #f1f5f9 !important;
+}
+html.light-mode .stat-card {
+  background: #ffffff !important;
+}
+html.light-mode .widget {
+  background: #ffffff !important;
+}
+html.light-mode .filters-sidebar {
+  background: #ffffff !important;
+}
