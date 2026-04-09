@@ -7,11 +7,16 @@ const navbar    = document.getElementById('navbar');
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
 
-// Flicker fix for Auth buttons
+// Flicker fix for Auth buttons and role-based links
 const authStyle = document.createElement('style');
 authStyle.textContent = `.auth-pending { opacity: 0 !important; visibility: hidden !important; pointer-events: none; transition: opacity 0.3s ease; }`;
 document.head.appendChild(authStyle);
+
 document.querySelectorAll('#loginBtn, #signupBtn').forEach(b => b.classList.add('auth-pending'));
+// Also hide role-sensitive items initially
+document.querySelectorAll('.nav-link[href*="jobs.html"], .nav-link[href*="hire.html"]').forEach(link => {
+  link.classList.add('auth-pending');
+});
 
 // Theme Init
 if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode');
@@ -68,6 +73,7 @@ function updateNavbarAuth() {
     const isFindJobs   = href.includes('jobs.html');
     const isHireWorkers= href.includes('hire.html');
 
+    link.classList.remove('auth-pending');
     if (!user) { link.closest('li')?.style.removeProperty('display'); link.style.removeProperty('display'); return; }
 
     if (user.role === 'employer') {
