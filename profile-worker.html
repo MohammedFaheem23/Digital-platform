@@ -360,7 +360,7 @@ let profileSkills = [];
 
 /* ── Init ── */
 async function init() {
-  await new Promise(r => setTimeout(r, 500)); // wait for session
+  if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // wait for session
   currentUser = getCurrentUser();
   if (!currentUser) { window.location.href = 'login.html'; return; }
 

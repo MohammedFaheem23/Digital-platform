@@ -237,9 +237,13 @@ const TIMELINE_STEPS = [
 let allApps = [];
 let currentFilter = 'all';
 
-/* ---- Load applications from localStorage ---- */
+/* ---- Load applications from database ---- */
 async function loadApplications() {
-  await new Promise(r => setTimeout(r, 500)); // wait for session
+  if (typeof initSession === 'function') {
+    await initSession();
+  } else {
+    if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // wait for session fallback
+  }
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 

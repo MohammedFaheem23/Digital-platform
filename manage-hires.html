@@ -247,7 +247,7 @@ let currentFilter = 'all';
 
 /* ---- Load ---- */
 async function loadHirings() {
-  await new Promise(r => setTimeout(r, 500)); // wait for session
+  if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // wait for session
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 

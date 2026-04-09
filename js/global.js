@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (typeof initSession === 'function') {
     await initSession();
   } else {
-    await new Promise(r => setTimeout(r, 600)); // Fallback if missing
+    if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // Fallback if missing
   }
   updateNavbarAuth();
   setupScrollAnimations();

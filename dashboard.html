@@ -421,7 +421,7 @@ function getRecommendedJobs(user) {
    INIT
 ==================================================== */
 async function initDashboard() {
-  await new Promise(r => setTimeout(r, 500)); // wait for session restore
+  if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // wait for session restore
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 

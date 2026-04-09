@@ -226,8 +226,11 @@ function applyAvailabilityUI(isAvail) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Wait for session restore
-  await new Promise(r => setTimeout(r, 500));
+  if (typeof initSession === 'function') {
+    await initSession();
+  } else {
+    if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // wait for session fallback
+  }
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
   await initDashboard();

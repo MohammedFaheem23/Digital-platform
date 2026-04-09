@@ -258,7 +258,7 @@ async function socialLogin(provider) {
 document.addEventListener('DOMContentLoaded', async () => {
   updateRoleView();
   // Wait for the async session restore in supabase.js
-  await new Promise(r => setTimeout(r, 400));
+  if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));}
   const user = getCurrentUser();
   if (user && (window.location.pathname.includes('login') || window.location.pathname.includes('register'))) {
     const dest = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';

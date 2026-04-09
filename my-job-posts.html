@@ -385,7 +385,7 @@ let currentUser = null;
 
 /* ─── Init ─── */
 async function init() {
-  await new Promise(r => setTimeout(r, 500)); // Wait for session restore
+  if(typeof initSession==="function"){await initSession();}else{await new Promise(r=>setTimeout(r,600));} // Wait for session restore
   currentUser = getCurrentUser();
   if (!currentUser) { window.location.href = 'login.html'; return; }
 
