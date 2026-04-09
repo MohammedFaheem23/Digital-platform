@@ -291,11 +291,18 @@ let _sessionCache = null;
 function getCurrentUser()  { return _sessionCache; }
 function setCurrentUser(u) { _sessionCache = u; }
 
-// Restore session on every page load
-(async () => {
-  const user = await sbGetCurrentUser();
-  if (user) { _sessionCache = user; }
-})();
+let _sessionPromise = null;
+async function initSession() {
+  if (!_sessionPromise) {
+    _sessionPromise = sbGetCurrentUser().then(user => {
+      if (user) _sessionCache = user;
+    });
+  }
+  await _sessionPromise;
+}
+
+// Start fetching session in the background proactively
+initSession();
 
 /** Update worker or employer profile */
 async function sbUpdateProfile(userId, payload) {

@@ -165,8 +165,12 @@ document.head.appendChild(style);
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', async () => {
   setupThemeSwitcher();
-  // Wait for the async session restore (supabase.js IIFE)
-  await new Promise(r => setTimeout(r, 450));
+  // Ensure session is actually restored from Supabase instead of guessing with a timer
+  if (typeof initSession === 'function') {
+    await initSession();
+  } else {
+    await new Promise(r => setTimeout(r, 600)); // Fallback if missing
+  }
   updateNavbarAuth();
   setupScrollAnimations();
 });
