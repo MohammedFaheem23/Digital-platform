@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    .profile-hero {
+      background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(234,88,12,0.05));
+      border:1px solid rgba(249,115,22,0.15); border-radius:22px;
+      padding:32px; display:flex; align-items:flex-start; gap:24px;
+      flex-wrap:wrap; margin-bottom:28px; position:relative; overflow:hidden;
+    }
+    .profile-hero::before {
+      content:''; position:absolute; top:-60px; right:-60px;
+      width:200px; height:200px; border-radius:50%;
+      background:rgba(249,115,22,0.06); pointer-events:none;
+    }
+    .profile-avatar-wrap { position:relative; flex-shrink:0; }
+    .profile-avatar {
+      width:96px; height:96px; border-radius:50%;
+      background:linear-gradient(135deg,#f97316,#ea580c);
+      display:flex; align-items:center; justify-content:center;
+      font-size:2.4rem; font-weight:800; color:#fff;
+      border:3px solid rgba(249,115,22,0.4);
+      box-shadow:0 8px 24px rgba(249,115,22,0.25);
+    }
+    .avail-badge {
+      position:absolute; bottom:4px; right:4px;
+      width:22px; height:22px; border-radius:50%; border:2px solid #0f1117;
+      transition:.3s;
+    }
+    .profile-info { flex:1; min-width:200px; }
+    .profile-name { font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+    .profile-trade { font-size:0.92rem; color:var(--text-muted); margin-bottom:10px; }
+    .profile-tags { display:flex; flex-wrap:wrap; gap:8px; }
+    .profile-tag { font-size:0.75rem; padding:4px 12px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:var(--text-secondary); }
+
+    /* Availability toggle in profile */
+    .avail-row {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+      background:#1a1d26; border:1px solid rgba(255,255,255,0.08); border-radius:14px;
+      padding:14px 20px; margin-bottom:28px; transition:.3s;
+    }
+
+    /* Section card */
+    .profile-section {
+      background:#1a1d26; border:1px solid rgba(255,255,255,0.08);
+      border-radius:18px; margin-bottom:20px; overflow:hidden;
+    }
+    .section-head {
+      padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.06);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .section-head-title { font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .section-body { padding:22px 24px; }
+
+    /* Form fields */
+    .field-row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:520px){ .field-row2{grid-template-columns:1fr;} }
+    .field-group { margin-bottom:14px; }
+    .field-label { font-size:0.8rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:7px; }
+    .field-input, .field-select, .field-textarea {
+      width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px; padding:11px 14px; color:var(--text-primary); font-size:0.88rem;
+      font-family:inherit; box-sizing:border-box; outline:none; transition:.2s;
+    }
+    .field-input:focus, .field-select:focus, .field-textarea:focus { border-color:var(--primary); background:rgba(249,115,22,0.04); }
+    .field-select option { background:#1a1d26; }
+    .field-textarea { resize:vertical; min-height:90px; line-height:1.55; }
+
+    /* Skills chips */
+    .chips-wrap { display:flex; flex-wrap:wrap; gap:7px; }
+    .skill-chip-edit {
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(249,115,22,0.12); color:var(--primary);
+      border:1px solid rgba(249,115,22,0.25); border-radius:20px;
+      padding:4px 12px; font-size:0.78rem; font-weight:600;
+    }
+    .skill-chip-edit .rm { cursor:pointer; opacity:.65; font-size:0.9rem; }
+    .skill-chip-edit .rm:hover { opacity:1; }
+    .add-skill-row { display:flex; gap:8px; margin-top:10px; }
+    .add-skill-input {
+      flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px; padding:9px 14px; color:var(--text-primary); font-size:0.85rem;
+      font-family:inherit; outline:none; transition:.2s;
+    }
+    .add-skill-input:focus { border-color:var(--primary); }
+
+    /* Save bar */
+    .save-bar {
+      position:sticky; bottom:0; background:#1a1d26;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:14px 24px; display:flex; gap:10px; justify-content:flex-end;
+      z-index:10;
+    }
+
+    /* Stats row */
+    .profile-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+    @media(max-width:440px){ .profile-stats{grid-template-columns:1fr 1fr;} }
+    .ps-card { background:#1a1d26; border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:16px; text-align:center; }
+    .ps-val { font-size:1.6rem; font-weight:800; color:var(--primary); }
+    .ps-label { font-size:0.72rem; color:var(--text-muted); margin-top:4px; }
+
+    /* Reviews */
+    .review-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:10px; }
+    .review-stars { color:#fbbf24; font-size:1rem; letter-spacing:2px; margin-bottom:6px; }
+    .review-text { font-size:0.85rem; line-height:1.55; color:var(--text-secondary); font-style:italic; }
+    .review-meta { font-size:0.73rem; color:var(--text-muted); margin-top:8px; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Main</span>
+      <a href="dashboard-worker.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="jobs.html" class="sidebar-link"><span class="sidebar-icon">💼</span> Browse Jobs</a>
+      <a href="my-applications.html" class="sidebar-link"><span class="sidebar-icon">📋</span> My Applications</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;"><span class="sidebar-icon">📜</span> Job History</a>
+
+      <span class="sidebar-section-label">Profile</span>
+      <a href="profile-worker.html" class="sidebar-link active"><span class="sidebar-icon">👤</span> My Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;"><span class="sidebar-icon">🛡️</span> Verification</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Skill Training — coming soon!','info');return false;"><span class="sidebar-icon">🎓</span> Skill Training</a>
+
+      <span class="sidebar-section-label">Finance</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Earnings</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💳</span> Payments</a>
+
+      <span class="sidebar-section-label">Support</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
+        <span class="sidebar-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN ════ -->
+  <main class="dashboard-main">
+    <div class="dashboard-topbar">
+      <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title">My Profile</div>
+      <div class="topbar-actions">
+        <a href="dashboard-worker.html" class="btn btn-ghost btn-sm">← Dashboard</a>
+        <div class="user-ava" id="userAva" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">?</div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+
+      <!-- Hero card -->
+      <div class="profile-hero">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="heroAvatar">?</div>
+          <div class="avail-badge" id="heroBadge" style="background:#34d399;"></div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name" id="heroName">Loading…</div>
+          <div class="profile-trade" id="heroTrade">🛠️ —</div>
+          <div class="profile-tags" id="heroTags"></div>
+        </div>
+        <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+          <div id="heroAvailPill" style="font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:20px;background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.3);">🟢 Available</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Member since <span id="heroSince">—</span></div>
+        </div>
+      </div>
+
+      <!-- Availability toggle -->
+      <div class="avail-row" id="availRow">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="availDot" style="width:12px;height:12px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;"></div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;" id="availLabel">🟢 Available for Work</div>
+            <div style="font-size:0.76rem;color:var(--text-muted);">Employers can find and contact you</div>
+          </div>
+        </div>
+        <label style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer;">
+          <input type="checkbox" id="availToggle" style="opacity:0;width:0;height:0;position:absolute;" onchange="toggleAvail(this.checked)" />
+          <span id="availSlider" style="position:absolute;inset:0;background:#16a34a;border-radius:28px;transition:.3s;">
+            <span id="availKnob" style="position:absolute;left:28px;top:4px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3);"></span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Stats -->
+      <div class="profile-stats">
+        <div class="ps-card">
+          <div class="ps-val" id="statApps">0</div>
+          <div class="ps-label">Applications</div>
+        </div>
+        <div class="ps-card">
+          <div class="ps-val" id="statRating" style="color:#fbbf24;">—</div>
+          <div class="ps-label">Avg Rating</div>
+        </div>
+        <div class="ps-card">
+          <div class="ps-val" id="statReviews">0</div>
+          <div class="ps-label">Reviews</div>
+        </div>
+      </div>
+
+      <!-- Personal Info -->
+      <div class="profile-section">
+        <div class="section-head">
+          <div class="section-head-title">👤 Personal Information</div>
+        </div>
+        <div class="section-body">
+          <div class="field-row2">
+            <div class="field-group">
+              <label class="field-label">Full Name *</label>
+              <input type="text" class="field-input" id="pfName" placeholder="Your full name" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Email</label>
+              <input type="email" class="field-input" id="pfEmail" placeholder="email@example.com" disabled style="opacity:0.55;cursor:not-allowed;" />
+            </div>
+          </div>
+          <div class="field-row2">
+            <div class="field-group">
+              <label class="field-label">Phone Number</label>
+              <input type="tel" class="field-input" id="pfPhone" placeholder="+91 9876543210" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">City / Location *</label>
+              <input type="text" class="field-input" id="pfCity" placeholder="e.g. Bengaluru, Karnataka" />
+            </div>
+          </div>
+          <div class="field-row2">
+            <div class="field-group">
+              <label class="field-label">Date of Birth</label>
+              <input type="date" class="field-input" id="pfDob" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Gender</label>
+              <select class="field-select" id="pfGender">
+                <option value="">Prefer not to say</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Info -->
+      <div class="profile-section">
+        <div class="section-head">
+          <div class="section-head-title">🛠️ Professional Details</div>
+        </div>
+        <div class="section-body">
+          <div class="field-row2">
+            <div class="field-group">
+              <label class="field-label">Primary Trade *</label>
+              <select class="field-select" id="pfTrade">
+                <option value="">Select your trade…</option>
+                <option value="Electrician">⚡ Electrician</option>
+                <option value="Plumber">🔧 Plumber</option>
+                <option value="Carpenter">🪚 Carpenter</option>
+                <option value="Welder">🔥 Welder</option>
+                <option value="Painter">🎨 Painter</option>
+                <option value="Mason">🧱 Mason</option>
+                <option value="AC Technician">❄️ AC Technician</option>
+                <option value="Driver">🚗 Driver</option>
+                <option value="Cleaner">🧹 Cleaner</option>
+                <option value="General Labour">🛠️ General Labour</option>
+                <option value="Other">🔩 Other</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Experience Level</label>
+              <select class="field-select" id="pfExp">
+                <option value="Fresher">Fresher (0-1 yr)</option>
+                <option value="Junior">Junior (1-3 yrs)</option>
+                <option value="Senior">Senior (3-7 yrs)</option>
+                <option value="Expert">Expert (7+ yrs)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row2">
+            <div class="field-group">
+              <label class="field-label">Expected Pay</label>
+              <input type="text" class="field-input" id="pfPay" placeholder="e.g. ₹800/day or ₹18,000/mo" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Job Type Preference</label>
+              <select class="field-select" id="pfJobType">
+                <option value="Any">Any</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Freelance">Freelance / Gig</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Bio / About Yourself</label>
+            <textarea class="field-textarea" id="pfBio" rows="4" placeholder="Tell employers about your experience, strengths, and what you bring to the job…"></textarea>
+          </div>
+
+          <!-- Skills -->
+          <div class="field-group">
+            <label class="field-label">Skills</label>
+            <div class="chips-wrap" id="skillChips"></div>
+            <div class="add-skill-row">
+              <input class="add-skill-input" id="newSkillInput" placeholder="Type a skill and press Enter…" onkeydown="handleAddSkill(event)" />
+              <button class="btn btn-ghost btn-sm" onclick="addSkillFromBtn()">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews received -->
+      <div class="profile-section">
+        <div class="section-head">
+          <div class="section-head-title">⭐ Reviews from Employers</div>
+        </div>
+        <div class="section-body" id="reviewsSection">
+          <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.9rem;">
+            <div style="font-size:2rem;margin-bottom:8px;">⭐</div>
+            No reviews yet. Complete jobs to earn your first review.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- Sticky save bar -->
+    <div class="save-bar">
+      <button class="btn btn-ghost" onclick="loadProfile()">↺ Reset</button>
+      <button class="btn btn-primary" onclick="saveProfile()">💾 Save Profile</button>
+    </div>
+  </main>
+</div>
+
+<script src="js/global.js"></script>
+<script>
+/* =====================================================
+   WORKER PROFILE PAGE
+===================================================== */
+
+let currentUser = null;
+let profileSkills = [];
+
+/* ── Init ── */
+function init() {
+  currentUser = getCurrentUser();
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+
+  loadProfile();
+  loadStats();
+  loadReviews();
+  initAvailUI();
+}
+
+/* ── Load profile fields ── */
+function loadProfile() {
+  const u = getCurrentUser();
+  currentUser = u;
+  if (!u) return;
+
+  // Top bar avatar
+  document.getElementById('userAva').textContent = u.name?.[0]?.toUpperCase() || '?';
+
+  // Hero
+  document.getElementById('heroAvatar').textContent = u.name?.[0]?.toUpperCase() || '?';
+  document.getElementById('heroName').textContent   = u.name || '—';
+  document.getElementById('heroTrade').textContent  = u.trade ? `🛠️ ${u.trade}` : '🛠️ Trade not set';
+  document.getElementById('heroSince').textContent  = u.createdAt
+    ? new Date(u.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'})
+    : new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+
+  // Hero tags
+  const tags = [u.city, u.experience, u.jobType].filter(Boolean);
+  document.getElementById('heroTags').innerHTML = tags.map(t =>
+    `<span class="profile-tag">${t}</span>`).join('');
+
+  // Fields
+  setValue('pfName',    u.name     || '');
+  setValue('pfEmail',   u.email    || '');
+  setValue('pfPhone',   u.phone    || '');
+  setValue('pfCity',    u.city     || '');
+  setValue('pfDob',     u.dob      || '');
+  setValue('pfGender',  u.gender   || '');
+  setValue('pfTrade',   u.trade    || '');
+  setValue('pfExp',     u.experience || 'Fresher');
+  setValue('pfPay',     u.expectedPay || '');
+  setValue('pfJobType', u.jobType  || 'Any');
+  setValue('pfBio',     u.bio      || '');
+
+  // Skills
+  profileSkills = [...(u.skills || [])];
+  renderSkillChips();
+}
+
+function setValue(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+/* ── Stats ── */
+function loadStats() {
+  const apps = currentUser?.applications || [];
+  document.getElementById('statApps').textContent = apps.length;
+
+  const reviews = JSON.parse(localStorage.getItem(`sc_worker_reviews_${currentUser.email}`) || '[]');
+  if (reviews.length) {
+    const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+    document.getElementById('statRating').textContent  = avg + '★';
+    document.getElementById('statReviews').textContent = reviews.length;
+  }
+}
+
+/* ── Reviews ── */
+function loadReviews() {
+  const reviews = JSON.parse(localStorage.getItem(`sc_worker_reviews_${currentUser.email}`) || '[]');
+  const sec = document.getElementById('reviewsSection');
+  if (!reviews.length) return;
+
+  sec.innerHTML = reviews.map(r => `
+    <div class="review-card">
+      <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+      <div class="review-text">"${r.text || 'No comment left.'}"</div>
+      <div class="review-meta">— ${r.reviewerName || 'Employer'} · ${new Date(r.reviewedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+    </div>`).join('');
+}
+
+/* ── Skills ── */
+function renderSkillChips() {
+  const wrap = document.getElementById('skillChips');
+  if (!wrap) return;
+  wrap.innerHTML = profileSkills.map((s, i) => `
+    <span class="skill-chip-edit">
+      ${s}<span class="rm" onclick="removeSkill(${i})">✕</span>
+    </span>`).join('');
+}
+
+function handleAddSkill(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addSkillFromBtn();
+  }
+}
+
+function addSkillFromBtn() {
+  const inp = document.getElementById('newSkillInput');
+  const val = inp?.value.trim().replace(/,$/, '');
+  if (!val || profileSkills.includes(val)) { inp && (inp.value = ''); return; }
+  profileSkills.push(val);
+  renderSkillChips();
+  inp.value = '';
+}
+
+function removeSkill(idx) {
+  profileSkills.splice(idx, 1);
+  renderSkillChips();
+}
+
+/* ── Save ── */
+function saveProfile() {
+  const name = document.getElementById('pfName')?.value.trim();
+  const city = document.getElementById('pfCity')?.value.trim();
+  if (!name) { flash('pfName', 'Full name is required'); return; }
+
+  const updated = {
+    ...currentUser,
+    name,
+    phone:       document.getElementById('pfPhone')?.value.trim() || currentUser.phone || '',
+    city,
+    dob:         document.getElementById('pfDob')?.value || '',
+    gender:      document.getElementById('pfGender')?.value || '',
+    trade:       document.getElementById('pfTrade')?.value || currentUser.trade || '',
+    experience:  document.getElementById('pfExp')?.value || 'Fresher',
+    expectedPay: document.getElementById('pfPay')?.value.trim() || '',
+    jobType:     document.getElementById('pfJobType')?.value || 'Any',
+    bio:         document.getElementById('pfBio')?.value.trim() || '',
+    skills:      [...profileSkills],
+    updatedAt:   new Date().toISOString(),
+  };
+
+  // Update sc_user
+  setCurrentUser(updated);
+  currentUser = updated;
+
+  // Update sc_users list
+  const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
+  const idx = allUsers.findIndex(u => u.email === updated.email);
+  if (idx > -1) {
+    allUsers[idx] = { ...allUsers[idx], ...updated };
+    localStorage.setItem('sc_users', JSON.stringify(allUsers));
+  }
+
+  // Refresh hero card
+  document.getElementById('heroName').textContent  = updated.name;
+  document.getElementById('heroTrade').textContent = updated.trade ? `🛠️ ${updated.trade}` : '🛠️ Trade not set';
+  document.getElementById('heroAvatar').textContent = updated.name?.[0]?.toUpperCase() || '?';
+  document.getElementById('userAva').textContent    = updated.name?.[0]?.toUpperCase() || '?';
+
+  const tags = [updated.city, updated.experience, updated.jobType].filter(Boolean);
+  document.getElementById('heroTags').innerHTML = tags.map(t => `<span class="profile-tag">${t}</span>`).join('');
+
+  showToast('✅ Profile saved successfully!', 'success');
+}
+
+function flash(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = '#ef4444';
+  el.focus();
+  showToast(`⚠️ ${msg}`, 'error');
+  setTimeout(() => el.style.borderColor = '', 2000);
+}
+
+/* ── Availability ── */
+function initAvailUI() {
+  const key     = `sc_availability_${currentUser.email}`;
+  const stored  = localStorage.getItem(key);
+  const isAvail = stored === null ? true : stored === 'true';
+  document.getElementById('availToggle').checked = isAvail;
+  applyAvailUI(isAvail);
+}
+
+function toggleAvail(isAvail) {
+  localStorage.setItem(`sc_availability_${currentUser.email}`, String(isAvail));
+  applyAvailUI(isAvail);
+  showToast(
+    isAvail ? '🟢 You are now visible to employers!' : '⚫ Hidden from employers.',
+    isAvail ? 'success' : 'info'
+  );
+}
+
+function applyAvailUI(isAvail) {
+  const dot    = document.getElementById('availDot');
+  const label  = document.getElementById('availLabel');
+  const slider = document.getElementById('availSlider');
+  const knob   = document.getElementById('availKnob');
+  const row    = document.getElementById('availRow');
+  const pill   = document.getElementById('heroAvailPill');
+  const badge  = document.getElementById('heroBadge');
+
+  if (isAvail) {
+    if (dot)    { dot.style.background = '#34d399'; dot.style.boxShadow = '0 0 8px #34d399'; }
+    if (label)  label.textContent = '🟢 Available for Work';
+    if (slider) slider.style.background = '#16a34a';
+    if (knob)   knob.style.left = '28px';
+    if (row)    { row.style.borderColor = 'rgba(52,211,153,0.3)'; row.style.background = 'rgba(52,211,153,0.04)'; }
+    if (pill)   { pill.style.background = 'rgba(52,211,153,0.12)'; pill.style.color = '#34d399'; pill.style.borderColor = 'rgba(52,211,153,0.3)'; pill.textContent = '🟢 Available'; }
+    if (badge)  badge.style.background = '#34d399';
+  } else {
+    if (dot)    { dot.style.background = '#6b7280'; dot.style.boxShadow = 'none'; }
+    if (label)  label.textContent = '⚫ Not Available';
+    if (slider) slider.style.background = '#374151';
+    if (knob)   knob.style.left = '4px';
+    if (row)    { row.style.borderColor = 'rgba(255,255,255,0.06)'; row.style.background = '#1a1d26'; }
+    if (pill)   { pill.style.background = 'rgba(107,114,128,0.12)'; pill.style.color = '#9ca3af'; pill.style.borderColor = 'rgba(107,114,128,0.2)'; pill.textContent = '⚫ Unavailable'; }
+    if (badge)  badge.style.background = '#6b7280';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

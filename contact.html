@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us – SkillConnect</title>
+  <meta name="description" content="Get in touch with SkillConnect – support for workers, employers, and enterprise clients." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+</head>
+<body>
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="home.html" class="nav-link">Home</a></li>
+        <li><a href="jobs.html" class="nav-link">Find Jobs</a></li>
+        <li><a href="hire.html" class="nav-link">Hire Workers</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="contact.html" class="nav-link active">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost" id="loginBtn">Log In</a>
+        <a href="register.html" class="btn btn-primary" id="signupBtn">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <span class="section-tag">📬 Get in Touch</span>
+      <h1>Contact <span class="gradient-text">SkillConnect</span></h1>
+      <p>We're here to help workers find jobs, employers find talent, and everyone find answers.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:60px;align-items:start;">
+        <!-- Contact Info -->
+        <div>
+          <h2 style="margin-bottom:24px;">We'd love to hear from you</h2>
+          <p style="margin-bottom:40px;">Whether you have a question about the platform, need help with your account, or want to partner with us — our team is ready to assist.</p>
+
+          <div style="display:flex;flex-direction:column;gap:24px;">
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="width:50px;height:50px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📞</div>
+              <div>
+                <strong style="display:block;margin-bottom:2px;">Phone Support</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">1800-123-4567 (Toll Free)</span><br/>
+                <span style="color:var(--text-muted);font-size:0.8rem;">Mon–Sat, 8 AM to 8 PM</span>
+              </div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="width:50px;height:50px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">✉️</div>
+              <div>
+                <strong style="display:block;margin-bottom:2px;">Email Support</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">support@skillconnect.in</span><br/>
+                <span style="color:var(--text-muted);font-size:0.8rem;">Response within 24 hours</span>
+              </div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="width:50px;height:50px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">💬</div>
+              <div>
+                <strong style="display:block;margin-bottom:2px;">Live Chat</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">Available on the app</span><br/>
+                <span style="color:var(--text-muted);font-size:0.8rem;">Avg. response: 5 minutes</span>
+              </div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="width:50px;height:50px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📍</div>
+              <div>
+                <strong style="display:block;margin-bottom:2px;">Office</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">Plot 42, Sector 18, Gurugram</span><br/>
+                <span style="color:var(--text-muted);font-size:0.8rem;">Haryana 122015, India</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="card" style="padding:40px;">
+          <h3 style="margin-bottom:24px;">Send us a Message</h3>
+
+          <div id="contactAlert" class="alert" style="display:none;"></div>
+
+          <form id="contactForm" onsubmit="submitContact(event)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="contactName">Your Name <span>*</span></label>
+                <input type="text" id="contactName" class="form-input" placeholder="Rajesh Sharma" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contactPhone">Phone Number</label>
+                <input type="tel" id="contactPhone" class="form-input" placeholder="+91 98765 43210" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactEmail">Email Address <span>*</span></label>
+              <input type="email" id="contactEmail" class="form-input" placeholder="you@example.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactCategory">I am a...</label>
+              <select id="contactCategory" class="form-select">
+                <option value="worker">Skilled Worker</option>
+                <option value="employer">Employer / Hiring Manager</option>
+                <option value="enterprise">Enterprise / Bulk Hiring</option>
+                <option value="press">Press / Media</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactSubject">Subject <span>*</span></label>
+              <select id="contactSubject" class="form-select">
+                <option>Account Issue</option>
+                <option>Payment Problem</option>
+                <option>Job Not Found</option>
+                <option>Worker Complaint</option>
+                <option>Technical Bug</option>
+                <option>Partnership Enquiry</option>
+                <option>Feedback / Suggestion</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactMessage">Message <span>*</span></label>
+              <textarea id="contactMessage" class="form-textarea" placeholder="Describe your issue or question in detail..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="contactSubmitBtn">
+              <span id="contactBtnText">Send Message 📨</span>
+              <span id="contactSpinner" class="spinner" style="display:none;"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" style="background:linear-gradient(180deg,transparent,rgba(249,115,22,0.03),transparent);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">FAQ</span>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:12px;">
+        <div class="faq-item card" onclick="toggleFaq(this)" style="cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>Is SkillConnect free to use for workers?</strong>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+            <p>Yes! Registering and creating a profile is completely free for workers. We charge a small service fee only when you successfully get hired through our platform.</p>
+          </div>
+        </div>
+        <div class="faq-item card" onclick="toggleFaq(this)" style="cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>How does the verification process work?</strong>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+            <p>Workers submit their ID proof (Aadhaar) and skill certificates. Our team verifies within 24–48 hours. Verified profiles get 3x more job matches and earn higher trust from employers.</p>
+          </div>
+        </div>
+        <div class="faq-item card" onclick="toggleFaq(this)" style="cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>How are payments processed?</strong>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+            <p>Employers deposit payment into our secure escrow system. Once the job is marked complete by both parties, the amount is released to the worker's bank account within 24 hours.</p>
+          </div>
+        </div>
+        <div class="faq-item card" onclick="toggleFaq(this)" style="cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>What if I have a dispute with a worker/employer?</strong>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+            <p>We have a dedicated dispute resolution team. You can raise a dispute within 72 hours of job completion. Our team will review and resolve issues typically within 3–5 business days.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="mainFooter">
+    <div class="container">
+      <div class="footer-bottom"><p>© 2026 SkillConnect. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="js/global.js"></script>
+  <script>
+    function toggleFaq(item) {
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      const isOpen = answer.style.display === 'block';
+      document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+      document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+      if (!isOpen) {
+        answer.style.display = 'block';
+        icon.textContent = '−';
+      }
+    }
+
+    function submitContact(e) {
+      e.preventDefault();
+      const btn = document.getElementById('contactSubmitBtn');
+      const btnText = document.getElementById('contactBtnText');
+      const spinner = document.getElementById('contactSpinner');
+      btn.disabled = true;
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+        document.getElementById('contactForm').reset();
+        const alert = document.getElementById('contactAlert');
+        alert.className = 'alert alert-success';
+        alert.innerHTML = '✅ Message sent! We\'ll respond within 24 hours.';
+        alert.style.display = 'flex';
+        showToast('Message sent successfully! 📨', 'success');
+      }, 1500);
+    }
+  </script>
+  <style>
+    @media (max-width:900px) {
+      .container > div { grid-template-columns:1fr !important; }
+    }
+    @media (max-width:600px) {
+      [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; }
+    }
+  </style>
+</body>
+</html>

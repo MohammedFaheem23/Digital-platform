@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillConnect – Digital Platform for Skilled Labour</title>
+  <meta name="description"
+    content="SkillConnect bridges skilled labourers with employers. Find electricians, plumbers, carpenters and more. Hire trusted professionals or find your next job opportunity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="logo-icon">⚡</div>
+        <span>SkillConnect</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="jobs.html" class="nav-link">Find Jobs</a></li>
+        <li><a href="hire.html" class="nav-link">Hire Workers</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost" id="loginBtn">Log In</a>
+        <a href="register.html" class="btn btn-primary" id="signupBtn">Get Started</a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-particles" id="particles"></div>
+      <div class="hero-gradient"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-icon">✦</span>
+        <span>Trusted by 50,000+ Professionals</span>
+      </div>
+      <h1 class="hero-title">
+        Connect with <span class="gradient-text">Skilled Labour</span><br />
+        Powered by Technology
+      </h1>
+      <p class="hero-subtitle">
+        India's most trusted digital platform connecting skilled tradesmen with employers.
+        Electricians, plumbers, carpenters, welders — find work or hire talent instantly.
+      </p>
+      <div class="hero-search">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="heroSearch" placeholder="Search for skilled workers or jobs..." class="search-input" />
+          <select class="search-select" id="heroCategory">
+            <option value="">All Skills</option>
+            <option value="electrician">Electrician</option>
+            <option value="plumber">Plumber</option>
+            <option value="carpenter">Carpenter</option>
+            <option value="welder">Welder</option>
+            <option value="painter">Painter</option>
+            <option value="mason">Mason</option>
+          </select>
+          <button class="btn btn-primary search-btn" onclick="handleHeroSearch()">Search</button>
+        </div>
+        <div class="hero-tags">
+          <span class="tag" onclick="quickSearch('Electrician')">⚡ Electrician</span>
+          <span class="tag" onclick="quickSearch('Plumber')">🔧 Plumber</span>
+          <span class="tag" onclick="quickSearch('Carpenter')">🪚 Carpenter</span>
+          <span class="tag" onclick="quickSearch('Welder')">🔥 Welder</span>
+          <span class="tag" onclick="quickSearch('Painter')">🎨 Painter</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" data-target="50000">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Workers Registered</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-target="12000">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Jobs Posted</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-target="98">0</span><span class="stat-plus">%</span>
+          <span class="stat-label">Satisfaction Rate</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-target="500">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Cities Covered</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="worker-card card-1">
+          <div class="worker-avatar" style="background:linear-gradient(135deg,#f97316,#ea580c)">R</div>
+          <div class="worker-info">
+            <span class="worker-name">Ramesh Kumar</span>
+            <span class="worker-skill">⚡ Master Electrician</span>
+            <div class="worker-rating">★★★★★ <span>4.9</span></div>
+          </div>
+          <span class="worker-badge available">Available</span>
+        </div>
+        <div class="worker-card card-2">
+          <div class="worker-avatar" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">S</div>
+          <div class="worker-info">
+            <span class="worker-name">Suresh Patel</span>
+            <span class="worker-skill">🔧 Senior Plumber</span>
+            <div class="worker-rating">★★★★★ <span>4.8</span></div>
+          </div>
+          <span class="worker-badge available">Available</span>
+        </div>
+        <div class="worker-card card-3">
+          <div class="worker-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">A</div>
+          <div class="worker-info">
+            <span class="worker-name">Arjun Singh</span>
+            <span class="worker-skill">🪚 Expert Carpenter</span>
+            <div class="worker-rating">★★★★☆ <span>4.7</span></div>
+          </div>
+          <span class="worker-badge busy">On Job</span>
+        </div>
+        <div class="floating-notification notif-1">
+          <span>✅ Job Matched!</span>
+          <small>Ramesh hired for ₹1,200</small>
+        </div>
+        <div class="floating-notification notif-2">
+          <span>⭐ New Review</span>
+          <small>Excellent work done!</small>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow">↓</div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section how-it-works" id="howItWorks">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Simple Process</span>
+        <h2>How SkillConnect Works</h2>
+        <p>Get connected with skilled professionals in 3 simple steps</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" data-step="1">
+          <div class="step-number">01</div>
+          <div class="step-icon">📝</div>
+          <h3>Create Your Profile</h3>
+          <p>Register as a worker or employer. Upload your skills, certifications, and work experience to get started.
+          </p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card" data-step="2">
+          <div class="step-number">02</div>
+          <div class="step-icon">🔍</div>
+          <h3>Find & Connect</h3>
+          <p>Browse job listings or skilled worker profiles. Use smart filters to find the perfect match for your needs.
+          </p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card" data-step="3">
+          <div class="step-number">03</div>
+          <div class="step-icon">🤝</div>
+          <h3>Work & Get Paid</h3>
+          <p>Complete the job securely. Get paid through our trusted payment system with reviews and ratings built in.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="section categories-section" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Browse Categories</span>
+        <h2>Find Any Skilled Trade</h2>
+        <p>From construction to home services — we've got every skill covered</p>
+      </div>
+      <div class="categories-grid">
+        <a href="jobs.html?category=electrical" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">⚡</div>
+          <h3>Electrical</h3>
+          <p>2,450 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=plumbing" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9)">🔧</div>
+          <h3>Plumbing</h3>
+          <p>1,830 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=carpentry" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">🪚</div>
+          <h3>Carpentry</h3>
+          <p>1,240 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=welding" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#f87171,#ef4444)">🔥</div>
+          <h3>Welding</h3>
+          <p>980 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=painting" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#34d399,#10b981)">🎨</div>
+          <h3>Painting</h3>
+          <p>1,560 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=masonry" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#fb923c,#ea580c)">🧱</div>
+          <h3>Masonry</h3>
+          <p>870 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html?category=hvac" class="category-card">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#67e8f9,#06b6d4)">❄️</div>
+          <h3>HVAC</h3>
+          <p>640 workers</p>
+          <span class="cat-arrow">→</span>
+        </a>
+        <a href="jobs.html" class="category-card category-more">
+          <div class="cat-icon-wrap" style="background:linear-gradient(135deg,#c084fc,#a855f7)">+</div>
+          <h3>More Skills</h3>
+          <p>View all 25+ trades</p>
+          <span class="cat-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Workers -->
+  <section class="section featured-workers" id="featuredWorkers">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Top Professionals</span>
+        <h2>Featured Skilled Workers</h2>
+        <p>Highly rated professionals ready to work</p>
+      </div>
+      <div class="workers-grid" id="workersGrid">
+        <!-- Workers populated by JS -->
+      </div>
+      <div class="section-cta">
+        <a href="hire.html" class="btn btn-primary btn-lg">View All Workers</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="section why-us" id="whyUs">
+    <div class="container">
+      <div class="why-us-grid">
+        <div class="why-us-content">
+          <span class="section-tag">Why SkillConnect</span>
+          <h2>Built for the Heartbeat of India's Workforce</h2>
+          <p>We understand the challenges that skilled workers and small businesses face. That's why we built a platform
+            that's simple, secure, and truly impactful.</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">🛡️</div>
+              <div>
+                <h4>Verified Profiles</h4>
+                <p>All workers undergo background checks and skill verification before listing.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">💳</div>
+              <div>
+                <h4>Secure Payments</h4>
+                <p>All transactions are protected with escrow-based payment system.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">📱</div>
+              <div>
+                <h4>Mobile First</h4>
+                <p>Works seamlessly on any device — smartphone, tablet, or desktop.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🌐</div>
+              <div>
+                <h4>Multilingual Support</h4>
+                <p>Available in Hindi, Tamil, Telugu, Bengali, and 8+ regional languages.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why-us-visual">
+          <div class="trust-badges">
+            <div class="trust-badge">
+              <span class="trust-icon">🏆</span>
+              <div>
+                <strong>Award Winning</strong>
+                <small>Best Labour Tech 2025</small>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <span class="trust-icon">🔒</span>
+              <div>
+                <strong>ISO Certified</strong>
+                <small>Data Protection</small>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <span class="trust-icon">🇮🇳</span>
+              <div>
+                <strong>Made in India</strong>
+                <small>Govt. Registered</small>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <span class="trust-icon">⭐</span>
+              <div>
+                <strong>4.8/5 Rating</strong>
+                <small>App Store & Play Store</small>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p>"SkillConnect transformed how I find work. I now get regular jobs and have doubled my income in 6
+              months!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">R</div>
+              <div>
+                <strong>Rajesh Sharma</strong>
+                <small>Electrician, Delhi</small>
+              </div>
+              <div class="testimonial-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Success Stories</span>
+        <h2>What Our Users Say</h2>
+        <p>Real experiences from real people on our platform</p>
+      </div>
+      <div class="testimonials-slider" id="testimonialsSlider">
+        <div class="testimonial-slide active">
+          <div class="testi-content">
+            <div class="testi-quote">❝</div>
+            <p>I was struggling to find consistent work as a plumber. Since joining SkillConnect, I'm fully booked every
+              week. The platform is easy to use and payments are always on time.</p>
+            <div class="testi-footer">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">M</div>
+              <div>
+                <strong>Mohan Das</strong>
+                <span>Plumber, Bengaluru</span>
+                <div>★★★★★</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-slide">
+          <div class="testi-content">
+            <div class="testi-quote">❝</div>
+            <p>We renovated our entire office using skilled workers from SkillConnect. The quality was exceptional and
+              we saved 30% compared to traditional contractors.</p>
+            <div class="testi-footer">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">P</div>
+              <div>
+                <strong>Priya Mehta</strong>
+                <span>Business Owner, Mumbai</span>
+                <div>★★★★★</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-slide">
+          <div class="testi-content">
+            <div class="testi-quote">❝</div>
+            <p>As a carpenter with 15 years experience, I never thought technology could help me. SkillConnect has
+              connected me with clients I never would have reached on my own.</p>
+            <div class="testi-footer">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">K</div>
+              <div>
+                <strong>Karthik Rajan</strong>
+                <span>Carpenter, Chennai</span>
+                <div>★★★★★</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-controls">
+          <button class="testi-btn" onclick="prevTesti()" id="prevTesti">←</button>
+          <div class="testi-dots" id="testiDots"></div>
+          <button class="testi-btn" onclick="nextTesti()" id="nextTesti">→</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="section cta-banner" id="ctaBanner">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-content">
+          <h2>Ready to Transform Your Career?</h2>
+          <p>Join thousands of skilled professionals and employers already using SkillConnect</p>
+          <div class="cta-buttons">
+            <a href="register.html?type=worker" class="btn btn-primary btn-lg">Find Work Now</a>
+            <a href="register.html?type=employer" class="btn btn-outline btn-lg">Post a Job</a>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <div class="cta-stat">
+            <span>₹18,000</span>
+            <small>Average Monthly Earning</small>
+          </div>
+          <div class="cta-stat">
+            <span>24hrs</span>
+            <small>Average Time to Get Hired</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="mainFooter">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo">
+            <div class="logo-icon">⚡</div>
+            <span>SkillConnect</span>
+          </a>
+          <p>India's premier digital platform connecting skilled labourers with opportunities across the nation.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook">f</a>
+            <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="social-link" aria-label="Instagram">📸</a>
+            <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>For Workers</h4>
+          <ul>
+            <li><a href="register.html?type=worker">Create Profile</a></li>
+            <li><a href="jobs.html">Browse Jobs</a></li>
+            <li><a href="dashboard-worker.html">Worker Dashboard</a></li>
+            <li><a href="#">Skill Training</a></li>
+            <li><a href="#">Safety Guidelines</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>For Employers</h4>
+          <ul>
+            <li><a href="register.html?type=employer">Register as Employer</a></li>
+            <li><a href="hire.html">Find Workers</a></li>
+            <li><a href="dashboard-employer.html">Employer Dashboard</a></li>
+            <li><a href="#">Post a Job</a></li>
+            <li><a href="#">Bulk Hiring</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 SkillConnect. All rights reserved. | Made with ❤️ for India's Workforce</p>
+        <p>Registered under Ministry of Labour & Employment, Govt. of India</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/global.js"></script>
+  <script src="js/home.js"></script>
+</body>
+
+</html>

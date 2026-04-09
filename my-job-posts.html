@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Job Posts – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    /* ─── Stats ─── */
+    .jp-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    @media(max-width:700px){ .jp-stats{grid-template-columns:repeat(2,1fr);} }
+    .jp-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:18px 20px; text-align:center; }
+    .jp-stat-val { font-size:1.8rem; font-weight:800; line-height:1; }
+    .jp-stat-label { font-size:0.78rem; color:var(--text-muted); margin-top:5px; }
+
+    /* ─── Filter tabs ─── */
+    .filter-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+    .filter-tab { padding:8px 18px; border-radius:50px; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--text-secondary); font-size:0.85rem; font-weight:500; cursor:pointer; transition:.2s; }
+    .filter-tab:hover, .filter-tab.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+
+    /* ─── Job post card ─── */
+    .jp-card { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:22px 24px; margin-bottom:16px; transition:.25s; position:relative; overflow:hidden; }
+    .jp-card:hover { border-color:var(--primary); box-shadow:0 8px 32px rgba(249,115,22,.08); }
+    .jp-card-accent { position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:18px 0 0 18px; }
+    .jp-card-top { display:flex; align-items:flex-start; gap:16px; }
+    .jp-icon { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
+    .jp-title { font-size:1.05rem; font-weight:700; margin-bottom:4px; }
+    .jp-meta { display:flex; flex-wrap:wrap; gap:10px; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; }
+    .jp-meta span { display:flex; align-items:center; gap:4px; }
+    .jp-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+    .jp-tag { font-size:0.73rem; padding:3px 10px; border-radius:20px; background:rgba(249,115,22,0.1); color:var(--primary); border:1px solid rgba(249,115,22,0.2); }
+    .jp-desc { font-size:0.84rem; color:var(--text-secondary); line-height:1.55; margin-bottom:14px; background:rgba(255,255,255,0.03); border-radius:10px; padding:10px 14px; border-left:3px solid rgba(255,255,255,0.1); }
+    .jp-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .jp-status-right { margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+
+    /* status pills */
+    .jp-pill { display:inline-flex; align-items:center; gap:5px; padding:5px 14px; border-radius:50px; font-size:0.78rem; font-weight:600; }
+    .pill-active  { background:rgba(52,211,153,0.12); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+    .pill-paused  { background:rgba(251,191,36,0.12);  color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+    .pill-closed  { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+    .pill-draft   { background:rgba(156,163,175,0.1);  color:#9ca3af; border:1px solid rgba(156,163,175,0.2); }
+
+    .applicant-chip { font-size:0.78rem; padding:4px 12px; border-radius:20px; background:rgba(56,189,248,0.1); color:#38bdf8; border:1px solid rgba(56,189,248,0.25); cursor:pointer; transition:.15s; }
+    .applicant-chip:hover { background:rgba(56,189,248,0.2); }
+
+    /* ─── Empty state ─── */
+    .empty-state { text-align:center; padding:72px 24px; color:var(--text-muted); }
+    .empty-state-icon { font-size:4rem; margin-bottom:16px; }
+    .empty-state h3 { font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-bottom:8px; }
+    .empty-state p { font-size:0.9rem; max-width:340px; margin:0 auto 20px; line-height:1.6; }
+
+    /* ─── Modal ─── */
+    .modal-backdrop {
+      position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9000;
+      display:flex; align-items:center; justify-content:center; padding:20px;
+      animation:fadeInBd .2s ease;
+      backdrop-filter:blur(4px);
+    }
+    @keyframes fadeInBd{from{opacity:0}to{opacity:1}}
+    .modal-box {
+      background:#1a1d26; border:1px solid rgba(255,255,255,0.1); border-radius:22px;
+      width:100%; max-width:580px; max-height:92vh; overflow-y:auto;
+      box-shadow:0 32px 80px rgba(0,0,0,0.7); animation:slideUpM .3s ease;
+    }
+    @keyframes slideUpM{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-header { padding:24px 28px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:#1a1d26; z-index:1; border-radius:22px 22px 0 0; }
+    .modal-title { font-size:1.1rem; font-weight:700; }
+    .modal-close { background:rgba(255,255,255,0.08); border:none; color:#aaa; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; }
+    .modal-close:hover { background:rgba(255,255,255,0.15); color:#fff; }
+    .modal-body { padding:24px 28px; background:#1a1d26; }
+    .modal-footer { padding:16px 28px 24px; display:flex; gap:10px; border-top:1px solid rgba(255,255,255,0.08); background:#1a1d26; border-radius:0 0 22px 22px; }
+
+    /* form fields */
+    .field-group { margin-bottom:16px; }
+    .field-label { font-size:0.82rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:7px; }
+    .field-input, .field-select, .field-textarea {
+      width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border);
+      border-radius:10px; padding:11px 14px; color:var(--text-primary); font-size:0.88rem;
+      font-family:inherit; box-sizing:border-box; outline:none; transition:.2s;
+    }
+    .field-input:focus, .field-select:focus, .field-textarea:focus { border-color:var(--primary); }
+    .field-select option { background:var(--bg-primary,#0f1117); }
+    .field-textarea { resize:vertical; min-height:90px; line-height:1.5; }
+    .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media(max-width:480px){ .field-row{grid-template-columns:1fr;} }
+    .field-hint { font-size:0.73rem; color:var(--text-muted); margin-top:5px; }
+
+    /* skill tags input */
+    .tags-input-wrap { display:flex; flex-wrap:wrap; gap:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px; padding:8px 10px; cursor:text; transition:.2s; }
+    .tags-input-wrap:focus-within { border-color:var(--primary); }
+    .tag-chip { display:inline-flex; align-items:center; gap:4px; background:rgba(249,115,22,0.15); color:var(--primary); border:1px solid rgba(249,115,22,0.25); border-radius:16px; padding:3px 10px; font-size:0.78rem; font-weight:600; }
+    .tag-chip .rm { cursor:pointer; font-size:0.85rem; opacity:.7; }
+    .tag-chip .rm:hover { opacity:1; }
+    .tags-input { background:none; border:none; outline:none; color:var(--text-primary); font-family:inherit; font-size:0.85rem; min-width:80px; flex:1; padding:2px 4px; }
+
+    /* applicant list in modal */
+    .applicant-row { display:flex; align-items:flex-start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .applicant-row:last-child { border-bottom:none; }
+    .app-ava { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#f97316,#ea580c); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; flex-shrink:0; font-size:1rem; }
+    .app-info { flex:1; min-width:160px; }
+    .app-name { font-size:0.92rem; font-weight:700; }
+    .app-meta { font-size:0.76rem; color:var(--text-muted); margin-top:3px; line-height:1.5; }
+    .app-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; width:100%; padding-left:54px; }
+    .app-btn { padding:5px 14px; border-radius:20px; font-size:0.78rem; font-weight:600; border:1px solid; cursor:pointer; transition:.15s; }
+    .app-btn:hover { filter:brightness(1.15); transform:translateY(-1px); }
+    .app-btn-accept    { background:rgba(52,211,153,0.12); color:#34d399; border-color:rgba(52,211,153,0.35); }
+    .app-btn-shortlist { background:rgba(56,189,248,0.12); color:#38bdf8; border-color:rgba(56,189,248,0.3); }
+    .app-btn-reject    { background:rgba(248,113,113,0.1); color:#f87171; border-color:rgba(248,113,113,0.3); }
+    .app-btn-reset     { background:rgba(255,255,255,0.05); color:#9ca3af; border-color:rgba(255,255,255,0.1); }
+    .app-status-badge  { font-size:0.73rem; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; }
+    .asb-pending    { background:rgba(251,191,36,0.12); color:#fbbf24; }
+    .asb-shortlisted{ background:rgba(56,189,248,0.12); color:#38bdf8; }
+    .asb-selected   { background:rgba(52,211,153,0.12);  color:#34d399; }
+    .asb-rejected   { background:rgba(248,113,113,0.1);   color:#f87171; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- ════ SIDEBAR ════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Main</span>
+      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manage-hires.html" class="sidebar-link"><span class="sidebar-icon">🤝</span> Manage Hires</a>
+      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon">👷</span> Find Workers</a>
+      <a href="my-job-posts.html" class="sidebar-link active"><span class="sidebar-icon">📋</span> My Job Posts</a>
+
+      <span class="sidebar-section-label">Manage</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon">🏢</span> Company Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Payments</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon">📄</span> Contracts</a>
+
+      <span class="sidebar-section-label">Support</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
+        <span class="sidebar-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN ════ -->
+  <main class="dashboard-main">
+    <div class="dashboard-topbar">
+      <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title">My Job Posts</div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Post a Job</button>
+        <div class="user-avatar-btn">
+          <div class="user-ava" id="userAva">?</div>
+          <span class="user-ava-name" id="userName">User</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+
+      <!-- Stats -->
+      <div class="jp-stats">
+        <div class="jp-stat">
+          <div class="jp-stat-val" id="statTotal" style="color:var(--text-primary);">0</div>
+          <div class="jp-stat-label">Total Posts</div>
+        </div>
+        <div class="jp-stat">
+          <div class="jp-stat-val" id="statActive" style="color:#34d399;">0</div>
+          <div class="jp-stat-label">Active</div>
+        </div>
+        <div class="jp-stat">
+          <div class="jp-stat-val" id="statApps" style="color:#38bdf8;">0</div>
+          <div class="jp-stat-label">Total Applicants</div>
+        </div>
+        <div class="jp-stat">
+          <div class="jp-stat-val" id="statClosed" style="color:#f87171;">0</div>
+          <div class="jp-stat-label">Closed</div>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="applyFilter('all',this)">All</button>
+        <button class="filter-tab" onclick="applyFilter('active',this)">✅ Active</button>
+        <button class="filter-tab" onclick="applyFilter('paused',this)">⏸️ Paused</button>
+        <button class="filter-tab" onclick="applyFilter('draft',this)">📝 Draft</button>
+        <button class="filter-tab" onclick="applyFilter('closed',this)">🔒 Closed</button>
+      </div>
+
+      <!-- Posts list -->
+      <div id="postsList"></div>
+
+      <!-- CTA -->
+      <div style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(234,88,12,0.05));border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">🔍 Also want to hire directly?</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">Browse and contact skilled workers right now.</div>
+        </div>
+        <a href="hire.html" class="btn btn-primary">Find Workers →</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ════ POST MODAL ════ -->
+<div id="postModal" style="display:none;" class="modal-backdrop" onclick="handleBackdropClick(event,'postModal')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="postModalTitle">📋 Post a New Job</div>
+      <button class="modal-close" onclick="closeModal('postModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editPostId" value="" />
+
+      <div class="field-group">
+        <label class="field-label">Job Title *</label>
+        <input type="text" class="field-input" id="postTitle" placeholder="e.g. Senior Electrician Needed for Wiring Project" />
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Trade / Category *</label>
+          <select class="field-select" id="postTrade">
+            <option value="">Select trade…</option>
+            <option value="Electrician">⚡ Electrician</option>
+            <option value="Plumber">🔧 Plumber</option>
+            <option value="Carpenter">🪚 Carpenter</option>
+            <option value="Welder">🔥 Welder</option>
+            <option value="Painter">🎨 Painter</option>
+            <option value="Mason">🧱 Mason</option>
+            <option value="AC Technician">❄️ AC Technician</option>
+            <option value="Driver">🚗 Driver</option>
+            <option value="Cleaner">🧹 Cleaner</option>
+            <option value="General Labour">🛠️ General Labour</option>
+            <option value="Other">🔩 Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Job Type *</label>
+          <select class="field-select" id="postType">
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Freelance">Freelance / Gig</option>
+            <option value="Contract">Contract</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Location *</label>
+          <input type="text" class="field-input" id="postLocation" placeholder="e.g. Bengaluru, Karnataka" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pay / Salary</label>
+          <input type="text" class="field-input" id="postPay" placeholder="e.g. ₹800/day or ₹18,000/mo" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Experience Required</label>
+          <select class="field-select" id="postExp">
+            <option value="Any">Any level</option>
+            <option value="0-1 years">0 – 1 year</option>
+            <option value="1-3 years">1 – 3 years</option>
+            <option value="3-5 years">3 – 5 years</option>
+            <option value="5+ years">5+ years</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Openings</label>
+          <input type="number" class="field-input" id="postOpenings" placeholder="1" min="1" max="100" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Job Description *</label>
+        <textarea class="field-textarea" id="postDesc" rows="4" placeholder="Describe the responsibilities, requirements, and what a typical day looks like…"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Required Skills (press Enter or comma to add)</label>
+        <div class="tags-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
+          <input class="tags-input" id="skillInput" placeholder="Type skill + Enter…" onkeydown="handleSkillInput(event)" />
+        </div>
+        <div class="field-hint">e.g. Wiring, Solar panels, CCTV installation</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Application Deadline</label>
+          <input type="date" class="field-input" id="postDeadline" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Status</label>
+          <select class="field-select" id="postStatus">
+            <option value="active">✅ Active (visible to workers)</option>
+            <option value="draft">📝 Draft (not visible yet)</option>
+            <option value="paused">⏸️ Paused</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('postModal')" style="flex:1;">Cancel</button>
+      <button class="btn btn-primary" onclick="savePost()" style="flex:2;" id="savePostBtn">📋 Publish Job Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ APPLICANTS MODAL ════ -->
+<div id="applicantsModal" style="display:none;" class="modal-backdrop" onclick="handleBackdropClick(event,'applicantsModal')">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="applicantsTitle">👥 Applicants</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">Click Accept / Shortlist / Reject to update applicant status</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('applicantsModal')">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:10px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;" id="applicantFilterRow">
+      <button class="filter-tab active" onclick="filterApplicants('all',this)" style="padding:5px 14px;font-size:0.78rem;">All</button>
+      <button class="filter-tab" onclick="filterApplicants('pending',this)" style="padding:5px 14px;font-size:0.78rem;">⏳ Pending</button>
+      <button class="filter-tab" onclick="filterApplicants('shortlisted',this)" style="padding:5px 14px;font-size:0.78rem;">⭐ Shortlisted</button>
+      <button class="filter-tab" onclick="filterApplicants('selected',this)" style="padding:5px 14px;font-size:0.78rem;">✅ Selected</button>
+      <button class="filter-tab" onclick="filterApplicants('rejected',this)" style="padding:5px 14px;font-size:0.78rem;">❌ Rejected</button>
+    </div>
+    <div class="modal-body" id="applicantsBody" style="padding-top:10px;"></div>
+  </div>
+</div>
+
+<!-- ════ DELETE CONFIRM ════ -->
+<div id="deleteModal" style="display:none;" class="modal-backdrop" onclick="handleBackdropClick(event,'deleteModal')">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="modal-header">
+      <div class="modal-title">🗑️ Delete Job Post?</div>
+      <button class="modal-close" onclick="closeModal('deleteModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary);line-height:1.6;">This will permanently delete <strong id="deletePostTitle" style="color:var(--text-primary);"></strong>. This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('deleteModal')" style="flex:1;">Cancel</button>
+      <button class="btn" style="flex:1;background:#ef4444;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/global.js"></script>
+<script>
+/* =====================================================
+   MY JOB POSTS – Full CRUD
+===================================================== */
+
+const TRADE_ICONS = {
+  'Electrician':'⚡','Plumber':'🔧','Carpenter':'🪚','Welder':'🔥',
+  'Painter':'🎨','Mason':'🧱','AC Technician':'❄️','Driver':'🚗',
+  'Cleaner':'🧹','General Labour':'🛠️','Other':'🔩'
+};
+const TRADE_BG = {
+  'Electrician':'rgba(249,115,22,0.12)','Plumber':'rgba(56,189,248,0.12)',
+  'Carpenter':'rgba(16,185,129,0.12)','Welder':'rgba(248,113,113,0.1)',
+  'Painter':'rgba(168,85,247,0.1)','Mason':'rgba(251,191,36,0.1)',
+  'AC Technician':'rgba(56,189,248,0.15)','Driver':'rgba(251,191,36,0.1)',
+  'Cleaner':'rgba(52,211,153,0.1)','General Labour':'rgba(255,255,255,0.06)','Other':'rgba(255,255,255,0.06)'
+};
+const STATUS_ACCENT = { active:'#34d399', paused:'#fbbf24', closed:'#f87171', draft:'#9ca3af' };
+
+let allPosts   = [];
+let curFilter  = 'all';
+let skills     = [];
+let deletePendingId = null;
+let currentUser = null;
+
+/* ─── Init ─── */
+function init() {
+  currentUser = getCurrentUser();
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+
+  document.getElementById('userAva').textContent   = currentUser.avatar || currentUser.name?.[0]?.toUpperCase() || 'E';
+  document.getElementById('userName').textContent  = currentUser.name?.split(' ')[0] || 'User';
+
+  loadPosts();
+  updateStats();
+  render();
+
+  // Set minimum date for deadline
+  document.getElementById('postDeadline').min = new Date().toISOString().split('T')[0];
+}
+
+/* ─── Load / Save ─── */
+function loadPosts() {
+  allPosts = JSON.parse(localStorage.getItem(`sc_job_posts_${currentUser.email}`) || '[]');
+}
+function savePosts() {
+  localStorage.setItem(`sc_job_posts_${currentUser.email}`, JSON.stringify(allPosts));
+}
+
+/* ─── Stats ─── */
+function updateStats() {
+  const totalApps = allPosts.reduce((s,p) => s + (p.applicants||[]).length, 0);
+  document.getElementById('statTotal').textContent  = allPosts.length;
+  document.getElementById('statActive').textContent = allPosts.filter(p=>p.status==='active').length;
+  document.getElementById('statApps').textContent   = totalApps;
+  document.getElementById('statClosed').textContent = allPosts.filter(p=>p.status==='closed').length;
+}
+
+/* ─── Filter ─── */
+function applyFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+/* ─── Render ─── */
+function render() {
+  const container = document.getElementById('postsList');
+  let list = allPosts;
+  if (curFilter !== 'all') list = allPosts.filter(p => p.status === curFilter);
+  const sorted = [...list].sort((a,b) => b.createdAt - a.createdAt);
+
+  if (sorted.length === 0) {
+    if (allPosts.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3>No Job Posts Yet</h3>
+          <p>Post your first job and start receiving applications from skilled workers in your area.</p>
+          <button class="btn btn-primary" onclick="openPostModal()">+ Post Your First Job</button>
+        </div>`;
+    } else {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <h3>No posts in this category</h3>
+          <p>Try a different filter.</p>
+        </div>`;
+    }
+    return;
+  }
+
+  container.innerHTML = sorted.map(p => buildCard(p)).join('');
+}
+
+/* ─── Build card ─── */
+function buildCard(p) {
+  const icon      = TRADE_ICONS[p.trade] || '📋';
+  const bg        = TRADE_BG[p.trade]    || 'rgba(255,255,255,0.06)';
+  const accent    = STATUS_ACCENT[p.status] || '#9ca3af';
+  const pillCls   = `pill-${p.status}`;
+  const pillLabel = { active:'✅ Active', paused:'⏸️ Paused', closed:'🔒 Closed', draft:'📝 Draft' }[p.status] || p.status;
+
+  const posted = p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recently';
+  const deadline = p.deadline ? `🗓️ Deadline: ${new Date(p.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}` : '';
+  const apps  = (p.applicants||[]).length;
+
+  return `
+  <div class="jp-card">
+    <div class="jp-card-accent" style="background:${accent};"></div>
+    <div class="jp-card-top">
+      <div class="jp-icon" style="background:${bg};">${icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="jp-title">${p.title}</div>
+        <div class="jp-meta">
+          <span>🛠️ ${p.trade||'—'}</span>
+          <span>📍 ${p.location||'—'}</span>
+          ${p.pay?`<span>💰 ${p.pay}</span>`:''}
+          <span>📅 Posted ${posted}</span>
+          ${deadline?`<span>${deadline}</span>`:''}
+          ${p.openings?`<span>👥 ${p.openings} opening${p.openings>1?'s':''}</span>`:''}
+          ${p.experience&&p.experience!='Any'?`<span>🎓 ${p.experience}</span>`:''}
+        </div>
+        ${p.skills?.length?`<div class="jp-tags">${p.skills.slice(0,6).map(s=>`<span class="jp-tag">${s}</span>`).join('')}${p.skills.length>6?`<span class="jp-tag">+${p.skills.length-6}</span>`:''}</div>`:''}
+        ${p.desc?`<div class="jp-desc">${p.desc.length>180?p.desc.slice(0,180)+'…':p.desc}</div>`:''}
+        <div class="jp-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${p.id}')">✏️ Edit</button>
+          ${p.status === 'active'
+            ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','paused')">⏸️ Pause</button>`
+            : p.status === 'paused'
+            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">▶️ Activate</button>`
+            : p.status === 'draft'
+            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">🚀 Publish</button>`
+            : ''}
+          ${p.status !== 'closed' ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','closed')">🔒 Close</button>` : ''}
+          <button class="btn btn-ghost btn-sm" style="color:#f87171;" onclick="promptDelete('${p.id}','${p.title.replace(/'/g,"\\'")}')">🗑️</button>
+          <button class="applicant-chip" onclick="viewApplicants('${p.id}')">👥 ${apps} Applicant${apps!==1?'s':''}</button>
+        </div>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <span class="jp-pill ${pillCls}">${pillLabel}</span>
+        <span style="font-size:0.8rem;${p.type==='Full Time'?'color:#34d399':p.type==='Freelance'?'color:#f97316':'color:#38bdf8'}">${p.type||''}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─── OPEN POST MODAL ─── */
+function openPostModal(editId = null) {
+  clearForm();
+  if (editId) {
+    const p = allPosts.find(x => x.id === editId);
+    if (!p) return;
+    document.getElementById('postModalTitle').textContent = '✏️ Edit Job Post';
+    document.getElementById('savePostBtn').textContent    = '💾 Save Changes';
+    document.getElementById('editPostId').value  = p.id;
+    document.getElementById('postTitle').value   = p.title;
+    document.getElementById('postTrade').value   = p.trade;
+    document.getElementById('postType').value    = p.type;
+    document.getElementById('postLocation').value= p.location;
+    document.getElementById('postPay').value     = p.pay || '';
+    document.getElementById('postExp').value     = p.experience || 'Any';
+    document.getElementById('postOpenings').value= p.openings || '';
+    document.getElementById('postDesc').value    = p.desc || '';
+    document.getElementById('postDeadline').value= p.deadline || '';
+    document.getElementById('postStatus').value  = p.status;
+    skills = [...(p.skills||[])];
+    renderSkillChips();
+  } else {
+    document.getElementById('postModalTitle').textContent = '📋 Post a New Job';
+    document.getElementById('savePostBtn').textContent    = '🚀 Publish Job Post';
+  }
+  showModal('postModal');
+}
+
+function openEditModal(id) { openPostModal(id); }
+
+function clearForm() {
+  ['postTitle','postLocation','postPay','postOpenings','postDesc','postDeadline'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('editPostId').value  = '';
+  document.getElementById('postTrade').value   = '';
+  document.getElementById('postType').value    = 'Full Time';
+  document.getElementById('postExp').value     = 'Any';
+  document.getElementById('postStatus').value  = 'active';
+  skills = [];
+  renderSkillChips();
+}
+
+/* ─── Skills tag input ─── */
+function handleSkillInput(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/, '');
+    if (val && !skills.includes(val)) {
+      skills.push(val);
+      renderSkillChips();
+    }
+    e.target.value = '';
+  }
+  if (e.key === 'Backspace' && !e.target.value && skills.length) {
+    skills.pop();
+    renderSkillChips();
+  }
+}
+
+function renderSkillChips() {
+  const wrap  = document.getElementById('skillsWrap');
+  const input = document.getElementById('skillInput');
+  // Remove old chips
+  wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
+  skills.forEach((s, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${s}<span class="rm" onclick="removeSkill(${i})">✕</span>`;
+    wrap.insertBefore(chip, input);
+  });
+}
+
+function removeSkill(idx) {
+  skills.splice(idx, 1);
+  renderSkillChips();
+}
+
+/* ─── Save / Update ─── */
+function savePost() {
+  const title    = document.getElementById('postTitle').value.trim();
+  const trade    = document.getElementById('postTrade').value;
+  const location = document.getElementById('postLocation').value.trim();
+  const desc     = document.getElementById('postDesc').value.trim();
+
+  if (!title)    { flashField('postTitle',   'Title is required'); return; }
+  if (!trade)    { flashField('postTrade',   'Please select a trade'); return; }
+  if (!location) { flashField('postLocation','Location is required'); return; }
+  if (!desc)     { flashField('postDesc',    'Please add a job description'); return; }
+
+  const editId = document.getElementById('editPostId').value;
+  const now    = Date.now();
+
+  // Also add a dummy applicant pool (so it shows correctly from jobs.html views)
+  const payload = {
+    id:         editId || String(now),
+    title,
+    trade,
+    type:       document.getElementById('postType').value,
+    location,
+    pay:        document.getElementById('postPay').value.trim(),
+    experience: document.getElementById('postExp').value,
+    openings:   parseInt(document.getElementById('postOpenings').value) || 1,
+    desc,
+    skills:     [...skills],
+    deadline:   document.getElementById('postDeadline').value,
+    status:     document.getElementById('postStatus').value,
+    createdAt:  editId ? (allPosts.find(p=>p.id===editId)?.createdAt || now) : now,
+    updatedAt:  now,
+    postedBy:   currentUser.name || currentUser.email,
+    company:    currentUser.company || currentUser.name,
+    applicants: editId ? (allPosts.find(p=>p.id===editId)?.applicants || []) : [],
+  };
+
+  if (editId) {
+    const idx = allPosts.findIndex(p => p.id === editId);
+    if (idx >= 0) allPosts[idx] = payload;
+  } else {
+    allPosts.unshift(payload);
+  }
+
+  savePosts();
+  updateStats();
+  render();
+  closeModal('postModal');
+  showToast(editId ? '✅ Job post updated!' : '🚀 Job posted successfully! Workers can now apply.', 'success');
+}
+
+function flashField(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = '#ef4444';
+  el.focus();
+  showToast(`⚠️ ${msg}`, 'error');
+  setTimeout(() => el.style.borderColor = '', 2000);
+}
+
+/* ─── Change status ─── */
+function changeStatus(id, status) {
+  const p = allPosts.find(x => x.id === id);
+  if (!p) return;
+  p.status = status;
+  p.updatedAt = Date.now();
+  savePosts();
+  updateStats();
+  render();
+  const labels = { active:'✅ Activated', paused:'⏸️ Paused', closed:'🔒 Closed' };
+  showToast(`${labels[status]||'Updated'}: ${p.title}`, 'success');
+}
+
+/* ─── Delete ─── */
+function promptDelete(id, title) {
+  deletePendingId = id;
+  document.getElementById('deletePostTitle').textContent = '"' + title + '"';
+  showModal('deleteModal');
+}
+function confirmDelete() {
+  allPosts = allPosts.filter(p => p.id !== deletePendingId);
+  savePosts();
+  updateStats();
+  render();
+  closeModal('deleteModal');
+  showToast('🗑️ Job post deleted.', 'info');
+  deletePendingId = null;
+}
+
+/* ─── View Applicants ─── */
+let _viewingPostId = null;
+let _appFilter     = 'all';
+
+function viewApplicants(postId) {
+  _viewingPostId = postId;
+  _appFilter     = 'all';
+  // Reset filter tabs
+  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach((b,i) => b.classList.toggle('active', i===0));
+  renderApplicantsModal();
+  showModal('applicantsModal');
+}
+
+function filterApplicants(filter, btn) {
+  _appFilter = filter;
+  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApplicantsModal();
+}
+
+function renderApplicantsModal() {
+  const p = allPosts.find(x => x.id === _viewingPostId);
+  if (!p) return;
+
+  document.getElementById('applicantsTitle').innerHTML =
+    `👥 Applicants <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted);">for <em>${p.title}</em></span>`;
+
+  const body = document.getElementById('applicantsBody');
+  let apps = p.applicants || [];
+  if (_appFilter !== 'all') apps = apps.filter(a => (a.status||'pending') === _appFilter);
+
+  if ((p.applicants||[]).length === 0) {
+    body.innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <div style="font-size:2.5rem;margin-bottom:10px;">📭</div>
+        <p style="font-size:0.88rem;">No applicants yet. Workers will appear here when they apply through Browse Jobs.</p>
+      </div>`;
+    return;
+  }
+
+  if (apps.length === 0) {
+    body.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.9rem;">No ${_appFilter} applicants.</div>`;
+    return;
+  }
+
+  const STATUS_BADGE = {
+    pending:     '<span class="app-status-badge asb-pending">⏳ Pending</span>',
+    shortlisted: '<span class="app-status-badge asb-shortlisted">⭐ Shortlisted</span>',
+    selected:    '<span class="app-status-badge asb-selected">✅ Selected</span>',
+    rejected:    '<span class="app-status-badge asb-rejected">❌ Rejected</span>',
+  };
+
+  body.innerHTML = apps.map((a, idx) => {
+    const realIdx = (p.applicants||[]).findIndex(x => x.email === a.email);
+    const st = a.status || 'pending';
+    const applied = a.appliedOn ? new Date(a.appliedOn).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recently';
+    return `
+    <div class="applicant-row" id="appRow_${realIdx}">
+      <div class="app-ava" style="background:linear-gradient(135deg,${['#f97316,#ea580c','#38bdf8,#0ea5e9','#a78bfa,#7c3aed','#34d399,#10b981'][realIdx%4]});">${a.name?.[0]?.toUpperCase()||'?'}</div>
+      <div class="app-info">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="app-name">${a.name||'Applicant'}</span>
+          ${STATUS_BADGE[st] || STATUS_BADGE.pending}
+        </div>
+        <div class="app-meta">
+          ${a.phone ? `📞 ${a.phone}` : ''}
+          ${a.trade ? ` · 🛠️ ${a.trade}` : ''}
+          ${a.city  ? ` · 📍 ${a.city}` : ''}
+        </div>
+        <div class="app-meta">📅 Applied: ${applied}</div>
+      </div>
+      <div class="app-actions">
+        ${st !== 'selected'    ? `<button class="app-btn app-btn-accept"    onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','selected')">✅ Accept</button>` : ''}
+        ${st !== 'shortlisted' ? `<button class="app-btn app-btn-shortlist" onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','shortlisted')">⭐ Shortlist</button>` : ''}
+        ${st !== 'rejected'    ? `<button class="app-btn app-btn-reject"    onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','rejected')">❌ Reject</button>` : ''}
+        ${st !== 'pending'     ? `<button class="app-btn app-btn-reset"     onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','pending')">↩ Reset</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ─── Update applicant status (saves to post + syncs to worker profile) ─── */
+function updateApplicantStatus(postId, workerEmail, newStatus) {
+  const pIdx = allPosts.findIndex(x => x.id === postId);
+  if (pIdx === -1) return;
+
+  const aIdx = allPosts[pIdx].applicants.findIndex(a => a.email === workerEmail);
+  if (aIdx === -1) return;
+
+  allPosts[pIdx].applicants[aIdx].status = newStatus;
+  allPosts[pIdx].applicants[aIdx].updatedAt = new Date().toISOString();
+  savePosts();
+  render();         // refresh post cards (applicant count doesn't change but status does)
+  updateStats();
+
+  // ── Sync to worker's own applications in sc_users ──
+  const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
+  const workerIdx = allUsers.findIndex(u => u.email === workerEmail);
+  if (workerIdx > -1) {
+    const worker = allUsers[workerIdx];
+    const apps = worker.applications || [];
+    // match by employer-post job id (stored as 'ep_' + postId)
+    const jobId = 'ep_' + postId;
+    const appI = apps.findIndex(a => String(a.jobId) === jobId);
+    if (appI > -1) {
+      apps[appI].status = newStatus;
+      apps[appI].updatedAt = new Date().toISOString();
+    }
+    allUsers[workerIdx].applications = apps;
+    localStorage.setItem('sc_users', JSON.stringify(allUsers));
+
+    // Also update sc_user if the current user IS that worker (edge case)
+    try {
+      const cu = JSON.parse(localStorage.getItem('sc_user') || 'null');
+      if (cu && cu.email === workerEmail) {
+        cu.applications = apps;
+        localStorage.setItem('sc_user', JSON.stringify(cu));
+      }
+    } catch(e){}
+  }
+
+  const labels = { selected:'✅ Accepted', shortlisted:'⭐ Shortlisted', rejected:'❌ Rejected', pending:'↩ Reset to Pending' };
+  const workerName = allPosts[pIdx].applicants[aIdx].name || workerEmail;
+  showToast(`${labels[newStatus]} — ${workerName}`, 'success');
+
+  // Re-render the modal rows in-place
+  renderApplicantsModal();
+}
+
+/* ─── Modal helpers ─── */
+function showModal(id)  { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.style.opacity = '0'; setTimeout(() => { m.style.display = 'none'; m.style.opacity = ''; }, 200); }
+  document.body.style.overflow = '';
+}
+function handleBackdropClick(e, id) { if (e.target.id === id) closeModal(id); }
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

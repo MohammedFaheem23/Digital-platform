@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applications – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    /* ── Application cards ── */
+    .app-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+    .app-filter-btn {
+      padding:8px 18px; border-radius:50px; border:1px solid var(--border);
+      background:rgba(255,255,255,0.04); color:var(--text-secondary);
+      font-size:0.85rem; font-weight:500; cursor:pointer; transition:.2s;
+    }
+    .app-filter-btn:hover, .app-filter-btn.active {
+      background:var(--primary); color:#fff; border-color:var(--primary);
+    }
+    .app-card {
+      background:var(--card-bg); border:1px solid var(--border); border-radius:16px;
+      padding:20px 24px; margin-bottom:16px; display:flex; align-items:flex-start;
+      gap:18px; transition:.25s; position:relative; overflow:hidden;
+    }
+    .app-card:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 8px 32px rgba(249,115,22,.1); }
+    .app-card-accent {
+      position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:16px 0 0 16px;
+    }
+    .app-icon {
+      width:52px; height:52px; border-radius:14px; display:flex; align-items:center;
+      justify-content:center; font-size:1.5rem; flex-shrink:0;
+    }
+    .app-info { flex:1; min-width:0; }
+    .app-title { font-size:1rem; font-weight:700; margin-bottom:3px; }
+    .app-meta { font-size:0.82rem; color:var(--text-muted); margin-bottom:10px; display:flex; flex-wrap:wrap; gap:12px; }
+    .app-meta span { display:flex; align-items:center; gap:4px; }
+    .app-status-wrap { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+    .app-date { font-size:0.78rem; color:var(--text-muted); }
+    .app-actions { display:flex; gap:8px; margin-top:10px; }
+
+    /* Status pill styles */
+    .status-pill {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 14px; border-radius:50px; font-size:0.8rem; font-weight:600;
+    }
+    .status-selected   { background:rgba(52,211,153,0.12); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+    .status-shortlisted{ background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); }
+    .status-pending    { background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+    .status-rejected   { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+    .status-withdrawn  { background:rgba(156,163,175,0.1); color:#9ca3af; border:1px solid rgba(156,163,175,0.2); }
+
+    /* Status timeline */
+    .app-timeline {
+      display:flex; align-items:center; gap:0; margin-top:12px; font-size:0.75rem;
+    }
+    .timeline-step {
+      display:flex; flex-direction:column; align-items:center; flex:1;
+      position:relative;
+    }
+    .timeline-step:not(:last-child)::after {
+      content:''; position:absolute; top:12px; left:60%; width:80%;
+      height:2px; background:var(--border);
+    }
+    .timeline-step.done:not(:last-child)::after { background:var(--primary); }
+    .timeline-dot {
+      width:24px; height:24px; border-radius:50%; border:2px solid var(--border);
+      background:var(--card-bg); display:flex; align-items:center; justify-content:center;
+      font-size:0.65rem; font-weight:700; z-index:1; transition:.3s;
+    }
+    .timeline-step.done .timeline-dot { background:var(--primary); border-color:var(--primary); color:#fff; }
+    .timeline-step.active .timeline-dot { border-color:var(--primary); background:rgba(249,115,22,0.15); color:var(--primary); }
+    .timeline-label { margin-top:5px; color:var(--text-muted); white-space:nowrap; }
+    .timeline-step.done .timeline-label, .timeline-step.active .timeline-label { color:var(--text-secondary); font-weight:500; }
+
+    /* Stats row */
+    .app-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    .app-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:16px 20px; text-align:center; }
+    .app-stat-val { font-size:1.6rem; font-weight:800; line-height:1; }
+    .app-stat-label { font-size:0.78rem; color:var(--text-muted); margin-top:4px; }
+    @media(max-width:700px){ .app-stats-row{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:400px){ .app-stats-row{grid-template-columns:1fr 1fr;} }
+
+    /* Empty state */
+    .empty-state { text-align:center; padding:64px 24px; color:var(--text-muted); }
+    .empty-state-icon { font-size:4rem; margin-bottom:16px; }
+    .empty-state h3 { font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-bottom:8px; }
+    .empty-state p { font-size:0.9rem; max-width:320px; margin:0 auto 20px; line-height:1.6; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="home.html" class="nav-logo">
+        <div class="logo-icon">⚡</div>
+        <span>SkillConnect</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Main</span>
+      <a href="dashboard-worker.html" class="sidebar-link">
+        <span class="sidebar-icon">📊</span> Dashboard
+      </a>
+      <a href="jobs.html" class="sidebar-link">
+        <span class="sidebar-icon">💼</span> Browse Jobs
+      </a>
+      <a href="my-applications.html" class="sidebar-link active">
+        <span class="sidebar-icon">📋</span> My Applications
+        <span class="sidebar-badge" id="pendingBadge" style="display:none;"></span>
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Active Jobs — coming soon!','info');return false;">
+        <span class="sidebar-icon">✅</span> Active Jobs
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;">
+        <span class="sidebar-icon">📜</span> Job History
+      </a>
+
+      <span class="sidebar-section-label">Profile</span>
+      <a href="#" class="sidebar-link" onclick="showToast('My Profile editor — coming soon!','info');return false;">
+        <span class="sidebar-icon">👤</span> My Profile
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;">
+        <span class="sidebar-icon">🛡️</span> Verification
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Reviews — coming soon!','info');return false;">
+        <span class="sidebar-icon">⭐</span> My Reviews
+      </a>
+
+      <span class="sidebar-section-label">Finance</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;">
+        <span class="sidebar-icon">💰</span> Earnings
+      </a>
+
+      <span class="sidebar-section-label">Support</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;">
+        <span class="sidebar-icon">💬</span> Messages
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;">
+        <span class="sidebar-icon">⚙️</span> Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
+        <span class="sidebar-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+    <div class="dashboard-topbar">
+      <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title">My Applications</div>
+      <div class="topbar-actions">
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="user-ava" id="userAva">?</div>
+          <span class="user-ava-name" id="userName">User</span>
+          <span>▾</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Summary Stats -->
+      <div class="app-stats-row" id="appStatsRow">
+        <div class="app-stat">
+          <div class="app-stat-val" id="statTotal" style="color:var(--text-primary);">0</div>
+          <div class="app-stat-label">Total Applied</div>
+        </div>
+        <div class="app-stat">
+          <div class="app-stat-val" id="statPending" style="color:#fbbf24;">0</div>
+          <div class="app-stat-label">Under Review</div>
+        </div>
+        <div class="app-stat">
+          <div class="app-stat-val" id="statSelected" style="color:#34d399;">0</div>
+          <div class="app-stat-label">Selected</div>
+        </div>
+        <div class="app-stat">
+          <div class="app-stat-val" id="statRejected" style="color:#f87171;">0</div>
+          <div class="app-stat-label">Not Selected</div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="app-filters">
+        <button class="app-filter-btn active" data-filter="all" onclick="filterApps('all', this)">All</button>
+        <button class="app-filter-btn" data-filter="pending" onclick="filterApps('pending', this)">⏳ Under Review</button>
+        <button class="app-filter-btn" data-filter="shortlisted" onclick="filterApps('shortlisted', this)">⭐ Shortlisted</button>
+        <button class="app-filter-btn" data-filter="selected" onclick="filterApps('selected', this)">✅ Selected</button>
+        <button class="app-filter-btn" data-filter="rejected" onclick="filterApps('rejected', this)">❌ Not Selected</button>
+      </div>
+
+      <!-- Application List -->
+      <div id="applicationsList"></div>
+
+      <!-- Quick Apply Banner -->
+      <div style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(234,88,12,0.05));border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">💼 Looking for more jobs?</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">Browse hundreds of verified opportunities matching your skills.</div>
+        </div>
+        <a href="jobs.html" class="btn btn-primary">Browse Jobs →</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/global.js"></script>
+<script>
+/* ===================================================
+   My Applications Page Logic
+=================================================== */
+
+// Status config
+const STATUS_CONFIG = {
+  'pending':     { label:'Under Review', icon:'⏳', cls:'status-pending',    accent:'#fbbf24', step:1 },
+  'shortlisted': { label:'Shortlisted',  icon:'⭐', cls:'status-shortlisted', accent:'#38bdf8', step:2 },
+  'selected':    { label:'Selected! 🎉', icon:'✅', cls:'status-selected',    accent:'#34d399', step:3 },
+  'rejected':    { label:'Not Selected', icon:'❌', cls:'status-rejected',     accent:'#f87171', step:-1 },
+  'withdrawn':   { label:'Withdrawn',    icon:'↩️', cls:'status-withdrawn',    accent:'#9ca3af', step:0 },
+};
+
+const TIMELINE_STEPS = [
+  { key:'applied',     label:'Applied',     icon:'📤' },
+  { key:'review',      label:'Reviewing',   icon:'👁️' },
+  { key:'shortlisted', label:'Shortlisted', icon:'⭐' },
+  { key:'selected',    label:'Selected',    icon:'✅' },
+];
+
+let allApps = [];
+let currentFilter = 'all';
+
+/* ---- Load applications from localStorage ---- */
+function loadApplications() {
+  const user = getCurrentUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  // Update avatar
+  document.getElementById('userAva').textContent = user.avatar || user.name?.[0]?.toUpperCase() || 'U';
+  document.getElementById('userName').textContent = user.name?.split(' ')[0] || 'User';
+
+  // Load from user object or localStorage key
+  allApps = user.applications || JSON.parse(localStorage.getItem(`sc_apps_${user.email}`) || '[]');
+
+  // Simulate status progression for demo realism — randomise if app is old enough
+  allApps = allApps.map((app, i) => {
+    if (!app.status) app.status = 'pending';
+    return app;
+  });
+
+  updateStats();
+  renderApps();
+}
+
+/* ---- Stats ---- */
+function updateStats() {
+  document.getElementById('statTotal').textContent      = allApps.length;
+  document.getElementById('statPending').textContent    = allApps.filter(a => a.status === 'pending').length;
+  document.getElementById('statSelected').textContent   = allApps.filter(a => a.status === 'selected').length;
+  document.getElementById('statRejected').textContent   = allApps.filter(a => a.status === 'rejected').length;
+
+  const pendingCount = allApps.filter(a => a.status === 'pending' || a.status === 'shortlisted').length;
+  const badge = document.getElementById('pendingBadge');
+  if (pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ''; }
+  else badge.style.display = 'none';
+}
+
+/* ---- Filter ---- */
+function filterApps(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.app-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApps();
+}
+
+/* ---- Render ---- */
+function renderApps() {
+  const container = document.getElementById('applicationsList');
+  let apps = allApps;
+  if (currentFilter !== 'all') apps = allApps.filter(a => a.status === currentFilter);
+
+  if (apps.length === 0) {
+    if (allApps.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3>No Applications Yet</h3>
+          <p>Start applying to jobs to track your application status here in real time.</p>
+          <a href="jobs.html" class="btn btn-primary">Browse Jobs & Apply</a>
+        </div>`;
+    } else {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <h3>No applications in this category</h3>
+          <p>Try selecting a different filter above.</p>
+        </div>`;
+    }
+    return;
+  }
+
+  container.innerHTML = apps.map(app => buildAppCard(app)).join('');
+}
+
+/* ---- Build card HTML ---- */
+function buildAppCard(app) {
+  const s = STATUS_CONFIG[app.status] || STATUS_CONFIG['pending'];
+  const timelineHTML = buildTimeline(app.status);
+  const appliedDate = app.appliedOn
+    ? new Date(app.appliedOn).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
+    : app.date || 'Recently';
+
+  return `
+    <div class="app-card">
+      <div class="app-card-accent" style="background:${s.accent};"></div>
+      <div class="app-icon" style="background:${app.iconBg || 'rgba(249,115,22,0.12)'}">${app.icon || '💼'}</div>
+      <div class="app-info">
+        <div class="app-title">${app.title}</div>
+        <div class="app-meta">
+          <span>🏢 ${app.employer || app.company || 'Company'}</span>
+          <span>📍 ${app.location || 'Location'}</span>
+          <span>💰 ${app.pay || 'Negotiable'}</span>
+          <span>🏷️ ${app.type || 'Full Time'}</span>
+        </div>
+        <!-- Status Timeline -->
+        ${app.status !== 'rejected' && app.status !== 'withdrawn' ? timelineHTML : ''}
+        <!-- Actions -->
+        <div class="app-actions">
+          ${app.status === 'selected'
+            ? `<button class="btn btn-primary btn-sm" onclick="showToast('🎉 Congratulations! Contact the employer to confirm your start date.','success')">Contact Employer 🎉</button>`
+            : app.status === 'shortlisted'
+            ? `<button class="btn btn-primary btn-sm" onclick="showToast('You are shortlisted! The employer will contact you soon.','info')">View Details</button>
+               <button class="btn btn-ghost btn-sm" onclick="withdrawApp('${app.id}')">Withdraw</button>`
+            : app.status === 'rejected'
+            ? `<a href="jobs.html" class="btn btn-ghost btn-sm">Find Similar Jobs</a>`
+            : app.status === 'withdrawn'
+            ? `<span style="font-size:0.8rem;color:var(--text-muted);">Application withdrawn</span>`
+            : `<button class="btn btn-ghost btn-sm" onclick="withdrawApp('${app.id}')">Withdraw Application</button>`
+          }
+        </div>
+      </div>
+      <div class="app-status-wrap">
+        <span class="status-pill ${s.cls}">${s.icon} ${s.label}</span>
+        <span class="app-date">Applied ${appliedDate}</span>
+        ${app.status === 'selected' ? `<span style="font-size:0.75rem;color:#34d399;font-weight:600;">🎊 Congratulations!</span>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ---- Build timeline ---- */
+function buildTimeline(status) {
+  const stepIndex = { pending:1, shortlisted:2, selected:3 };
+  const current = stepIndex[status] ?? 0;
+
+  const steps = TIMELINE_STEPS.map((step, i) => {
+    const done   = i < current;
+    const active = i === current;
+    return `
+      <div class="timeline-step ${done ? 'done' : active ? 'active' : ''}">
+        <div class="timeline-dot">${done ? '✓' : step.icon}</div>
+        <div class="timeline-label">${step.label}</div>
+      </div>`;
+  }).join('');
+
+  return `<div class="app-timeline">${steps}</div>`;
+}
+
+/* ---- Withdraw application ---- */
+function withdrawApp(appId) {
+  const user = getCurrentUser();
+  const idx = allApps.findIndex(a => a.id == appId);
+  if (idx === -1) return;
+
+  allApps[idx].status = 'withdrawn';
+
+  // Persist
+  if (user) {
+    const updated = { ...user, applications: allApps };
+    setCurrentUser(updated);
+    const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
+    const ui = allUsers.findIndex(u => u.email === user.email);
+    if (ui > -1) { allUsers[ui] = updated; localStorage.setItem('sc_users', JSON.stringify(allUsers)); }
+  }
+
+  showToast('Application withdrawn.', 'info');
+  updateStats();
+  renderApps();
+}
+
+/* ---- Init ---- */
+document.addEventListener('DOMContentLoaded', loadApplications);
+</script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    /* ── Mode switcher tabs ── */
+    .mode-tabs {
+      display: flex; gap: 8px; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 14px; padding: 6px;
+      margin-bottom: 28px; width: fit-content;
+    }
+    .mode-tab {
+      padding: 9px 22px; border-radius: 10px; border: none; font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; transition: .25s; background: transparent;
+      color: var(--text-muted); font-family: inherit;
+    }
+    .mode-tab.active {
+      background: var(--primary); color: #fff;
+      box-shadow: 0 4px 16px rgba(249,115,22,.3);
+    }
+    .mode-tab:hover:not(.active) { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+
+    /* ── Section panels ── */
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+
+    /* ── Stat cards ── */
+    .stats-row-2 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+    @media(max-width:900px){ .stats-row-2{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px){ .stats-row-2{ grid-template-columns:1fr 1fr; } }
+
+    /* ── Hire card (compact) ── */
+    .hire-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center;
+      gap: 14px; transition: .2s; position: relative; overflow: hidden; cursor: pointer;
+    }
+    .hire-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .hire-card-accent { position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:14px 0 0 14px; }
+    .hc-ava { width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#fff;flex-shrink:0; }
+    .hc-info { flex:1;min-width:0; }
+    .hc-name { font-size:0.92rem;font-weight:700; }
+    .hc-sub { font-size:0.78rem;color:var(--text-muted);margin-top:2px; }
+    .hc-desc { font-size:0.8rem;color:var(--text-secondary);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+
+    /* ── Status pills ── */
+    .pill { display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:50px;font-size:0.76rem;font-weight:600; }
+    .pill-blue   { background:rgba(56,189,248,.12);color:#38bdf8;border:1px solid rgba(56,189,248,.3); }
+    .pill-yellow { background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.3); }
+    .pill-green  { background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.3); }
+    .pill-red    { background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3); }
+    .pill-purple { background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3); }
+
+    /* App status pills (worker) */
+    .pill-pending     { background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.3); }
+    .pill-shortlisted { background:rgba(56,189,248,.12);color:#38bdf8;border:1px solid rgba(56,189,248,.3); }
+    .pill-selected    { background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.3); }
+    .pill-rejected    { background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3); }
+    .pill-withdrawn   { background:rgba(156,163,175,.1);color:#9ca3af;border:1px solid rgba(156,163,175,.2); }
+
+    /* section divider label */
+    .section-label {
+      font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--text-muted);display:flex;align-items:center;gap:8px;margin:22px 0 12px;
+    }
+    .section-label::after { content:'';flex:1;height:1px;background:var(--border); }
+
+    /* Quick-action tiles */
+    .quick-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px; }
+    .quick-tile {
+      background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;
+      padding:18px;text-align:center;text-decoration:none;color:var(--text-primary);
+      transition:.2s;cursor:pointer;display:block;
+    }
+    .quick-tile:hover { transform:translateY(-2px);border-color:var(--primary); }
+    .quick-tile-icon { font-size:1.8rem;margin-bottom:8px; }
+    .quick-tile-label { font-size:0.85rem;font-weight:600; }
+    .quick-tile-sub { font-size:0.72rem;color:var(--text-muted);margin-top:2px; }
+
+    /* empty state */
+    .empty-sm { text-align:center;padding:32px 20px;color:var(--text-muted); }
+    .empty-sm div { font-size:2rem;margin-bottom:8px; }
+    .empty-sm p { font-size:0.85rem;margin-bottom:12px; }
+
+    /* Profile badge */
+    .profile-chip {
+      display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
+      background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);
+      border-radius:20px;font-size:0.78rem;color:var(--primary);font-weight:600;
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="index.html" class="nav-logo">
+        <div class="logo-icon">⚡</div><span>SkillConnect</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Main</span>
+      <a href="dashboard.html" class="sidebar-link active">
+        <span class="sidebar-icon">📊</span> Dashboard
+      </a>
+
+      <span class="sidebar-section-label">As a Worker</span>
+      <a href="jobs.html" class="sidebar-link">
+        <span class="sidebar-icon">💼</span> Browse Jobs
+      </a>
+      <a href="my-applications.html" class="sidebar-link">
+        <span class="sidebar-icon">📋</span> My Applications
+        <span class="sidebar-badge" id="appsBadge" style="display:none;"></span>
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;">
+        <span class="sidebar-icon">📜</span> Job History
+      </a>
+
+      <span class="sidebar-section-label">As a Hirer</span>
+      <a href="hire.html" class="sidebar-link">
+        <span class="sidebar-icon">👷</span> Find Workers
+      </a>
+      <a href="manage-hires.html" class="sidebar-link">
+        <span class="sidebar-icon">🤝</span> Manage Hires
+        <span class="sidebar-badge" id="hiringsBadge" style="display:none;"></span>
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Post a Job — coming soon!','info');return false;">
+        <span class="sidebar-icon">📋</span> Post a Job
+      </a>
+
+      <span class="sidebar-section-label">Account</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Profile editor — coming soon!','info');return false;">
+        <span class="sidebar-icon">👤</span> My Profile
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;">
+        <span class="sidebar-icon">💰</span> Earnings
+      </a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;">
+        <span class="sidebar-icon">⚙️</span> Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
+        <span class="sidebar-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════════════════ MAIN ════════════════ -->
+  <main class="dashboard-main">
+    <div class="dashboard-topbar">
+      <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title" id="dashboardTitle">My Dashboard</div>
+      <div class="topbar-actions">
+        <a href="jobs.html" class="btn btn-ghost btn-sm" style="margin-right:4px;">Find Jobs</a>
+        <a href="hire.html" class="btn btn-primary btn-sm">Hire Workers</a>
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="user-ava" id="userAva">?</div>
+          <span class="user-ava-name" id="userName">User</span>
+          <span>▾</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+
+      <!-- Greeting -->
+      <div class="dashboard-greeting" style="margin-bottom:20px;">
+        <h1 id="greetingText">Welcome! 👋</h1>
+        <p id="greetingSubtext">Here's everything at a glance — your jobs and your hirings.</p>
+      </div>
+
+      <!-- Mode switcher -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" id="tabWorker" onclick="switchMode('worker')">🔨 As a Worker</button>
+        <button class="mode-tab" id="tabHirer"  onclick="switchMode('hirer')">🤝 As a Hirer</button>
+      </div>
+
+      <!-- ══════ WORKER PANEL ══════ -->
+      <div class="dash-panel active" id="panelWorker">
+
+        <!-- Worker stats -->
+        <div class="stats-row-2">
+          <div class="stat-card" onclick="window.location.href='my-applications.html'" style="cursor:pointer;">
+            <div class="stat-card-icon" style="background:rgba(249,115,22,0.12)">💼</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="wStatApplied">0</div>
+              <div class="stat-card-label">Jobs Applied</div>
+              <div class="stat-card-change" id="wStatAppliedSub">No applications yet</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(52,211,153,0.12)">✅</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="wStatSelected">0</div>
+              <div class="stat-card-label">Selected</div>
+              <div class="stat-card-change" id="wStatSelectedSub">None yet</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(251,191,36,0.12)">⏳</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="wStatPending">0</div>
+              <div class="stat-card-label">Under Review</div>
+              <div class="stat-card-change" id="wStatPendingSub">None pending</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(56,189,248,0.12)">⭐</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="wStatRating">—</div>
+              <div class="stat-card-label">My Rating</div>
+              <div class="stat-card-change" id="wStatRatingSub">No reviews yet</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Recommended Jobs -->
+          <div class="widget">
+            <div class="widget-header">
+              <span class="widget-title">🎯 Recommended Jobs</span>
+              <a href="jobs.html" class="widget-action">View All</a>
+            </div>
+            <div class="widget-body" id="workerJobsWidget"></div>
+          </div>
+
+          <!-- My Applications (recent) -->
+          <div class="widget">
+            <div class="widget-header">
+              <span class="widget-title">📋 My Applications</span>
+              <a href="my-applications.html" class="widget-action">Manage All</a>
+            </div>
+            <div class="widget-body" id="workerAppsWidget"></div>
+          </div>
+        </div>
+
+        <!-- Profile completion alert -->
+        <div class="alert alert-info" id="profileAlert" style="margin-top:20px;display:none;"></div>
+
+        <!-- Earnings chart -->
+        <div class="widget dashboard-full" style="margin-top:20px;">
+          <div class="widget-header">
+            <span class="widget-title">💰 Earnings Overview</span>
+          </div>
+          <div class="widget-body" id="earningsBody"></div>
+        </div>
+      </div>
+
+      <!-- ══════ HIRER PANEL ══════ -->
+      <div class="dash-panel" id="panelHirer">
+
+        <!-- Hirer stats -->
+        <div class="stats-row-2">
+          <div class="stat-card" onclick="window.location.href='manage-hires.html'" style="cursor:pointer;">
+            <div class="stat-card-icon" style="background:rgba(249,115,22,0.12)">🤝</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="hStatTotal">0</div>
+              <div class="stat-card-label">Hire Requests</div>
+              <div class="stat-card-change" id="hStatTotalSub">No requests yet</div>
+            </div>
+          </div>
+          <div class="stat-card" onclick="window.location.href='manage-hires.html'" style="cursor:pointer;">
+            <div class="stat-card-icon" style="background:rgba(251,191,36,0.12)">⭐</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="hStatShortlisted">0</div>
+              <div class="stat-card-label">Shortlisted</div>
+              <div class="stat-card-change" id="hStatShortlistedSub">None yet</div>
+            </div>
+          </div>
+          <div class="stat-card" onclick="window.location.href='manage-hires.html'" style="cursor:pointer;">
+            <div class="stat-card-icon" style="background:rgba(52,211,153,0.12)">✅</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="hStatHired">0</div>
+              <div class="stat-card-label">Hired</div>
+              <div class="stat-card-change" id="hStatHiredSub">Start hiring</div>
+            </div>
+          </div>
+          <div class="stat-card" onclick="window.location.href='manage-hires.html'" style="cursor:pointer;">
+            <div class="stat-card-icon" style="background:rgba(168,85,247,0.12)">🏆</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="hStatCompleted">0</div>
+              <div class="stat-card-label">Completed</div>
+              <div class="stat-card-change" id="hStatCompletedSub">None yet</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Recent Hirings -->
+          <div class="widget">
+            <div class="widget-header">
+              <span class="widget-title">🤝 Recent Hirings</span>
+              <a href="manage-hires.html" class="widget-action">Manage All</a>
+            </div>
+            <div class="widget-body" id="hirerRecentWidget"></div>
+          </div>
+
+          <!-- Top Workers -->
+          <div class="widget">
+            <div class="widget-header">
+              <span class="widget-title">👷 Top Workers For You</span>
+              <a href="hire.html" class="widget-action">Browse All</a>
+            </div>
+            <div class="widget-body" id="hirerWorkersWidget"></div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section-label">Quick Actions</div>
+        <div class="quick-grid">
+          <a href="hire.html" class="quick-tile">
+            <div class="quick-tile-icon">👷</div>
+            <div class="quick-tile-label">Find Workers</div>
+            <div class="quick-tile-sub">Browse 500+ pros</div>
+          </a>
+          <a href="manage-hires.html" class="quick-tile">
+            <div class="quick-tile-icon">🤝</div>
+            <div class="quick-tile-label">Manage Hires</div>
+            <div class="quick-tile-sub">Track your hires</div>
+          </a>
+          <a href="#" class="quick-tile" onclick="showToast('Post a Job — coming soon!','info');return false;">
+            <div class="quick-tile-icon">📋</div>
+            <div class="quick-tile-label">Post a Job</div>
+            <div class="quick-tile-sub">Coming soon</div>
+          </a>
+          <a href="#" class="quick-tile" onclick="showToast('Payments — coming soon!','info');return false;">
+            <div class="quick-tile-icon">💰</div>
+            <div class="quick-tile-label">Payments</div>
+            <div class="quick-tile-sub">Coming soon</div>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /dashboard-content -->
+  </main>
+</div>
+
+<script src="js/global.js"></script>
+<script>
+/* =========================================================
+   Unified Dashboard – Worker + Hirer in one
+========================================================= */
+
+/* ---- Static data ---- */
+const ALL_JOBS_POOL = [
+  { title:'Senior Electrician Needed', company:'ABC Construction', location:'Delhi', pay:'₹900/day', type:'Full Time', icon:'⚡', iconBg:'rgba(249,115,22,0.12)', trade:'electrician' },
+  { title:'Home Wiring & Repair', company:'HomeServe Inc.', location:'Noida', pay:'₹1,200/day', type:'Freelance', icon:'🔌', iconBg:'rgba(249,115,22,0.1)', trade:'electrician' },
+  { title:'Solar Panel Technician', company:'SolarTech Ltd', location:'Pune', pay:'₹1,100/day', type:'Full Time', icon:'☀️', iconBg:'rgba(251,191,36,0.12)', trade:'electrician' },
+  { title:'Bathroom Plumbing Fix', company:'HomeCare Services', location:'Bangalore', pay:'₹700/day', type:'Freelance', icon:'🔧', iconBg:'rgba(56,189,248,0.1)', trade:'plumber' },
+  { title:'New Pipeline Installation', company:'GreenBuild Co.', location:'Chennai', pay:'₹1,000/day', type:'Contract', icon:'🚰', iconBg:'rgba(56,189,248,0.12)', trade:'plumber' },
+  { title:'Custom Cabinet Work', company:'DreamHome Corp', location:'Bengaluru', pay:'₹900/day', type:'Freelance', icon:'🪚', iconBg:'rgba(16,185,129,0.12)', trade:'carpenter' },
+  { title:'Steel Welding – Structural', company:'BuildMax Ltd', location:'Mumbai', pay:'₹1,100/day', type:'Full Time', icon:'🔥', iconBg:'rgba(248,113,113,0.1)', trade:'welder' },
+  { title:'Interior House Painting', company:'ColorCraft Homes', location:'Kochi', pay:'₹600/day', type:'Freelance', icon:'🎨', iconBg:'rgba(168,85,247,0.1)', trade:'painter' },
+  { title:'Brick Masonry – House Wall', company:'ClassicBuild Co.', location:'Lucknow', pay:'₹750/day', type:'Full Time', icon:'🧱', iconBg:'rgba(251,191,36,0.1)', trade:'mason' },
+  { title:'General Labour Position', company:'WorkPlus Ltd', location:'Nearby', pay:'₹550/day', type:'Full Time', icon:'🛠️', iconBg:'rgba(255,255,255,0.06)', trade:'other' },
+];
+
+const WORKER_DETAILS = {
+  1:{name:'Rajesh Sharma',initial:'R',trade:'Electrician',gradient:'linear-gradient(135deg,#f97316,#ea580c)',rating:4.9,jobs:312},
+  2:{name:'Suresh Patel', initial:'S',trade:'Plumber',    gradient:'linear-gradient(135deg,#3b82f6,#2563eb)',rating:4.8,jobs:245},
+  3:{name:'Arjun Singh',  initial:'A',trade:'Carpenter',  gradient:'linear-gradient(135deg,#10b981,#059669)',rating:4.7,jobs:189},
+  4:{name:'Mohan Das',    initial:'M',trade:'Welder',     gradient:'linear-gradient(135deg,#f87171,#ef4444)',rating:4.9,jobs:420},
+  5:{name:'Karthik Rajan',initial:'K',trade:'Painter',    gradient:'linear-gradient(135deg,#a78bfa,#7c3aed)',rating:4.6,jobs:178},
+  6:{name:'Vinod Mehta',  initial:'V',trade:'Mason',      gradient:'linear-gradient(135deg,#fb923c,#ea580c)',rating:4.8,jobs:267},
+};
+
+const HIRING_STATUS = {
+  contacted:  {label:'Contacted',  icon:'📞', pillCls:'pill-blue'},
+  shortlisted:{label:'Shortlisted',icon:'⭐', pillCls:'pill-yellow'},
+  hired:      {label:'Hired',      icon:'✅', pillCls:'pill-green'},
+  completed:  {label:'Completed',  icon:'🏆', pillCls:'pill-purple'},
+  rejected:   {label:'Rejected',   icon:'❌', pillCls:'pill-red'},
+};
+const APP_STATUS = {
+  pending:    {label:'Under Review',pillCls:'pill-pending'},
+  shortlisted:{label:'Shortlisted', pillCls:'pill-shortlisted'},
+  selected:   {label:'Selected ✅', pillCls:'pill-selected'},
+  rejected:   {label:'Not Selected',pillCls:'pill-rejected'},
+  withdrawn:  {label:'Withdrawn',   pillCls:'pill-withdrawn'},
+};
+
+/* ---- Mode switch ---- */
+let activeMode = localStorage.getItem('sc_dash_mode') || 'worker';
+function switchMode(mode) {
+  activeMode = mode;
+  localStorage.setItem('sc_dash_mode', mode);
+  document.getElementById('panelWorker').classList.toggle('active', mode === 'worker');
+  document.getElementById('panelHirer').classList.toggle('active',  mode === 'hirer');
+  document.getElementById('tabWorker').classList.toggle('active', mode === 'worker');
+  document.getElementById('tabHirer').classList.toggle('active',  mode === 'hirer');
+  document.getElementById('dashboardTitle').textContent = mode === 'worker' ? 'My Dashboard (Worker)' : 'My Dashboard (Hirer)';
+}
+
+/* ---- Profile completeness ---- */
+function profileCompletion(user) {
+  const fields = ['name','email','phone','city','trade','experience','rate'];
+  return Math.round((fields.filter(f => user[f]).length / fields.length) * 100);
+}
+
+/* ---- Recommended jobs ---- */
+function getRecommendedJobs(user) {
+  const trade = (user?.trade || 'other').toLowerCase();
+  let matched = ALL_JOBS_POOL.filter(j => j.trade === trade);
+  if (!matched.length) matched = ALL_JOBS_POOL.filter(j => j.trade === 'other');
+  return matched.slice(0, 3);
+}
+
+/* ====================================================
+   INIT
+==================================================== */
+function initDashboard() {
+  const user = getCurrentUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  /* ── Top bar ── */
+  const first = user.name?.split(' ')[0] || 'there';
+  const hour  = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greetingText').textContent    = `${greet}, ${first}! 👋`;
+  document.getElementById('greetingSubtext').textContent = 'Switch between Worker and Hirer tabs to manage everything in one place.';
+  document.getElementById('userAva').textContent  = user.avatar || user.name?.[0]?.toUpperCase() || 'U';
+  document.getElementById('userName').textContent = first;
+
+  /* ── Load data ── */
+  const apps    = user.applications || [];
+  const hirings = JSON.parse(localStorage.getItem(`sc_hirings_${user.email}`) || '[]');
+
+  /* ── Sidebar badges ── */
+  const pendingApps    = apps.filter(a => ['pending','shortlisted'].includes(a.status)).length;
+  const activeHirings  = hirings.filter(h => ['contacted','shortlisted'].includes(h.status)).length;
+  const aBadge = document.getElementById('appsBadge');
+  const hBadge = document.getElementById('hiringsBadge');
+  if (aBadge) { aBadge.textContent = pendingApps;   aBadge.style.display   = pendingApps   > 0 ? '' : 'none'; }
+  if (hBadge) { hBadge.textContent = activeHirings;  hBadge.style.display  = activeHirings > 0 ? '' : 'none'; }
+
+  /* ── WORKER stats ── */
+  const applied      = apps.length;
+  const selected     = apps.filter(a => a.status === 'selected').length;
+  const pending      = apps.filter(a => a.status === 'pending').length;
+  const rating       = user?.stats?.rating || 0;
+
+  document.getElementById('wStatApplied').textContent    = applied;
+  document.getElementById('wStatSelected').textContent   = selected;
+  document.getElementById('wStatPending').textContent    = pending;
+  document.getElementById('wStatRating').textContent     = rating || '—';
+  document.getElementById('wStatAppliedSub').textContent = applied ? `↑ ${pendingApps} active` : 'No applications yet';
+  document.getElementById('wStatSelectedSub').textContent= selected ? `🎉 ${selected} offers!` : 'Keep applying!';
+  document.getElementById('wStatPendingSub').textContent = pending ? `${pending} awaiting reply` : 'None pending';
+  document.getElementById('wStatRatingSub').textContent  = rating ? `Based on reviews` : 'No reviews yet';
+
+  /* ── Recommended Jobs widget ── */
+  const jobs = getRecommendedJobs(user);
+  const jobsEl = document.getElementById('workerJobsWidget');
+  if (jobs.length === 0) {
+    jobsEl.innerHTML = `<div class="empty-sm"><div>🔍</div><p>Complete your profile to see matching jobs.</p><a href="jobs.html" class="btn btn-primary btn-sm">Browse All Jobs</a></div>`;
+  } else {
+    jobsEl.innerHTML = jobs.map(j => `
+      <div class="job-item" style="cursor:pointer;" onclick="window.location.href='jobs.html'">
+        <div class="job-item-icon" style="background:${j.iconBg};">${j.icon}</div>
+        <div class="job-item-info">
+          <div class="job-item-title">${j.title}</div>
+          <div class="job-item-sub">📍 ${j.location} · ${j.company}</div>
+        </div>
+        <div class="job-item-meta">
+          <span class="job-item-pay">${j.pay}</span>
+          <span class="badge badge-info" style="font-size:0.7rem;">${j.type}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ── My Applications widget ── */
+  const appsEl = document.getElementById('workerAppsWidget');
+  if (apps.length === 0) {
+    appsEl.innerHTML = `<div class="empty-sm"><div>📋</div><p>No applications yet. Start applying!</p><a href="jobs.html" class="btn btn-primary btn-sm">Browse Jobs</a></div>`;
+  } else {
+    const recent = [...apps].reverse().slice(0, 4);
+    appsEl.innerHTML = recent.map(app => {
+      const s = APP_STATUS[app.status] || APP_STATUS.pending;
+      const date = app.appliedOn ? new Date(app.appliedOn).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recently';
+      return `
+      <div class="job-item" style="cursor:pointer;" onclick="window.location.href='my-applications.html'">
+        <div class="job-item-icon" style="background:${app.iconBg||'rgba(249,115,22,0.1)'};">${app.icon||'💼'}</div>
+        <div class="job-item-info">
+          <div class="job-item-title">${app.title}</div>
+          <div class="job-item-sub">🏢 ${app.employer||'—'} · ${date}</div>
+        </div>
+        <span class="pill ${s.pillCls}">${s.label}</span>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── Profile alert ── */
+  const comp = profileCompletion(user);
+  const alertEl = document.getElementById('profileAlert');
+  if (alertEl && comp < 100) {
+    alertEl.style.display = 'flex';
+    alertEl.innerHTML = `📝 Profile <strong style="color:var(--accent)">${comp}% complete</strong>. ${comp < 60 ? 'Finish it to get job matches!' : 'Almost there!'} <a href="#" style="color:var(--accent);font-weight:700;margin-left:auto;" onclick="showToast('Profile editor — coming soon!','info')">Complete Now →</a>`;
+  }
+
+  /* ── Earnings widget ── */
+  document.getElementById('earningsBody').innerHTML = `
+    <div style="text-align:center;padding:20px;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>📊</span><span>Your earnings chart will appear here once you complete jobs.</span>
+    </div>`;
+
+  /* ── HIRER stats ── */
+  const hTotal       = hirings.length;
+  const hShortlisted = hirings.filter(h => h.status === 'shortlisted').length;
+  const hHired       = hirings.filter(h => h.status === 'hired').length;
+  const hCompleted   = hirings.filter(h => h.status === 'completed').length;
+
+  document.getElementById('hStatTotal').textContent          = hTotal;
+  document.getElementById('hStatShortlisted').textContent    = hShortlisted;
+  document.getElementById('hStatHired').textContent          = hHired;
+  document.getElementById('hStatCompleted').textContent      = hCompleted;
+  document.getElementById('hStatTotalSub').textContent       = hTotal ? `${activeHirings} active` : 'No requests yet';
+  document.getElementById('hStatShortlistedSub').textContent = hShortlisted ? `${hShortlisted} workers` : 'None yet';
+  document.getElementById('hStatHiredSub').textContent       = hHired ? `${hHired} confirmed` : 'Start hiring';
+  document.getElementById('hStatCompletedSub').textContent   = hCompleted ? `${hCompleted} done` : 'None yet';
+
+  /* ── Recent Hirings widget ── */
+  const hirerEl = document.getElementById('hirerRecentWidget');
+  if (hirings.length === 0) {
+    hirerEl.innerHTML = `<div class="empty-sm"><div>🤝</div><p>No hire requests yet.</p><a href="hire.html" class="btn btn-primary btn-sm">Find Workers</a></div>`;
+  } else {
+    const recent = [...hirings].reverse().slice(0, 4);
+    hirerEl.innerHTML = recent.map(h => {
+      const w = WORKER_DETAILS[h.workerId] || {};
+      const s = HIRING_STATUS[h.status] || HIRING_STATUS.contacted;
+      const date = h.sentAt ? new Date(h.sentAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recently';
+      return `
+      <div class="hire-card" onclick="window.location.href='manage-hires.html'">
+        <div class="hire-card-accent" style="background:${h.status==='hired'?'#34d399':h.status==='shortlisted'?'#fbbf24':h.status==='rejected'?'#f87171':'#38bdf8'};"></div>
+        <div class="hc-ava" style="background:${w.gradient||'var(--primary)'};">${w.initial||'?'}</div>
+        <div class="hc-info">
+          <div class="hc-name">${w.name||h.workerName||'Worker'}</div>
+          <div class="hc-sub">🛠️ ${w.trade||h.trade||'—'} · Sent ${date}</div>
+          <div class="hc-desc">📝 ${h.desc||'No description'}</div>
+        </div>
+        <span class="pill ${s.pillCls}">${s.icon} ${s.label}</span>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── Top Workers widget ── */
+  const topWorkers = [WORKER_DETAILS[4], WORKER_DETAILS[6], WORKER_DETAILS[1]];
+  document.getElementById('hirerWorkersWidget').innerHTML = topWorkers.map(w => `
+    <div class="job-item">
+      <div style="width:40px;height:40px;border-radius:50%;background:${w.gradient};display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;flex-shrink:0;">${w.initial}</div>
+      <div class="job-item-info">
+        <div class="job-item-title">${w.name}</div>
+        <div class="job-item-sub">🛠️ ${w.trade} · ★${w.rating} · ${w.jobs} jobs</div>
+      </div>
+      <a href="hire.html" class="btn btn-primary btn-sm">Hire</a>
+    </div>`).join('');
+
+  /* ── Set saved tab mode ── */
+  switchMode(activeMode);
+}
+
+document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Jobs – SkillConnect</title>
+  <meta name="description" content="Find skilled labour jobs in your city. Browse electrician, plumber, carpenter, welder jobs and more on SkillConnect." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    .jobs-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; margin-top: 40px; align-items: start; }
+    .jobs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .jobs-count { font-size:0.9rem; color:var(--text-muted); }
+    .jobs-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .jobs-sort { display:flex; align-items:center; gap:12px; }
+    @media (max-width: 900px) { .jobs-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="home.html" class="nav-link">Home</a></li>
+        <li><a href="jobs.html" class="nav-link active">Find Jobs</a></li>
+        <li><a href="hire.html" class="nav-link">Hire Workers</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost" id="loginBtn">Log In</a>
+        <a href="register.html" class="btn btn-primary" id="signupBtn">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container page-hero-content">
+      <span class="section-tag">💼 Job Board</span>
+      <h1>Find Your Next <span class="gradient-text">Skilled Job</span></h1>
+      <p>Browse thousands of job opportunities for skilled tradesmen across India.</p>
+      <div class="search-box" style="max-width:600px;margin-top:24px;border-radius:50px;padding:6px 6px 6px 20px;">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="jobSearch" placeholder="Search jobs by skill, title or company..." class="search-input" oninput="filterJobs()" />
+        <select class="search-select" id="jobCityFilter" onchange="filterJobs()">
+          <option value="">All Cities</option>
+          <option>Delhi</option><option>Mumbai</option><option>Bengaluru</option>
+          <option>Chennai</option><option>Hyderabad</option><option>Pune</option>
+          <option>Kolkata</option><option>Jaipur</option>
+        </select>
+        <button class="btn btn-primary search-btn" onclick="filterJobs()">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="jobs-layout">
+      <!-- Filters -->
+      <aside>
+        <div class="filters-sidebar">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="font-size:1rem;">Filters</h3>
+            <button onclick="clearFilters()" style="font-size:0.8rem;color:var(--primary);background:none;border:none;cursor:pointer;">Clear All</button>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Trade Category</div>
+            <div class="filter-options">
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Electrician" onchange="filterJobs()"><span>⚡ Electrician</span><span class="filter-count">28</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Plumber" onchange="filterJobs()"><span>🔧 Plumber</span><span class="filter-count">19</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Carpenter" onchange="filterJobs()"><span>🪚 Carpenter</span><span class="filter-count">15</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Welder" onchange="filterJobs()"><span>🔥 Welder</span><span class="filter-count">11</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Painter" onchange="filterJobs()"><span>🎨 Painter</span><span class="filter-count">14</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-category" value="Mason" onchange="filterJobs()"><span>🧱 Mason</span><span class="filter-count">9</span></label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Job Type</div>
+            <div class="filter-options">
+              <label class="filter-option"><input type="checkbox" class="f-type" value="Full Time" onchange="filterJobs()"><span>Full Time</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-type" value="Part Time" onchange="filterJobs()"><span>Part Time</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-type" value="Freelance" onchange="filterJobs()"><span>Freelance / Per Job</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-type" value="Contract" onchange="filterJobs()"><span>Contract</span></label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Daily Rate (₹)</div>
+            <input type="range" class="range-slider" id="rateRange" min="200" max="5000" value="5000" oninput="document.getElementById('rateVal').textContent='₹'+this.value;filterJobs()" />
+            <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:6px;">Up to <strong id="rateVal">₹5,000</strong>/day</div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Experience Required</div>
+            <div class="filter-options">
+              <label class="filter-option"><input type="checkbox" class="f-exp" value="Fresher" onchange="filterJobs()"><span>Fresher (0-1 yr)</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-exp" value="Junior" onchange="filterJobs()"><span>Junior (1-3 yrs)</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-exp" value="Senior" onchange="filterJobs()"><span>Senior (3-5 yrs)</span></label>
+              <label class="filter-option"><input type="checkbox" class="f-exp" value="Expert" onchange="filterJobs()"><span>Expert (5+ yrs)</span></label>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="filterJobs()">Apply Filters</button>
+        </div>
+      </aside>
+
+      <!-- Jobs List -->
+      <div>
+        <div class="jobs-header">
+          <div>
+            <span class="jobs-count" id="jobsCount">Showing 12 jobs</span>
+          </div>
+          <div class="jobs-sort">
+            <span style="font-size:0.85rem;color:var(--text-muted);">Sort by:</span>
+            <select style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text-primary);font-size:0.85rem;" id="sortJobs" onchange="filterJobs()">
+              <option value="recent">Most Recent</option>
+              <option value="pay-high">Highest Pay</option>
+              <option value="pay-low">Lowest Pay</option>
+            </select>
+          </div>
+        </div>
+        <div class="jobs-grid" id="jobsGrid"><!-- Populated by JS --></div>
+        <div style="text-align:center;margin-top:32px;">
+          <button class="btn btn-ghost btn-lg" id="loadMoreBtn" onclick="loadMore()">Load More Jobs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-top:80px;" id="mainFooter">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 SkillConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/global.js"></script>
+  <script src="js/jobs.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worker Dashboard – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <a href="home.html" class="nav-logo">
+          <div class="logo-icon">⚡</div>
+          <span>SkillConnect</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="sidebar-section-label">Main</span>
+        <a href="dashboard-worker.html" class="sidebar-link active">
+          <span class="sidebar-icon">📊</span> Dashboard
+        </a>
+        <a href="jobs.html" class="sidebar-link">
+          <span class="sidebar-icon">💼</span> Browse Jobs
+        </a>
+        <a href="my-applications.html" class="sidebar-link">
+          <span class="sidebar-icon">📋</span> My Applications
+          <span class="sidebar-badge" id="appsSidebarBadge" style="display:none;"></span>
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;">
+          <span class="sidebar-icon">📜</span> Job History
+        </a>
+
+        <span class="sidebar-section-label">Profile</span>
+        <a href="profile-worker.html" class="sidebar-link">
+          <span class="sidebar-icon">👤</span> My Profile
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;">
+          <span class="sidebar-icon">🛡️</span> Verification
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Reviews — coming soon!','info');return false;">
+          <span class="sidebar-icon">⭐</span> My Reviews
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Skill Training — coming soon!','info');return false;">
+          <span class="sidebar-icon">🎓</span> Skill Training
+        </a>
+
+        <span class="sidebar-section-label">Finance</span>
+        <a href="#" class="sidebar-link" onclick="showToast('Earnings dashboard — coming soon!','info');return false;">
+          <span class="sidebar-icon">💰</span> Earnings
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;">
+          <span class="sidebar-icon">💳</span> Payments
+        </a>
+
+        <span class="sidebar-section-label">Support</span>
+        <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;">
+          <span class="sidebar-icon">💬</span> Messages
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Notifications — coming soon!','info');return false;">
+          <span class="sidebar-icon">🔔</span> Notifications
+        </a>
+        <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;">
+          <span class="sidebar-icon">⚙️</span> Settings
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;" id="sidebarLogout">
+          <span class="sidebar-icon">🚪</span> Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" id="sidebarToggle">☰</button>
+        <div class="topbar-title" id="dashboardTitle">My Dashboard</div>
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn" title="Notifications" id="notifBtn">
+            🔔
+            <div class="notif-dot"></div>
+          </button>
+          <button class="topbar-icon-btn" title="Messages" id="msgBtn">💬</button>
+          <a href="profile-worker.html" class="user-avatar-btn" id="userAvatarBtn" style="text-decoration:none;">
+            <div class="user-ava" id="userAva">?</div>
+            <span class="user-ava-name" id="userName">User</span>
+            <span>▾</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <!-- Greeting -->
+        <div class="dashboard-greeting">
+          <h1 id="greetingText">Loading... 👋</h1>
+          <p id="greetingSubtext">We're personalizing your dashboard...</p>
+        </div>
+
+        <!-- Availability Toggle -->
+        <div id="availabilityBanner" style="
+          display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+          background:#1a1d26;border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+          padding:16px 22px;margin-bottom:24px;transition:.3s;
+        ">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div id="availDot" style="width:12px;height:12px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;flex-shrink:0;transition:.3s;"></div>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;" id="availLabel">🟢 Available for Work</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">Employers can contact you for new jobs</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:0.82rem;color:var(--text-muted);" id="availSince"></span>
+            <!-- Toggle switch -->
+            <div id="availToggleBtn" onclick="toggleAvailability()" title="Toggle availability"
+              style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer;flex-shrink:0;">
+              <span id="availSlider" style="
+                position:absolute;inset:0;background:#374151;border-radius:28px;transition:.3s;
+              ">
+                <span id="availKnob" style="
+                  position:absolute;left:4px;top:4px;width:20px;height:20px;background:#fff;
+                  border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3);
+                "></span>
+              </span>
+            </div>
+            <a href="profile-worker.html" class="btn btn-ghost btn-sm">✏️ Edit Profile</a>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(249,115,22,0.12)">💼</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value">0</div>
+              <div class="stat-card-label">Jobs Applied</div>
+              <div class="stat-card-change">No applications yet</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(16,185,129,0.12)">✅</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value">0</div>
+              <div class="stat-card-label">Jobs Completed</div>
+              <div class="stat-card-change">None yet</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(56,189,248,0.12)">💰</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value" id="totalEarnings">₹0</div>
+              <div class="stat-card-label">Total Earned</div>
+              <div class="stat-card-change">Start applying to earn</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background:rgba(245,158,11,0.12)">⭐</div>
+            <div class="stat-card-body">
+              <div class="stat-card-value">—</div>
+              <div class="stat-card-label">Rating</div>
+              <div class="stat-card-change">No reviews yet</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Completion Alert -->
+        <div class="alert alert-info" style="margin-bottom:24px;" id="profileAlert">
+          📝 Your profile is <strong style="color:var(--accent)">loading...</strong>.
+          <a href="#" style="color:var(--accent);font-weight:700;margin-left:auto;white-space:nowrap;">Complete Now →</a>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+          <!-- Recent Job Matches -->
+          <div class="widget">
+            <div class="widget-header">
+              <span class="widget-title">🎯 Recommended Jobs For You</span>
+              <a href="jobs.html" class="widget-action">View All</a>
+            </div>
+            <div class="widget-body">
+              <div id="recommendedJobs"></div>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div>
+            <div class="widget" style="margin-bottom:16px;">
+              <div class="widget-header">
+                <span class="widget-title">📊 This Month</span>
+              </div>
+              <div class="widget-body">
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:0.875rem;color:var(--text-secondary);">Profile Views</span>
+                    <span style="font-weight:700;" id="statProfileViews">0</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:0.875rem;color:var(--text-secondary);">Employer Contacts</span>
+                    <span style="font-weight:700;" id="statEmployerContacts">0</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:0.875rem;color:var(--text-secondary);">Jobs Won</span>
+                    <span style="font-weight:700;color:#34d399;" id="statJobsWon">0</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:0.875rem;color:var(--text-secondary);">Avg. Response Time</span>
+                    <span style="font-weight:700;" id="statResponseTime">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="widget">
+              <div class="widget-header">
+                <span class="widget-title">💬 Recent Messages</span>
+                <a href="#" class="widget-action">View All</a>
+              </div>
+              <div class="widget-body">
+                <div id="recentMessages"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="widget dashboard-full" style="margin-bottom:24px;">
+          <div class="widget-header">
+            <span class="widget-title">📋 Recent Applications</span>
+            <a href="my-applications.html" class="widget-action">Manage All</a>
+          </div>
+          <div class="widget-body" style="padding:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Employer</th>
+                  <th>Location</th>
+                  <th>Pay</th>
+                  <th>Applied On</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="applicationsTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Earnings Chart Placeholder -->
+        <div class="widget dashboard-full">
+          <div class="widget-header">
+            <span class="widget-title">💰 Earnings Overview</span>
+            <select style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text-secondary);font-size:0.8rem;cursor:pointer;">
+              <option>Last 6 months</option>
+              <option>This year</option>
+              <option>Last year</option>
+            </select>
+          </div>
+          <div class="widget-body">
+            <div id="earningsChart" style="display:flex;align-items:flex-end;gap:12px;height:120px;padding-bottom:8px;">
+              <!-- Generated by JS -->
+            </div>
+            <div id="earningsChartLabels" style="display:flex;gap:12px;margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/global.js"></script>
+  <script src="js/dashboard-worker.js"></script>
+</body>
+</html>

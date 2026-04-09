@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Hires – SkillConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    /* ── Hiring cards ── */
+    .hire-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    .hire-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:18px 20px; text-align:center; }
+    .hire-stat-val { font-size:1.7rem; font-weight:800; line-height:1; }
+    .hire-stat-label { font-size:0.78rem; color:var(--text-muted); margin-top:5px; }
+    @media(max-width:700px){ .hire-stats-row{grid-template-columns:repeat(2,1fr);} }
+
+    .filter-tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
+    .filter-tab {
+      padding:8px 18px; border-radius:50px; border:1px solid var(--border);
+      background:rgba(255,255,255,0.04); color:var(--text-secondary);
+      font-size:0.85rem; font-weight:500; cursor:pointer; transition:.2s;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      background:var(--primary); color:#fff; border-color:var(--primary);
+    }
+
+    .hire-card {
+      background:var(--card-bg); border:1px solid var(--border); border-radius:18px;
+      padding:22px 24px; margin-bottom:16px; display:flex; align-items:flex-start;
+      gap:18px; transition:.25s; position:relative; overflow:hidden;
+    }
+    .hire-card:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 8px 32px rgba(249,115,22,.1); }
+    .hire-card-accent { position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:18px 0 0 18px; }
+
+    .worker-ava {
+      width:56px; height:56px; border-radius:50%; display:flex; align-items:center;
+      justify-content:center; font-size:1.4rem; font-weight:800; color:#fff; flex-shrink:0;
+      border:2px solid rgba(255,255,255,0.15);
+    }
+    .hire-info { flex:1; min-width:0; }
+    .hire-name { font-size:1.05rem; font-weight:700; margin-bottom:3px; display:flex; align-items:center; gap:8px; }
+    .hire-verified { font-size:0.72rem; background:rgba(52,211,153,0.15); color:#34d399; padding:2px 8px; border-radius:20px; border:1px solid rgba(52,211,153,0.3); }
+    .hire-meta { font-size:0.82rem; color:var(--text-muted); margin-bottom:10px; display:flex; flex-wrap:wrap; gap:12px; }
+    .hire-meta span { display:flex; align-items:center; gap:4px; }
+    .hire-job-desc { font-size:0.85rem; color:var(--text-secondary); background:rgba(255,255,255,0.04); border-radius:10px; padding:10px 14px; margin-bottom:12px; border-left:3px solid var(--primary); line-height:1.5; }
+    .hire-actions { display:flex; gap:8px; flex-wrap:wrap; }
+
+    .hire-status-wrap { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width:130px; }
+    .hire-date { font-size:0.78rem; color:var(--text-muted); }
+
+    .status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:50px; font-size:0.8rem; font-weight:600; }
+    .s-contacted   { background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); }
+    .s-shortlisted { background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+    .s-hired       { background:rgba(52,211,153,0.12); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+    .s-rejected    { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+    .s-completed   { background:rgba(168,85,247,0.12);  color:#c084fc; border:1px solid rgba(168,85,247,0.3); }
+
+    /* Rating stars */
+    .stars-row { display:flex; align-items:center; gap:4px; font-size:0.82rem; }
+    .stars-row .s { color:#fbbf24; font-size:0.85rem; }
+
+    /* Worker skills chips */
+    .skill-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+    .skill-chip-sm { font-size:0.73rem; padding:3px 9px; border-radius:20px; background:rgba(249,115,22,0.1); color:var(--primary); border:1px solid rgba(249,115,22,0.2); }
+
+    /* Empty state */
+    .empty-state { text-align:center; padding:64px 24px; color:var(--text-muted); }
+    .empty-state-icon { font-size:4rem; margin-bottom:16px; }
+    .empty-state h3 { font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-bottom:8px; }
+    .empty-state p { font-size:0.9rem; max-width:320px; margin:0 auto 20px; line-height:1.6; }
+
+    /* Status change dropdown */
+    .status-select {
+      background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:8px;
+      padding:6px 10px; color:var(--text-primary); font-size:0.8rem; cursor:pointer;
+      width:100%; margin-top:6px;
+    }
+
+    /* ── Rating modal ── */
+    .rating-modal-backdrop {
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;
+      display:flex;align-items:center;justify-content:center;padding:20px;
+      animation:fadeInBg .2s ease;backdrop-filter:blur(4px);
+    }
+    @keyframes fadeInBg{from{opacity:0}to{opacity:1}}
+    .rating-modal {
+      background:#1a1d26;border:1px solid rgba(255,255,255,0.1);border-radius:22px;
+      width:100%;max-width:480px;box-shadow:0 32px 80px rgba(0,0,0,0.75);
+      animation:slideUpModal .3s ease;
+    }
+    @keyframes slideUpModal{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .rating-modal-header { padding:24px 28px 16px; border-bottom:1px solid rgba(255,255,255,0.08); background:#1a1d26; border-radius:22px 22px 0 0; }
+    .rating-modal-body   { padding:24px 28px; background:#1a1d26; }
+    .rating-modal-footer { padding:16px 28px 24px; display:flex; gap:10px; background:#1a1d26; border-top:1px solid rgba(255,255,255,0.08); border-radius:0 0 22px 22px; }
+    .star-row { display:flex; gap:12px; justify-content:center; margin:20px 0; }
+    .star-btn {
+      font-size:2.4rem; background:none; border:none; cursor:pointer;
+      transition:transform .15s, filter .15s; filter:grayscale(1) opacity(0.3);
+      line-height:1; padding:0;
+    }
+    .star-btn.hovered, .star-btn.selected {
+      filter:grayscale(0) opacity(1); transform:scale(1.25);
+    }
+    .star-label { text-align:center; font-size:0.92rem; font-weight:600; color:var(--primary); min-height:22px; margin-bottom:4px; }
+    .existing-review {
+      background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.2);
+      border-radius:12px; padding:12px 14px; font-size:0.85rem; margin-bottom:14px;
+    }
+    .existing-review .rv-stars { color:#fbbf24; margin-bottom:4px; letter-spacing:2px; }
+    .aspect-chip { cursor:pointer; transition:.2s; }
+    .aspect-chip.active { background:rgba(249,115,22,0.25)!important; border-color:var(--primary)!important; color:var(--primary)!important; }
+
+    /* Section label */
+    .section-heading {
+
+      font-size:0.75rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      color:var(--text-muted); margin:28px 0 14px; display:flex; align-items:center; gap:8px;
+    }
+    .section-heading::after { content:''; flex:1; height:1px; background:var(--border); }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Main</span>
+      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manage-hires.html" class="sidebar-link active"><span class="sidebar-icon">🤝</span> Manage Hires<span class="sidebar-badge" id="activeBadge" style="display:none;"></span></a>
+      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon">👷</span> Find Workers</a>
+      <a href="my-job-posts.html" class="sidebar-link"><span class="sidebar-icon">📋</span> My Job Posts</a>
+
+      <span class="sidebar-section-label">Manage</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon">🏢</span> Company Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Payments</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon">📄</span> Contracts</a>
+
+      <span class="sidebar-section-label">Support</span>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
+        <span class="sidebar-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+    <div class="dashboard-topbar">
+      <button class="topbar-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title">Manage Hires</div>
+      <div class="topbar-actions">
+        <a href="hire.html" class="btn btn-primary btn-sm">+ Hire New Worker</a>
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="user-ava" id="userAva" style="background:linear-gradient(135deg,#f59e0b,#d97706);">?</div>
+          <span class="user-ava-name" id="userName">User</span>
+          <span>▾</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+
+      <!-- Stats -->
+      <div class="hire-stats-row">
+        <div class="hire-stat">
+          <div class="hire-stat-val" id="statTotal" style="color:var(--text-primary);">0</div>
+          <div class="hire-stat-label">Total Hire Requests</div>
+        </div>
+        <div class="hire-stat">
+          <div class="hire-stat-val" id="statContacted" style="color:#38bdf8;">0</div>
+          <div class="hire-stat-label">Contacted</div>
+        </div>
+        <div class="hire-stat">
+          <div class="hire-stat-val" id="statShortlisted" style="color:#fbbf24;">0</div>
+          <div class="hire-stat-label">Shortlisted</div>
+        </div>
+        <div class="hire-stat">
+          <div class="hire-stat-val" id="statHired" style="color:#34d399;">0</div>
+          <div class="hire-stat-label">Hired</div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterHirings('all',this)">All</button>
+        <button class="filter-tab" onclick="filterHirings('contacted',this)">📞 Contacted</button>
+        <button class="filter-tab" onclick="filterHirings('shortlisted',this)">⭐ Shortlisted</button>
+        <button class="filter-tab" onclick="filterHirings('hired',this)">✅ Hired</button>
+        <button class="filter-tab" onclick="filterHirings('completed',this)">🏆 Completed</button>
+        <button class="filter-tab" onclick="filterHirings('rejected',this)">❌ Rejected</button>
+      </div>
+
+      <!-- Hirings List -->
+      <div id="hiringsList"></div>
+
+      <!-- CTA Banner -->
+      <div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.05));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">👷 Need more workers?</div>
+          <div style="font-size:0.85rem;color:var(--text-muted);">Browse 500+ verified skilled workers ready to start today.</div>
+        </div>
+        <a href="hire.html" class="btn btn-primary">Find Workers →</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/global.js"></script>
+<script>
+/* ===================================================
+   Manage Hires – Employer hiring management
+=================================================== */
+
+const STATUS_CFG = {
+  contacted:   { label:'Contacted',  icon:'📞', cls:'s-contacted',   accent:'#38bdf8' },
+  shortlisted: { label:'Shortlisted',icon:'⭐', cls:'s-shortlisted', accent:'#fbbf24' },
+  hired:       { label:'Hired ✅',   icon:'✅', cls:'s-hired',       accent:'#34d399' },
+  completed:   { label:'Completed',  icon:'🏆', cls:'s-completed',   accent:'#c084fc' },
+  rejected:    { label:'Rejected',   icon:'❌', cls:'s-rejected',    accent:'#f87171' },
+};
+
+const WORKER_DETAILS = {
+  1: { name:'Rajesh Sharma',  initial:'R', trade:'Electrician', city:'Delhi',     rating:4.9, reviews:127, jobs:312, skills:['Wiring','Solar','CCTV','Panel'], gradient:'linear-gradient(135deg,#f97316,#ea580c)', phone:'+91 98100 12345', verified:true },
+  2: { name:'Suresh Patel',   initial:'S', trade:'Plumber',     city:'Mumbai',    rating:4.8, reviews:98,  jobs:245, skills:['Pipe Fitting','Drainage','Gas Lines'], gradient:'linear-gradient(135deg,#3b82f6,#2563eb)', phone:'+91 90220 67890', verified:true },
+  3: { name:'Arjun Singh',    initial:'A', trade:'Carpenter',   city:'Bengaluru', rating:4.7, reviews:74,  jobs:189, skills:['Furniture','Flooring','Cabinets'], gradient:'linear-gradient(135deg,#10b981,#059669)', phone:'+91 98440 23456', verified:true },
+  4: { name:'Mohan Das',      initial:'M', trade:'Welder',      city:'Chennai',   rating:4.9, reviews:152, jobs:420, skills:['MIG','TIG','Arc Welding'], gradient:'linear-gradient(135deg,#f87171,#ef4444)', phone:'+91 94440 34567', verified:true },
+  5: { name:'Karthik Rajan',  initial:'K', trade:'Painter',     city:'Hyderabad', rating:4.6, reviews:63,  jobs:178, skills:['Interior','Exterior','Texture'], gradient:'linear-gradient(135deg,#a78bfa,#7c3aed)', phone:'+91 98490 45678', verified:false },
+  6: { name:'Vinod Mehta',    initial:'V', trade:'Mason',       city:'Pune',      rating:4.8, reviews:89,  jobs:267, skills:['Brickwork','Plastering','Tiling'], gradient:'linear-gradient(135deg,#fb923c,#ea580c)', phone:'+91 99220 56789', verified:true },
+  7: { name:'Deepak Yadav',   initial:'D', trade:'Electrician', city:'Delhi',     rating:4.5, reviews:45,  jobs:123, skills:['HT/LT','Substation','Meter'], gradient:'linear-gradient(135deg,#fbbf24,#f59e0b)', phone:'+91 98100 67890', verified:true },
+  8: { name:'Pradeep Kumar',  initial:'P', trade:'Plumber',     city:'Kolkata',   rating:4.3, reviews:31,  jobs:78,  skills:['Bathroom','Kitchen','Drainage'], gradient:'linear-gradient(135deg,#67e8f9,#06b6d4)', phone:'+91 90330 78901', verified:false },
+};
+
+let allHirings = [];
+let currentFilter = 'all';
+
+/* ---- Load ---- */
+function loadHirings() {
+  const user = getCurrentUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  document.getElementById('userAva').textContent = user.avatar || user.name?.[0]?.toUpperCase() || 'E';
+  document.getElementById('userName').textContent = user.name?.split(' ')[0] || 'User';
+
+  // Load from localStorage — keyed by user email
+  allHirings = JSON.parse(localStorage.getItem(`sc_hirings_${user.email}`) || '[]');
+
+  updateStats();
+  renderHirings();
+}
+
+/* ---- Stats ---- */
+function updateStats() {
+  document.getElementById('statTotal').textContent       = allHirings.length;
+  document.getElementById('statContacted').textContent   = allHirings.filter(h => h.status === 'contacted').length;
+  document.getElementById('statShortlisted').textContent = allHirings.filter(h => h.status === 'shortlisted').length;
+  document.getElementById('statHired').textContent       = allHirings.filter(h => h.status === 'hired').length;
+
+  const active = allHirings.filter(h => ['contacted','shortlisted'].includes(h.status)).length;
+  const badge = document.getElementById('activeBadge');
+  if (badge) { badge.textContent = active; badge.style.display = active > 0 ? '' : 'none'; }
+}
+
+/* ---- Filter ---- */
+function filterHirings(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHirings();
+}
+
+/* ---- Render ---- */
+function renderHirings() {
+  const container = document.getElementById('hiringsList');
+  let list = allHirings;
+  if (currentFilter !== 'all') list = allHirings.filter(h => h.status === currentFilter);
+
+  if (list.length === 0) {
+    if (allHirings.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🤝</div>
+          <h3>No Hire Requests Yet</h3>
+          <p>Browse skilled workers and send hire requests — they'll appear here for you to manage and track.</p>
+          <a href="hire.html" class="btn btn-primary">Browse Workers & Hire</a>
+        </div>`;
+    } else {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <h3>No hirings in this category</h3>
+          <p>Try a different filter above.</p>
+        </div>`;
+    }
+    return;
+  }
+
+  // Group: Active first, then completed/rejected
+  const active    = list.filter(h => ['contacted','shortlisted','hired'].includes(h.status));
+  const concluded = list.filter(h => ['completed','rejected'].includes(h.status));
+
+  let html = '';
+  if (active.length > 0) {
+    html += `<div class="section-heading">Active (${active.length})</div>`;
+    html += active.map(h => buildCard(h)).join('');
+  }
+  if (concluded.length > 0) {
+    html += `<div class="section-heading">Concluded (${concluded.length})</div>`;
+    html += concluded.map(h => buildCard(h)).join('');
+  }
+  container.innerHTML = html;
+}
+
+/* ---- Build card ---- */
+function buildCard(h) {
+  const s   = STATUS_CFG[h.status] || STATUS_CFG.contacted;
+  const w   = WORKER_DETAILS[h.workerId] || {};
+  const sentDate = h.sentAt ? new Date(h.sentAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recently';
+  const stars = w.rating ? '★'.repeat(Math.floor(w.rating)) + (w.rating%1?'☆':'') : '';
+
+  return `
+  <div class="hire-card">
+    <div class="hire-card-accent" style="background:${s.accent};"></div>
+    <div class="worker-ava" style="background:${w.gradient||'var(--primary)'};">${w.initial||'?'}</div>
+    <div class="hire-info">
+      <div class="hire-name">
+        ${w.name || h.workerName || 'Worker'}
+        ${w.verified ? '<span class="hire-verified">✓ Verified</span>' : ''}
+      </div>
+      <div class="hire-meta">
+        <span>🛠️ ${w.trade || '—'}</span>
+        <span>📍 ${w.city || '—'}</span>
+        <span>💰 ₹${(w.jobs||0)*800>/0/?'':''}${w.jobs ? Math.round(w.jobs*0.8)+'+ jobs done' : '—'}</span>
+        ${h.budget ? `<span>🏷️ Budget: ${h.budget}</span>` : ''}
+        ${h.date && h.date !== 'Flexible' ? `<span>📅 Start: ${h.date}</span>` : ''}
+      </div>
+      <div class="stars-row">
+        <span class="s">${stars}</span>
+        <span style="font-weight:700;">${w.rating||'—'}</span>
+        <span style="color:var(--text-muted);">(${w.reviews||0} reviews)</span>
+      </div>
+      ${w.skills?.length ? `<div class="skill-row" style="margin-top:8px;">${w.skills.map(sk=>`<span class="skill-chip-sm">${sk}</span>`).join('')}</div>` : ''}
+      <div class="hire-job-desc">📝 ${h.desc || 'No job description provided.'}</div>
+      ${h.address ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">📍 Jobsite: ${h.address}</div>` : ''}
+      <div class="hire-actions">
+        ${buildActions(h, w)}
+      </div>
+    </div>
+    <div class="hire-status-wrap">
+      <span class="status-pill ${s.cls}">${s.icon} ${s.label}</span>
+      <span class="hire-date">Sent ${sentDate}</span>
+      ${w.phone ? `<a href="tel:${w.phone.replace(/\s/g,'')}" style="font-size:0.8rem;color:var(--primary);text-decoration:none;margin-top:4px;">📞 ${w.phone}</a>` : ''}
+      <select class="status-select" onchange="changeStatus('${h.id}', this.value)">
+        <option value="" disabled selected>Change Status…</option>
+        <option value="contacted">📞 Mark Contacted</option>
+        <option value="shortlisted">⭐ Shortlist</option>
+        <option value="hired">✅ Mark Hired</option>
+        <option value="completed">🏆 Mark Completed</option>
+        <option value="rejected">❌ Reject</option>
+      </select>
+    </div>
+  </div>`;
+}
+
+/* ---- Contextual action buttons per status ---- */
+function buildActions(h, w) {
+  const btns = [];
+  if (h.status === 'contacted') {
+    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','shortlisted')">⭐ Shortlist</button>`);
+    btns.push(`<button class="btn btn-ghost btn-sm" onclick="changeStatus('${h.id}','rejected')">Reject</button>`);
+  } else if (h.status === 'shortlisted') {
+    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','hired')">✅ Confirm Hire</button>`);
+    btns.push(`<button class="btn btn-ghost btn-sm" onclick="changeStatus('${h.id}','rejected')">Reject</button>`);
+  } else if (h.status === 'hired') {
+    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','completed')">🏆 Mark Completed</button>`);
+    if(w.phone) btns.push(`<a href="tel:${w.phone.replace(/\s/g,'')}" class="btn btn-ghost btn-sm">📞 Call Worker</a>`);
+  } else if (h.status === 'completed') {
+    const hasReview = !!h.review;
+    btns.push(`<button class="btn ${hasReview?'btn-ghost':'btn-primary'} btn-sm" onclick="openRatingModal('${h.id}')">${hasReview ? '✏️ Edit Review' : '⭐ Leave Review'}</button>`);
+    if (hasReview) btns.push(`<span style="font-size:0.8rem;color:#fbbf24;align-self:center;">${'★'.repeat(h.review.rating)}${'☆'.repeat(5-h.review.rating)} ${h.review.rating}.0</span>`);
+    btns.push(`<button class="btn btn-ghost btn-sm" onclick="rehireWorker('${h.workerId}')">🔄 Re-hire</button>`);
+  } else if (h.status === 'rejected') {
+    btns.push(`<button class="btn btn-ghost btn-sm" onclick="changeStatus('${h.id}','contacted')">↩️ Reconsider</button>`);
+  }
+  return btns.join('');
+}
+
+/* ---- Change status ---- */
+function changeStatus(hireId, newStatus) {
+  const user = getCurrentUser();
+  const idx = allHirings.findIndex(h => h.id == hireId);
+  if (idx === -1) return;
+
+  allHirings[idx].status = newStatus;
+  allHirings[idx].updatedAt = new Date().toISOString();
+
+  saveHirings(user);
+
+  const s = STATUS_CFG[newStatus];
+  showToast(`Status updated to "${s.label}" ${s.icon}`, 'success');
+  updateStats();
+  renderHirings();
+}
+
+/* ---- Re-hire shortcut ---- */
+function rehireWorker(workerId) {
+  window.location.href = `hire.html#worker-${workerId}`;
+}
+
+/* ---- Save to localStorage ---- */
+function saveHirings(user) {
+  if (!user) return;
+  localStorage.setItem(`sc_hirings_${user.email}`, JSON.stringify(allHirings));
+}
+
+/* ========================================================
+   RATING / REVIEW MODAL
+======================================================== */
+const STAR_LABELS = ['','😞 Poor','😐 Fair','🙂 Good','😊 Great','🤩 Excellent!'];
+let _ratingHireId  = null;
+let _selectedStars = 0;
+
+function openRatingModal(hireId) {
+  _ratingHireId  = hireId;
+  _selectedStars = 0;
+
+  const h = allHirings.find(x => x.id == hireId);
+  if (!h) return;
+  const w = WORKER_DETAILS[h.workerId] || {};
+  const existing = h.review || null;
+  if (existing) _selectedStars = existing.rating;
+
+  document.getElementById('ratingModalBackdrop')?.remove();
+
+  const backdrop = document.createElement('div');
+  backdrop.id = 'ratingModalBackdrop';
+  backdrop.className = 'rating-modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="rating-modal">
+      <div class="rating-modal-header">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:${w.gradient||'var(--primary)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:#fff;flex-shrink:0;">${w.initial||'?'}</div>
+          <div>
+            <div style="font-size:1.05rem;font-weight:700;">${w.name||h.workerName||'Worker'}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">🛠️ ${w.trade||'—'}</div>
+          </div>
+          <button onclick="closeRatingModal()" style="margin-left:auto;background:rgba(255,255,255,0.06);border:none;color:var(--text-secondary);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div class="rating-modal-body">
+        ${existing ? `
+        <div class="existing-review">
+          <div class="rv-stars">${'★'.repeat(existing.rating)}${'☆'.repeat(5-existing.rating)}</div>
+          <div style="font-style:italic;color:var(--text-secondary);">"${existing.text||'No comment.'}"</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">Reviewed on ${new Date(existing.reviewedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+        </div>` : ''}
+        <div style="text-align:center;font-size:0.88rem;color:var(--text-muted);margin-bottom:4px;">How was your experience with ${w.name?.split(' ')[0]||'this worker'}?</div>
+        <div class="star-label" id="starLabel">${existing ? STAR_LABELS[existing.rating] : 'Tap a star to rate'}</div>
+        <div class="star-row" id="starRow">
+          ${[1,2,3,4,5].map(n=>`<button class="star-btn${existing&&n<=existing.rating?' selected':''}" id="star${n}" data-val="${n}"
+            onmouseover="hoverStars(${n})" onmouseout="unhoverStars()" onclick="selectStars(${n})">⭐</button>`).join('')}
+        </div>
+        <div style="margin-top:16px;">
+          <label style="font-size:0.82rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">Write a Review (optional)</label>
+          <textarea id="reviewText" rows="4" placeholder="Share your experience — quality of work, punctuality, professionalism…" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text-primary);font-size:0.88rem;resize:vertical;font-family:inherit;box-sizing:border-box;outline:none;line-height:1.5;transition:.2s;" oninput="this.style.borderColor='var(--primary)'">${existing?existing.text:''}</textarea>
+        </div>
+        <div style="margin-top:14px;">
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Quick tags:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${['On time','Quality work','Professional','Clean work','Good communication','Value for money','Would hire again']
+              .map(a=>`<button class="skill-chip-sm aspect-chip" onclick="toggleAspect(this,'${a}')">${a}</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="rating-modal-footer">
+        <button onclick="closeRatingModal()" class="btn btn-ghost" style="flex:1;">Cancel</button>
+        <button onclick="submitReview()" class="btn btn-primary" style="flex:2;">⭐ Submit Review</button>
+      </div>
+    </div>`;
+
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeRatingModal(); });
+  document.body.appendChild(backdrop);
+}
+
+function hoverStars(n) {
+  if (_selectedStars > 0) return;
+  for (let i=1;i<=5;i++) document.getElementById('star'+i)?.classList.toggle('selected', i<=n);
+  document.getElementById('starLabel').textContent = STAR_LABELS[n];
+}
+function unhoverStars() {
+  for (let i=1;i<=5;i++) document.getElementById('star'+i)?.classList.toggle('selected', i<=_selectedStars);
+  document.getElementById('starLabel').textContent = _selectedStars ? STAR_LABELS[_selectedStars] : 'Tap a star to rate';
+}
+function selectStars(n) {
+  _selectedStars = n;
+  for (let i=1;i<=5;i++) document.getElementById('star'+i)?.classList.toggle('selected', i<=n);
+  const lbl = document.getElementById('starLabel');
+  lbl.textContent = STAR_LABELS[n];
+  lbl.style.color = '#fbbf24';
+  lbl.style.fontSize = '1rem';
+}
+
+function toggleAspect(btn, text) {
+  const active = btn.classList.toggle('active');
+  const ta = document.getElementById('reviewText');
+  if (!ta) return;
+  if (active) {
+    ta.value = ta.value ? ta.value.trim() + ' · ' + text : text;
+  } else {
+    ta.value = ta.value.replace(' · ' + text, '').replace(text + ' · ', '').replace(text, '').trim();
+  }
+}
+
+function submitReview() {
+  if (!_selectedStars) {
+    const lbl = document.getElementById('starLabel');
+    lbl.textContent = '⚠️ Please select a star rating!';
+    lbl.style.color = '#f87171';
+    return;
+  }
+  const text = document.getElementById('reviewText')?.value.trim() || '';
+  const user = getCurrentUser();
+  const idx  = allHirings.findIndex(h => h.id == _ratingHireId);
+  if (idx === -1) return;
+
+  const reviewEntry = {
+    rating:       _selectedStars,
+    text,
+    reviewedAt:   new Date().toISOString(),
+    reviewerName: user?.name || 'Employer',
+  };
+
+  // Save on hiring record
+  allHirings[idx].review = reviewEntry;
+  saveHirings(user);
+
+  // Save globally per worker (for future worker-side reviews page)
+  const wid = allHirings[idx].workerId;
+  if (wid) {
+    const key = `sc_worker_reviews_${wid}`;
+    const reviews = JSON.parse(localStorage.getItem(key) || '[]');
+    const ei = reviews.findIndex(r => r.hireId == _ratingHireId);
+    const entry = { ...reviewEntry, hireId: _ratingHireId };
+    if (ei >= 0) reviews[ei] = entry; else reviews.push(entry);
+    localStorage.setItem(key, JSON.stringify(reviews));
+  }
+
+  closeRatingModal();
+  showToast(`⭐ ${_selectedStars}-star review submitted! Thank you.`, 'success');
+  renderHirings();
+}
+
+function closeRatingModal() {
+  const m = document.getElementById('ratingModalBackdrop');
+  if (m) { m.style.opacity='0'; setTimeout(()=>m.remove(), 200); }
+}
+
+document.addEventListener('DOMContentLoaded', loadHirings);
+
+</script>
+</body>
+</html>
