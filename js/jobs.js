@@ -218,8 +218,8 @@ async function applyJob(id) {
       }
     }
   } else {
-    // Static job — just show success
-    showToast(`✅ Applied to "${job.title}"!`, 'success');
+    // Static job — just show success with a warning
+    showToast(`✅ Applied to "${job.title}"! (Note: This is a sample template job and will not appear in your real Dashboard)`, 'info');
     if (btn) { btn.textContent='✓ Applied'; btn.style.opacity='0.6'; }
   }
 }
