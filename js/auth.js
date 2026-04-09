@@ -184,7 +184,14 @@ async function handleLogin(e) {
     btn.disabled = false;
     btnText.style.display = 'inline';
     spinner.style.display = 'none';
-    showAlert('Invalid email or password. Please try again.', 'error', 'loginAlert');
+    
+    let msg = 'Invalid email or password. Please try again.';
+    if (err.message?.includes('Email not confirmed')) {
+      msg = '📧 Please confirm your email address before signing in. Check your inbox for the link.';
+    } else if (err.message) {
+      msg = err.message;
+    }
+    showAlert(msg, 'error', 'loginAlert');
   }
 }
 
@@ -212,7 +219,7 @@ async function handleRegister(e) {
   spinner.style.display = 'inline-block';
 
   try {
-    const user = await sbRegister({
+    const userResult = await sbRegister({
       name:       document.getElementById('regName')?.value.trim(),
       phone:      document.getElementById('regPhone')?.value.trim(),
       email:      document.getElementById('regEmail')?.value.trim(),
@@ -225,8 +232,16 @@ async function handleRegister(e) {
       city:       document.getElementById('regCity')?.value.trim(),
     });
 
-    setCurrentUser(user);
-    showToast(`Welcome to SkillConnect, ${user.name}! 🎉`, 'success');
+    if (userResult.needsConfirmation) {
+      btn.disabled = false;
+      btnText.style.display = 'inline';
+      spinner.style.display = 'none';
+      showAlert('📧 Registration successful! Please check your email to confirm your account before logging in.', 'success', 'registerAlert');
+      return;
+    }
+
+    setCurrentUser(userResult);
+    showToast(`Welcome to SkillConnect, ${userResult.name}! 🎉`, 'success');
     setTimeout(() => {
       window.location.href = role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
     }, 1000);

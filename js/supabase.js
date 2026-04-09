@@ -45,23 +45,48 @@ async function sbRegister({ name, phone, email, password, role, trade, experienc
     trade, experience, rate, company, city,
     available: true,
     avatar: name?.[0]?.toUpperCase() || 'U',
+    needsConfirmation: !authData.session
   };
+}
+
+/** Private helper to ensure a user has a profile record */
+async function _ensureProfile(authUser, extraData = {}) {
+  let { data: profile, error } = await db
+    .from('profiles')
+    .select('*')
+    .eq('id', authUser.id)
+    .single();
+
+  if (error || !profile) {
+    const name = extraData.name || authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'User';
+    const newProfile = {
+      id: authUser.id,
+      name: name,
+      email: authUser.email,
+      role: extraData.role || 'worker',
+      available: true,
+      avatar: authUser.user_metadata?.avatar_url || name[0].toUpperCase(),
+      phone: extraData.phone || null,
+      city: extraData.city || null,
+      trade: extraData.trade || null,
+      experience: extraData.experience || null,
+      rate: extraData.rate || null,
+      company: extraData.company || null,
+    };
+    const { error: insErr } = await db.from('profiles').insert(newProfile);
+    if (insErr) { console.error('Failed to create profile:', insErr); }
+    return newProfile;
+  }
+  return profile;
 }
 
 /** Sign in with email + password */
 async function sbLogin(email, password) {
   const { data, error } = await db.auth.signInWithPassword({ email, password });
-  if (error) throw error;
+  if (error) throw error; 
 
-  // Fetch full profile
-  const { data: profile, error: pErr } = await db
-    .from('profiles')
-    .select('*')
-    .eq('id', data.user.id)
-    .single();
-  if (pErr) throw pErr;
-
-  return profile;
+  // Use helper to get/create profile row
+  return await _ensureProfile(data.user);
 }
 
 /** Sign out */
@@ -71,29 +96,10 @@ async function sbLogout() {
 
 /** Get currently signed-in user from session */
 async function sbGetCurrentUser() {
-  const { data: { session } } = await db.auth.getSession();
-  if (!session) return null;
+  const { data: { session }, error: sErr } = await db.auth.getSession();
+  if (sErr || !session) return null;
 
-  let { data: profile, error } = await db
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
-    
-  if (error || !profile) {
-    // If a user logs in via Google/OAuth and has no profile, auto-create a default one
-    const newProfile = {
-      id: session.user.id,
-      name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
-      email: session.user.email,
-      role: 'worker', // default to worker, they can switch or update later
-      available: true,
-      avatar: session.user.user_metadata?.avatar_url || 'U',
-    };
-    await db.from('profiles').insert(newProfile);
-    profile = newProfile;
-  }
-  return profile;
+  return await _ensureProfile(session.user);
 }
 
 /** Sign in with Google */
@@ -103,6 +109,15 @@ async function sbLoginWithGoogle() {
     options: {
       redirectTo: window.location.origin + '/dashboard.html',
     }
+  });
+  if (error) throw error;
+  return data;
+}
+
+/** Reset Password */
+async function sbResetPassword(email) {
+  const { data, error } = await db.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html', // Or a dedicated reset-password.html
   });
   if (error) throw error;
   return data;
