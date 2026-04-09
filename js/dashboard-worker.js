@@ -55,7 +55,16 @@ async function initDashboard() {
   }
 
   if (user) {
-    document.getElementById('userAva').textContent  = user.avatar || user.name?.[0]?.toUpperCase() || 'U';
+    const userAva = document.getElementById('userAva');
+    if (userAva) {
+      if (user.avatar && user.avatar.startsWith('http')) {
+        userAva.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        userAva.style.background = 'transparent';
+      } else {
+        userAva.textContent = user.avatar || user.name?.[0]?.toUpperCase() || 'U';
+        userAva.style.background = 'linear-gradient(135deg,#f97316,#ea580c)';
+      }
+    }
     document.getElementById('userName').textContent = firstName;
   }
 
@@ -220,7 +229,7 @@ function applyAvailabilityUI(isAvail) {
     if (label)  label.textContent = '⚫ Not Available';
     if (slider) slider.style.background = '#374151';
     if (knob)   knob.style.left  = '4px';
-    if (banner) { banner.style.borderColor = 'rgba(255,255,255,0.06)'; banner.style.background = '#1a1d26'; }
+    if (banner) { banner.style.borderColor = 'var(--border)'; banner.style.background = 'var(--bg-card)'; }
     if (since)  since.textContent = 'Hidden from employers';
   }
 }

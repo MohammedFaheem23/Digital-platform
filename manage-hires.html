@@ -20,7 +20,7 @@
     .filter-tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
     .filter-tab {
       padding:8px 18px; border-radius:50px; border:1px solid var(--border);
-      background:rgba(255,255,255,0.04); color:var(--text-secondary);
+      background:var(--border); color:var(--text-secondary);
       font-size:0.85rem; font-weight:500; cursor:pointer; transition:.2s;
     }
     .filter-tab:hover, .filter-tab.active {
@@ -45,7 +45,7 @@
     .hire-verified { font-size:0.72rem; background:rgba(52,211,153,0.15); color:#34d399; padding:2px 8px; border-radius:20px; border:1px solid rgba(52,211,153,0.3); }
     .hire-meta { font-size:0.82rem; color:var(--text-muted); margin-bottom:10px; display:flex; flex-wrap:wrap; gap:12px; }
     .hire-meta span { display:flex; align-items:center; gap:4px; }
-    .hire-job-desc { font-size:0.85rem; color:var(--text-secondary); background:rgba(255,255,255,0.04); border-radius:10px; padding:10px 14px; margin-bottom:12px; border-left:3px solid var(--primary); line-height:1.5; }
+    .hire-job-desc { font-size:0.85rem; color:var(--text-secondary); background:var(--border); border-radius:10px; padding:10px 14px; margin-bottom:12px; border-left:3px solid var(--primary); line-height:1.5; }
     .hire-actions { display:flex; gap:8px; flex-wrap:wrap; }
 
     .hire-status-wrap { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width:130px; }
@@ -74,7 +74,7 @@
 
     /* Status change dropdown */
     .status-select {
-      background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:8px;
+      background:var(--border); border:1px solid var(--border); border-radius:8px;
       padding:6px 10px; color:var(--text-primary); font-size:0.8rem; cursor:pointer;
       width:100%; margin-top:6px;
     }
@@ -87,14 +87,14 @@
     }
     @keyframes fadeInBg{from{opacity:0}to{opacity:1}}
     .rating-modal {
-      background:#1a1d26;border:1px solid rgba(255,255,255,0.1);border-radius:22px;
+      background:var(--bg-card);border:1px solid rgba(255,255,255,0.1);border-radius:22px;
       width:100%;max-width:480px;box-shadow:0 32px 80px rgba(0,0,0,0.75);
       animation:slideUpModal .3s ease;
     }
     @keyframes slideUpModal{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .rating-modal-header { padding:24px 28px 16px; border-bottom:1px solid rgba(255,255,255,0.08); background:#1a1d26; border-radius:22px 22px 0 0; }
-    .rating-modal-body   { padding:24px 28px; background:#1a1d26; }
-    .rating-modal-footer { padding:16px 28px 24px; display:flex; gap:10px; background:#1a1d26; border-top:1px solid rgba(255,255,255,0.08); border-radius:0 0 22px 22px; }
+    .rating-modal-header { padding:24px 28px 16px; border-bottom:1px solid var(--border); background:var(--bg-card); border-radius:22px 22px 0 0; }
+    .rating-modal-body   { padding:24px 28px; background:var(--bg-card); }
+    .rating-modal-footer { padding:16px 28px 24px; display:flex; gap:10px; background:var(--bg-card); border-top:1px solid var(--border); border-radius:0 0 22px 22px; }
     .star-row { display:flex; gap:12px; justify-content:center; margin:20px 0; }
     .star-btn {
       font-size:2.4rem; background:none; border:none; cursor:pointer;
@@ -473,7 +473,7 @@ function openRatingModal(hireId) {
             <div style="font-size:1.05rem;font-weight:700;">${w.name||h.workerName||'Worker'}</div>
             <div style="font-size:0.8rem;color:var(--text-muted);">🛠️ ${w.trade||'—'}</div>
           </div>
-          <button onclick="closeRatingModal()" style="margin-left:auto;background:rgba(255,255,255,0.06);border:none;color:var(--text-secondary);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;">✕</button>
+          <button onclick="closeRatingModal()" style="margin-left:auto;background:var(--border);border:none;color:var(--text-secondary);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;">✕</button>
         </div>
       </div>
       <div class="rating-modal-body">
@@ -491,7 +491,7 @@ function openRatingModal(hireId) {
         </div>
         <div style="margin-top:16px;">
           <label style="font-size:0.82rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">Write a Review (optional)</label>
-          <textarea id="reviewText" rows="4" placeholder="Share your experience — quality of work, punctuality, professionalism…" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text-primary);font-size:0.88rem;resize:vertical;font-family:inherit;box-sizing:border-box;outline:none;line-height:1.5;transition:.2s;" oninput="this.style.borderColor='var(--primary)'">${existing?existing.text:''}</textarea>
+          <textarea id="reviewText" rows="4" placeholder="Share your experience — quality of work, punctuality, professionalism…" style="width:100%;background:var(--border);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text-primary);font-size:0.88rem;resize:vertical;font-family:inherit;box-sizing:border-box;outline:none;line-height:1.5;transition:.2s;" oninput="this.style.borderColor='var(--primary)'">${existing?existing.text:''}</textarea>
         </div>
         <div style="margin-top:14px;">
           <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Quick tags:</div>

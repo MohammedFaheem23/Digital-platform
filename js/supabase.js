@@ -338,3 +338,22 @@ async function sbSubmitReview(payload) {
   if (error) throw error;
   return data;
 }
+
+/** Upload profile photo to Supabase Storage */
+async function sbUploadAvatar(userId, file) {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${userId}-${Math.random()}.${fileExt}`;
+  const filePath = `${fileName}`;
+
+  const { error: uploadError } = await db.storage
+    .from('avatars')
+    .upload(filePath, file);
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = db.storage
+    .from('avatars')
+    .getPublicUrl(filePath);
+
+  return publicUrl;
+}

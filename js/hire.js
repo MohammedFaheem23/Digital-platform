@@ -54,6 +54,7 @@ async function buildWorkerList() {
       about:       u.bio         || `${u.name||'Worker'} is a skilled ${u.trade||'professional'} based in ${u.city||'India'}.`,
       isRegistered:true,
       email:       u.email,
+      avatar:      u.avatar,
     };
   });
 
@@ -77,7 +78,7 @@ function filterWorkers() {
     const matchCity    = !city || w.city === city;
     const matchTrade   = trades.length === 0 || trades.includes(w.trade);
     const matchAvail   = !avail || (avail === 'Available' ? w.available : !w.available);
-    const matchRating  = w.rating >= minRating;
+    const matchRating  = minRating === 0 || w.rating >= minRating;
     const matchVerified= !verifiedOnly || w.verified;
     return matchQ && matchCity && matchTrade && matchAvail && matchRating && matchVerified;
   });
@@ -111,10 +112,15 @@ function renderWorkersList() {
          <span class="review-count">(${w.reviews} reviews)</span>`
       : `<span style="font-size:0.8rem;color:var(--text-muted);">No reviews yet</span>`;
 
+    const avatarHtml = w.avatar && w.avatar.startsWith('http')
+      ? `<img src="${w.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`
+      : w.initial;
+    const avatarBg = w.avatar && w.avatar.startsWith('http') ? 'transparent' : w.gradient;
+
     return `
     <div class="worker-profile-card" style="cursor:pointer;" onclick="viewWorkerProfile(${idx})">
       <div class="wpc-header">
-        <div class="wpc-avatar" style="background:${w.gradient}">${w.initial}</div>
+        <div class="wpc-avatar" style="background:${avatarBg}">${avatarHtml}</div>
         <div class="wpc-info">
           <div class="wpc-name">${w.name}
             ${w.isRegistered ? '<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);margin-left:6px;">✨ Registered</span>' : ''}
@@ -164,15 +170,20 @@ function viewWorkerProfile(idx) {
   if (!w) return;
   document.getElementById('workerProfileModal')?.remove();
 
+  const avatarHtml = w.avatar && w.avatar.startsWith('http')
+    ? `<img src="${w.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`
+    : w.initial;
+  const avatarBg = w.avatar && w.avatar.startsWith('http') ? 'transparent' : 'rgba(255,255,255,0.25)';
+
   const modal = document.createElement('div');
   modal.id = 'workerProfileModal';
   modal.style.cssText = `position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);padding:20px;`;
   modal.innerHTML = `
-    <div style="background:var(--card-bg,#1a1a2e);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:20px;width:100%;max-width:540px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);animation:slideUp .3s ease;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:540px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);animation:slideUp .3s ease;">
       <div style="background:${w.gradient};padding:32px 28px 20px;position:relative;">
         <button onclick="closeModal('workerProfileModal')" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer;">✕</button>
         <div style="display:flex;align-items:center;gap:16px;">
-          <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;">${w.initial}</div>
+          <div style="width:72px;height:72px;border-radius:50%;background:${avatarBg};display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;">${avatarHtml}</div>
           <div>
             <div style="font-size:1.3rem;font-weight:700;color:#fff;">${w.name}</div>
             <div style="color:rgba(255,255,255,0.85);font-size:0.95rem;">🛠️ ${w.trade} · ${w.city}</div>

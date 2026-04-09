@@ -44,20 +44,20 @@
     /* Availability toggle in profile */
     .avail-row {
       display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
-      background:#1a1d26; border:1px solid rgba(255,255,255,0.08); border-radius:14px;
+      background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
       padding:14px 20px; margin-bottom:28px; transition:.3s;
     }
 
     /* Section card */
     .profile-section {
-      background:#1a1d26; border:1px solid rgba(255,255,255,0.08);
+      background:var(--bg-card); border:1px solid var(--border);
       border-radius:18px; margin-bottom:20px; overflow:hidden;
     }
     .section-head {
-      padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.06);
+      padding:18px 24px; border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between;
     }
-    .section-head-title { font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .section-head-title { font-size:0.95rem; font-weight:700; display:flex; align-items:center; gap:8px; color:var(--text-primary); }
     .section-body { padding:22px 24px; }
 
     /* Form fields */
@@ -66,12 +66,12 @@
     .field-group { margin-bottom:14px; }
     .field-label { font-size:0.8rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:7px; }
     .field-input, .field-select, .field-textarea {
-      width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      width:100%; background:var(--bg-dark); border:1px solid var(--border);
       border-radius:10px; padding:11px 14px; color:var(--text-primary); font-size:0.88rem;
       font-family:inherit; box-sizing:border-box; outline:none; transition:.2s;
     }
     .field-input:focus, .field-select:focus, .field-textarea:focus { border-color:var(--primary); background:rgba(249,115,22,0.04); }
-    .field-select option { background:#1a1d26; }
+    .field-select option { background:var(--bg-card); color:var(--text-primary); }
     .field-textarea { resize:vertical; min-height:90px; line-height:1.55; }
 
     /* Skills chips */
@@ -81,12 +81,13 @@
       background:rgba(249,115,22,0.12); color:var(--primary);
       border:1px solid rgba(249,115,22,0.25); border-radius:20px;
       padding:4px 12px; font-size:0.78rem; font-weight:600;
+      transition: var(--transition-fast);
     }
     .skill-chip-edit .rm { cursor:pointer; opacity:.65; font-size:0.9rem; }
     .skill-chip-edit .rm:hover { opacity:1; }
     .add-skill-row { display:flex; gap:8px; margin-top:10px; }
     .add-skill-input {
-      flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      flex:1; background:var(--bg-dark); border:1px solid var(--border);
       border-radius:10px; padding:9px 14px; color:var(--text-primary); font-size:0.85rem;
       font-family:inherit; outline:none; transition:.2s;
     }
@@ -94,8 +95,8 @@
 
     /* Save bar */
     .save-bar {
-      position:sticky; bottom:0; background:#1a1d26;
-      border-top:1px solid rgba(255,255,255,0.08);
+      position:sticky; bottom:0; background:var(--bg-card);
+      border-top:1px solid var(--border);
       padding:14px 24px; display:flex; gap:10px; justify-content:flex-end;
       z-index:10;
     }
@@ -103,12 +104,13 @@
     /* Stats row */
     .profile-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
     @media(max-width:440px){ .profile-stats{grid-template-columns:1fr 1fr;} }
-    .ps-card { background:#1a1d26; border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:16px; text-align:center; }
+    .ps-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px; text-align:center; transition: var(--transition-fast); }
+    .ps-card:hover { border-color: var(--border-hover); }
     .ps-val { font-size:1.6rem; font-weight:800; color:var(--primary); }
     .ps-label { font-size:0.72rem; color:var(--text-muted); margin-top:4px; }
 
     /* Reviews */
-    .review-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:10px; }
+    .review-card { background:var(--bg-dark); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
     .review-stars { color:#fbbf24; font-size:1rem; letter-spacing:2px; margin-bottom:6px; }
     .review-text { font-size:0.85rem; line-height:1.55; color:var(--text-secondary); font-style:italic; }
     .review-meta { font-size:0.73rem; color:var(--text-muted); margin-top:8px; }
@@ -167,6 +169,11 @@
         <div class="profile-avatar-wrap">
           <div class="profile-avatar" id="heroAvatar">?</div>
           <div class="avail-badge" id="heroBadge" style="background:#34d399;"></div>
+          <!-- Upload Button -->
+          <label for="avatarInput" style="position:absolute;bottom:0;right:0;width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;border:2px solid var(--bg-card);box-shadow:0 2px 8px rgba(0,0,0,0.2);z-index:10;">
+            <span style="font-size:0.8rem;">📷</span>
+            <input type="file" id="avatarInput" hidden accept="image/*" onchange="handleAvatarUpload(this)" />
+          </label>
         </div>
         <div class="profile-info">
           <div class="profile-name" id="heroName">Loading…</div>
@@ -377,10 +384,25 @@ function loadProfile() {
   if (!u) return;
 
   // Top bar avatar
-  document.getElementById('userAva').textContent = u.name?.[0]?.toUpperCase() || '?';
+  const userAva = document.getElementById('userAva');
+  if (u.avatar && u.avatar.startsWith('http')) {
+    userAva.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    userAva.style.background = 'transparent';
+  } else {
+    userAva.textContent = u.avatar || u.name?.[0]?.toUpperCase() || '?';
+    userAva.style.background = 'linear-gradient(135deg,#f97316,#ea580c)';
+  }
 
   // Hero
-  document.getElementById('heroAvatar').textContent = u.name?.[0]?.toUpperCase() || '?';
+  const heroAvatar = document.getElementById('heroAvatar');
+  if (u.avatar && u.avatar.startsWith('http')) {
+    heroAvatar.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    heroAvatar.style.background = 'transparent';
+  } else {
+    heroAvatar.textContent = u.avatar || u.name?.[0]?.toUpperCase() || '?';
+    heroAvatar.style.background = 'linear-gradient(135deg,#f97316,#ea580c)';
+  }
+
   document.getElementById('heroName').textContent   = u.name || '—';
   document.getElementById('heroTrade').textContent  = u.trade ? `🛠️ ${u.trade}` : '🛠️ Trade not set';
   document.getElementById('heroSince').textContent  = u.createdAt
@@ -408,6 +430,29 @@ function loadProfile() {
   // Skills
   profileSkills = [...(u.skills || [])];
   renderSkillChips();
+}
+
+/** Handle file upload */
+async function handleAvatarUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Validate size < 2MB
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('Image too large (max 2MB)', 'error');
+    return;
+  }
+
+  try {
+    showToast('Uploading photo...', 'info');
+    const url = await sbUploadAvatar(currentUser.id, file);
+    await sbUpdateProfile(currentUser.id, { avatar: url });
+    showToast('Profile photo updated!', 'success');
+    loadProfile();
+  } catch (e) {
+    console.error('Avatar upload failed:', e);
+    showToast('Upload failed. Please ensure "avatars" bucket is public in Supabase.', 'error');
+  }
 }
 
 function setValue(id, val) {
