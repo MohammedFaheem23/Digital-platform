@@ -100,7 +100,7 @@ function renderWorkersList() {
   if (count) count.textContent = `Showing ${visible.length} of ${filteredWorkers.length} workers`;
 
   if (filteredWorkers.length === 0) {
-    grid.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted);grid-column:1/-1;"><div style="font-size:3rem;margin-bottom:16px;">👷</div><h3>No workers found</h3><p>Try adjusting your filters.</p></div>`;
+    grid.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted);grid-column:1/-1;"><h3>No workers found</h3><p>Try adjusting your filters.</p></div>`;
     return;
   }
 
@@ -123,16 +123,16 @@ function renderWorkersList() {
         <div class="wpc-avatar" style="background:${avatarBg}">${avatarHtml}</div>
         <div class="wpc-info">
           <div class="wpc-name">${w.name}
-            ${w.isRegistered ? '<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);margin-left:6px;">✨ Registered</span>' : ''}
+            ${w.isRegistered ? '<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);margin-left:6px;">Registered</span>' : ''}
           </div>
           <div class="wpc-trade">${w.trade}</div>
-          <div class="wpc-location">📍 ${w.city} · ${w.experience} exp</div>
+          <div class="wpc-location">Location: ${w.city} · ${w.experience} exp</div>
         </div>
       </div>
-      ${w.verified ? '<div class="wpc-verified">✓ Verified</div>' : ''}
+      ${w.verified ? '<div class="wpc-verified">Verified</div>' : ''}
       <div class="wpc-rating">
         ${ratingDisplay}
-        <span class="badge ${w.available?'badge-success':'badge-warning'}" style="margin-left:auto;font-size:0.7rem;">${w.available?'🟢 Available':'🔴 On Job'}</span>
+        <span class="badge ${w.available?'badge-success':'badge-warning'}" style="margin-left:auto;font-size:0.7rem;">${w.available?'Available':'On Job'}</span>
       </div>
       <div class="wpc-skills">${w.skills.slice(0,3).map(s=>`<span class="skill-chip">${s}</span>`).join('')}${w.skills.length>3?`<span class="skill-chip" style="background:rgba(255,255,255,0.05);">+${w.skills.length-3} more</span>`:''}</div>
       <div class="wpc-footer" onclick="event.stopPropagation()">
@@ -186,10 +186,10 @@ function viewWorkerProfile(idx) {
           <div style="width:72px;height:72px;border-radius:50%;background:${avatarBg};display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;">${avatarHtml}</div>
           <div>
             <div style="font-size:1.3rem;font-weight:700;color:#fff;">${w.name}</div>
-            <div style="color:rgba(255,255,255,0.85);font-size:0.95rem;">🛠️ ${w.trade} · ${w.city}</div>
+            <div style="color:rgba(255,255,255,0.85);font-size:0.95rem;">${w.trade} · ${w.city}</div>
             <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-              ${w.verified ? '<span style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.75rem;padding:2px 8px;border-radius:20px;">✓ Verified</span>' : ''}
-              <span style="background:${w.available?'rgba(52,211,153,0.3)':'rgba(245,158,11,0.3)'};color:${w.available?'#34d399':'#fbbf24'};font-size:0.75rem;padding:2px 8px;border-radius:20px;">${w.available?'🟢 Available Now':'🔴 On Job'}</span>
+              ${w.verified ? '<span style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.75rem;padding:2px 8px;border-radius:20px;">Verified</span>' : ''}
+              <span style="background:${w.available?'rgba(52,211,153,0.3)':'rgba(245,158,11,0.3)'};color:${w.available?'#34d399':'#fbbf24'};font-size:0.75rem;padding:2px 8px;border-radius:20px;">${w.available?'Available Now':'On Job'}</span>
             </div>
           </div>
         </div>
@@ -203,14 +203,14 @@ function viewWorkerProfile(idx) {
         <div style="margin-bottom:18px;"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted,#888);text-transform:uppercase;margin-bottom:8px;">About</div><p style="font-size:0.9rem;color:var(--text-secondary,#ccc);line-height:1.6;margin:0;">${w.about}</p></div>
         <div style="margin-bottom:18px;"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted,#888);text-transform:uppercase;margin-bottom:8px;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:8px;">${w.skills.map(s=>`<span style="background:rgba(249,115,22,0.12);color:var(--primary,#f97316);font-size:0.8rem;padding:4px 12px;border-radius:20px;border:1px solid rgba(249,115,22,0.2);">${s}</span>`).join('')}</div></div>
         <div style="margin-bottom:18px;"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted,#888);text-transform:uppercase;margin-bottom:8px;">Contact</div>
-          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);">📞 ${w.phone}</div>
-          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);margin-top:6px;">📍 ${w.city}, India</div>
-          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);margin-top:6px;">💰 ${w.rateLabel}</div>
+          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);">Phone: ${w.phone}</div>
+          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);margin-top:6px;">Location: ${w.city}, India</div>
+          <div style="font-size:0.9rem;color:var(--text-secondary,#ccc);margin-top:6px;">Rate: ${w.rateLabel}</div>
         </div>
       </div>
       <div style="padding:16px 28px 24px;display:flex;gap:12px;border-top:1px solid var(--border,rgba(255,255,255,0.08));">
-        <button data-hire="true" style="flex:1;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;border-radius:10px;padding:12px;font-size:0.95rem;font-weight:600;cursor:pointer;">🤝 Hire ${w.name.split(' ')[0]}</button>
-        <a href="tel:${w.phone.replace(/\s/g,'')}" style="flex:1;background:rgba(255,255,255,0.07);color:var(--text-primary,#fff);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:10px;padding:12px;font-size:0.95rem;font-weight:600;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;">📞 Call Now</a>
+        <button data-hire="true" style="flex:1;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;border-radius:10px;padding:12px;font-size:0.95rem;font-weight:600;cursor:pointer;">Hire ${w.name.split(' ')[0]}</button>
+        <a href="tel:${w.phone.replace(/\s/g,'')}" style="flex:1;background:rgba(255,255,255,0.07);color:var(--text-primary,#fff);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:10px;padding:12px;font-size:0.95rem;font-weight:600;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;">Call Now</a>
       </div>
     </div>`;
 
@@ -240,7 +240,7 @@ function hireWorker(idx) {
     <div style="background:var(--card-bg,#1a1a2e);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);animation:slideUp .3s ease;">
       <div style="background:linear-gradient(135deg,#f97316,#ea580c);padding:24px 28px;position:relative;">
         <button onclick="closeModal('hireRequestModal')" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer;">✕</button>
-        <div style="font-size:1.2rem;font-weight:700;color:#fff;">🤝 Send Hire Request</div>
+        <div style="font-size:1.2rem;font-weight:700;color:#fff;"> Send Hire Request</div>
         <div style="color:rgba(255,255,255,0.85);font-size:0.9rem;margin-top:4px;">to ${w.name} · ${w.trade}</div>
       </div>
       <div style="padding:24px 28px;">
@@ -259,7 +259,7 @@ function hireWorker(idx) {
           <input type="text" id="hireAddress" placeholder="e.g. Koramangala, Bengaluru" value="${user.city||''}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:10px;padding:10px 12px;color:var(--text-primary,#fff);font-size:0.85rem;box-sizing:border-box;outline:none;font-family:inherit;">
         </div>
         <div style="display:flex;gap:12px;">
-          <button data-submit="true" style="flex:1;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;border-radius:10px;padding:13px;font-size:0.95rem;font-weight:600;cursor:pointer;">Send Request 🚀</button>
+          <button data-submit="true" style="flex:1;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;border-radius:10px;padding:13px;font-size:0.95rem;font-weight:600;cursor:pointer;">Send Request </button>
           <button onclick="closeModal('hireRequestModal')" style="background:rgba(255,255,255,0.07);color:var(--text-secondary,#ccc);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:10px;padding:13px 20px;font-size:0.95rem;font-weight:600;cursor:pointer;">Cancel</button>
         </div>
       </div>
@@ -290,10 +290,10 @@ async function submitHireRequest(idx) {
       address:   document.getElementById('hireAddress')?.value || null,
     });
     closeModal('hireRequestModal');
-    showToast(`✅ Hire request sent to ${w.name}! View in Manage Hires.`, 'success');
+    showToast(` Hire request sent to ${w.name}! View in Manage Hires.`, 'success');
     setTimeout(() => { if (confirm(`Request sent to ${w.name}!\n\nGo to "Manage Hires" to track status?`)) window.location.href = 'manage-hires.html'; }, 1200);
   } catch(err) {
-    if (btn) { btn.disabled = false; btn.textContent = 'Send Request 🚀'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Send Request '; }
     showToast('Failed to send request. Please try again.', 'error');
   }
 }
@@ -314,7 +314,7 @@ if (!document.getElementById('hireModalStyles')) {
 document.addEventListener('DOMContentLoaded', async () => {
   // Show loading state
   const grid = document.getElementById('workersListGrid');
-  if (grid) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);">⏳ Loading workers…</div>`;
+  if (grid) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);"> Loading workers…</div>`;
 
   await buildWorkerList();
   filterWorkers();

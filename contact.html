@@ -22,7 +22,7 @@
 <body>
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <a href="home.html" class="nav-logo"><div class="logo-icon"></div><span>SkillConnect</span></a>
       <ul class="nav-links" id="navLinks">
         <li><a href="home.html" class="nav-link">Home</a></li>
         <li><a href="jobs.html" class="nav-link">Find Jobs</a></li>
@@ -40,7 +40,7 @@
 
   <section class="page-hero">
     <div class="container page-hero-content">
-      <span class="section-tag">📬 Get in Touch</span>
+      <span class="section-tag"> Get in Touch</span>
       <h1>Contact <span class="gradient-text">SkillConnect</span></h1>
       <p>We're here to help workers find jobs, employers find talent, and everyone find answers.</p>
     </div>
@@ -64,7 +64,7 @@
               </div>
             </div>
             <div class="card" style="display:flex;align-items:center;gap:16px;">
-              <div style="width:50px;height:50px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">✉️</div>
+              <div style="width:50px;height:50px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;"></div>
               <div>
                 <strong style="display:block;margin-bottom:2px;">Email Support</strong>
                 <span style="color:var(--text-muted);font-size:0.875rem;">support@skillconnect.in</span><br/>
@@ -72,7 +72,7 @@
               </div>
             </div>
             <div class="card" style="display:flex;align-items:center;gap:16px;">
-              <div style="width:50px;height:50px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">💬</div>
+              <div style="width:50px;height:50px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;"></div>
               <div>
                 <strong style="display:block;margin-bottom:2px;">Live Chat</strong>
                 <span style="color:var(--text-muted);font-size:0.875rem;">Available on the app</span><br/>
@@ -80,7 +80,7 @@
               </div>
             </div>
             <div class="card" style="display:flex;align-items:center;gap:16px;">
-              <div style="width:50px;height:50px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📍</div>
+              <div style="width:50px;height:50px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;"></div>
               <div>
                 <strong style="display:block;margin-bottom:2px;">Office</strong>
                 <span style="color:var(--text-muted);font-size:0.875rem;">Plot 42, Sector 18, Gurugram</span><br/>
@@ -144,7 +144,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-full btn-lg" id="contactSubmitBtn">
-              <span id="contactBtnText">Send Message 📨</span>
+              <span id="contactBtnText">Send Message </span>
               <span id="contactSpinner" class="spinner" style="display:none;"></span>
             </button>
           </form>
@@ -215,8 +215,8 @@
       const answer = item.querySelector('.faq-answer');
       const icon = item.querySelector('.faq-icon');
       const isOpen = answer.style.display === 'block';
-      document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
-      document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+      document.querySelectorAll('.faq-answer').forEach(a =>a.style.display = 'none');
+      document.querySelectorAll('.faq-icon').forEach(i =>i.textContent = '+');
       if (!isOpen) {
         answer.style.display = 'block';
         icon.textContent = '−';
@@ -232,22 +232,22 @@
       btnText.style.display = 'none';
       spinner.style.display = 'inline-block';
 
-      setTimeout(() => {
+      setTimeout(() =>{
         btn.disabled = false;
         btnText.style.display = 'inline';
         spinner.style.display = 'none';
         document.getElementById('contactForm').reset();
         const alert = document.getElementById('contactAlert');
         alert.className = 'alert alert-success';
-        alert.innerHTML = '✅ Message sent! We\'ll respond within 24 hours.';
+        alert.innerHTML = "Message sent! We'll respond within 24 hours.";
         alert.style.display = 'flex';
-        showToast('Message sent successfully! 📨', 'success');
+        showToast('Message sent successfully! ', 'success');
       }, 1500);
     }
   </script>
   <style>
     @media (max-width:900px) {
-      .container > div { grid-template-columns:1fr !important; }
+      .container >div { grid-template-columns:1fr !important; }
     }
     @media (max-width:600px) {
       [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; }

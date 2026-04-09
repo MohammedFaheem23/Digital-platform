@@ -106,56 +106,56 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <a href="home.html" class="nav-logo">
-        <div class="logo-icon">⚡</div>
+        <div class="logo-icon"></div>
         <span>SkillConnect</span>
       </a>
     </div>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Main</span>
       <a href="dashboard-worker.html" class="sidebar-link">
-        <span class="sidebar-icon">📊</span> Dashboard
+        <span class="sidebar-icon"></span>Dashboard
       </a>
       <a href="jobs.html" class="sidebar-link">
-        <span class="sidebar-icon">💼</span> Browse Jobs
+        <span class="sidebar-icon"></span>Browse Jobs
       </a>
       <a href="my-applications.html" class="sidebar-link active">
-        <span class="sidebar-icon">📋</span> My Applications
+        <span class="sidebar-icon"></span>My Applications
         <span class="sidebar-badge" id="pendingBadge" style="display:none;"></span>
       </a>
       <a href="#" class="sidebar-link" onclick="showToast('Active Jobs — coming soon!','info');return false;">
-        <span class="sidebar-icon">✅</span> Active Jobs
+        <span class="sidebar-icon"></span>Active Jobs
       </a>
       <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;">
-        <span class="sidebar-icon">📜</span> Job History
+        <span class="sidebar-icon"></span>Job History
       </a>
 
       <span class="sidebar-section-label">Profile</span>
       <a href="#" class="sidebar-link" onclick="showToast('My Profile editor — coming soon!','info');return false;">
-        <span class="sidebar-icon">👤</span> My Profile
+        <span class="sidebar-icon"></span>My Profile
       </a>
       <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;">
-        <span class="sidebar-icon">🛡️</span> Verification
+        <span class="sidebar-icon"></span>Verification
       </a>
       <a href="#" class="sidebar-link" onclick="showToast('Reviews — coming soon!','info');return false;">
-        <span class="sidebar-icon">⭐</span> My Reviews
+        <span class="sidebar-icon">⭐</span>My Reviews
       </a>
 
       <span class="sidebar-section-label">Finance</span>
       <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;">
-        <span class="sidebar-icon">💰</span> Earnings
+        <span class="sidebar-icon"></span>Earnings
       </a>
 
       <span class="sidebar-section-label">Support</span>
       <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;">
-        <span class="sidebar-icon">💬</span> Messages
+        <span class="sidebar-icon"></span>Messages
       </a>
       <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;">
-        <span class="sidebar-icon">⚙️</span> Settings
+        <span class="sidebar-icon"></span>Settings
       </a>
     </nav>
     <div class="sidebar-footer">
       <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
-        <span class="sidebar-icon">🚪</span> Log Out
+        <span class="sidebar-icon"></span>Log Out
       </button>
     </div>
   </aside>
@@ -198,10 +198,10 @@
       <!-- Filter Tabs -->
       <div class="app-filters">
         <button class="app-filter-btn active" data-filter="all" onclick="filterApps('all', this)">All</button>
-        <button class="app-filter-btn" data-filter="pending" onclick="filterApps('pending', this)">⏳ Under Review</button>
+        <button class="app-filter-btn" data-filter="pending" onclick="filterApps('pending', this)">Under Review</button>
         <button class="app-filter-btn" data-filter="shortlisted" onclick="filterApps('shortlisted', this)">⭐ Shortlisted</button>
-        <button class="app-filter-btn" data-filter="selected" onclick="filterApps('selected', this)">✅ Selected</button>
-        <button class="app-filter-btn" data-filter="rejected" onclick="filterApps('rejected', this)">❌ Not Selected</button>
+        <button class="app-filter-btn" data-filter="selected" onclick="filterApps('selected', this)">Selected</button>
+        <button class="app-filter-btn" data-filter="rejected" onclick="filterApps('rejected', this)">Not Selected</button>
       </div>
 
       <!-- Application List -->
@@ -210,7 +210,7 @@
       <!-- Quick Apply Banner -->
       <div style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(234,88,12,0.05));border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
         <div>
-          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">💼 Looking for more jobs?</div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;"> Looking for more jobs?</div>
           <div style="font-size:0.85rem;color:var(--text-muted);">Browse hundreds of verified opportunities matching your skills.</div>
         </div>
         <a href="jobs.html" class="btn btn-primary">Browse Jobs →</a>
@@ -229,18 +229,18 @@
 
 // Status config
 const STATUS_CONFIG = {
-  'pending':     { label:'Under Review', icon:'⏳', cls:'status-pending',    accent:'#fbbf24', step:1 },
+  'pending':     { label:'Under Review', icon:'', cls:'status-pending',    accent:'#fbbf24', step:1 },
   'shortlisted': { label:'Shortlisted',  icon:'⭐', cls:'status-shortlisted', accent:'#38bdf8', step:2 },
-  'selected':    { label:'Selected! 🎉', icon:'✅', cls:'status-selected',    accent:'#34d399', step:3 },
-  'rejected':    { label:'Not Selected', icon:'❌', cls:'status-rejected',     accent:'#f87171', step:-1 },
+  'selected':    { label:'Selected! ', icon:'', cls:'status-selected',    accent:'#34d399', step:3 },
+  'rejected':    { label:'Not Selected', icon:'', cls:'status-rejected',     accent:'#f87171', step:-1 },
   'withdrawn':   { label:'Withdrawn',    icon:'↩️', cls:'status-withdrawn',    accent:'#9ca3af', step:0 },
 };
 
 const TIMELINE_STEPS = [
   { key:'applied',     label:'Applied',     icon:'📤' },
-  { key:'review',      label:'Reviewing',   icon:'👁️' },
+  { key:'review',      label:'Reviewing',   icon:'' },
   { key:'shortlisted', label:'Shortlisted', icon:'⭐' },
-  { key:'selected',    label:'Selected',    icon:'✅' },
+  { key:'selected',    label:'Selected',    icon:'' },
 ];
 
 let allApps = [];
@@ -262,7 +262,7 @@ async function loadApplications() {
 
   try {
     const apps = await sbGetMyApplications(user.id);
-    allApps = apps.map(app => ({
+    allApps = apps.map(app =>({
       id: app.id,
       status: app.status || 'pending',
       created_at: app.created_at,
@@ -271,9 +271,9 @@ async function loadApplications() {
       location: app.job?.location || 'Unknown Location',
       pay: app.job?.pay || 'Negotiable',
       type: app.job?.type || 'Full Time',
-      icon: app.job?.trade === 'Electrician' ? '⚡' : 
-            app.job?.trade === 'Plumber' ? '🔧' : 
-            app.job?.trade === 'Carpenter' ? '🪚' : '💼'
+      icon: app.job?.trade === 'Electrician' ? '' : 
+            app.job?.trade === 'Plumber' ? '' : 
+            app.job?.trade === 'Carpenter' ? '' : ''
     }));
   } catch(e) {
     console.error('Failed to load applications', e);
@@ -287,20 +287,20 @@ async function loadApplications() {
 /* ---- Stats ---- */
 function updateStats() {
   document.getElementById('statTotal').textContent      = allApps.length;
-  document.getElementById('statPending').textContent    = allApps.filter(a => a.status === 'pending').length;
-  document.getElementById('statSelected').textContent   = allApps.filter(a => a.status === 'selected').length;
-  document.getElementById('statRejected').textContent   = allApps.filter(a => a.status === 'rejected').length;
+  document.getElementById('statPending').textContent    = allApps.filter(a =>a.status === 'pending').length;
+  document.getElementById('statSelected').textContent   = allApps.filter(a =>a.status === 'selected').length;
+  document.getElementById('statRejected').textContent   = allApps.filter(a =>a.status === 'rejected').length;
 
-  const pendingCount = allApps.filter(a => a.status === 'pending' || a.status === 'shortlisted').length;
+  const pendingCount = allApps.filter(a =>a.status === 'pending' || a.status === 'shortlisted').length;
   const badge = document.getElementById('pendingBadge');
-  if (pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = ''; }
+  if (pendingCount >0) { badge.textContent = pendingCount; badge.style.display = ''; }
   else badge.style.display = 'none';
 }
 
 /* ---- Filter ---- */
 function filterApps(filter, btn) {
   currentFilter = filter;
-  document.querySelectorAll('.app-filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.app-filter-btn').forEach(b =>b.classList.remove('active'));
   btn.classList.add('active');
   renderApps();
 }
@@ -309,13 +309,13 @@ function filterApps(filter, btn) {
 function renderApps() {
   const container = document.getElementById('applicationsList');
   let apps = allApps;
-  if (currentFilter !== 'all') apps = allApps.filter(a => a.status === currentFilter);
+  if (currentFilter !== 'all') apps = allApps.filter(a =>a.status === currentFilter);
 
   if (apps.length === 0) {
     if (allApps.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon"></div>
           <h3>No Applications Yet</h3>
           <p>Start applying to jobs to track your application status here in real time.</p>
           <a href="jobs.html" class="btn btn-primary">Browse Jobs & Apply</a>
@@ -323,7 +323,7 @@ function renderApps() {
     } else {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-icon"></div>
           <h3>No applications in this category</h3>
           <p>Try selecting a different filter above.</p>
         </div>`;
@@ -331,7 +331,7 @@ function renderApps() {
     return;
   }
 
-  container.innerHTML = apps.map(app => buildAppCard(app)).join('');
+  container.innerHTML = apps.map(app =>buildAppCard(app)).join('');
 }
 
 /* ---- Build card HTML ---- */
@@ -345,13 +345,13 @@ function buildAppCard(app) {
   return `
     <div class="app-card">
       <div class="app-card-accent" style="background:${s.accent};"></div>
-      <div class="app-icon" style="background:${app.iconBg || 'rgba(249,115,22,0.12)'}">${app.icon || '💼'}</div>
+      <div class="app-icon" style="background:${app.iconBg || 'rgba(249,115,22,0.12)'}">${app.icon || ''}</div>
       <div class="app-info">
         <div class="app-title">${app.title}</div>
         <div class="app-meta">
-          <span>🏢 ${app.employer || app.company || 'Company'}</span>
-          <span>📍 ${app.location || 'Location'}</span>
-          <span>💰 ${app.pay || 'Negotiable'}</span>
+          <span>${app.employer || app.company || 'Company'}</span>
+          <span>${app.location || 'Location'}</span>
+          <span>${app.pay || 'Negotiable'}</span>
           <span>🏷️ ${app.type || 'Full Time'}</span>
         </div>
         <!-- Status Timeline -->
@@ -359,7 +359,7 @@ function buildAppCard(app) {
         <!-- Actions -->
         <div class="app-actions">
           ${app.status === 'selected'
-            ? `<button class="btn btn-primary btn-sm" onclick="showToast('🎉 Congratulations! Contact the employer to confirm your start date.','success')">Contact Employer 🎉</button>`
+            ? `<button class="btn btn-primary btn-sm" onclick="showToast('Congratulations! Contact the employer to confirm your start date.','success')">Contact Employer </button>`
             : app.status === 'shortlisted'
             ? `<button class="btn btn-primary btn-sm" onclick="showToast('You are shortlisted! The employer will contact you soon.','info')">View Details</button>
                <button class="btn btn-ghost btn-sm" onclick="withdrawApp('${app.id}')">Withdraw</button>`
@@ -384,12 +384,12 @@ function buildTimeline(status) {
   const stepIndex = { pending:1, shortlisted:2, selected:3 };
   const current = stepIndex[status] ?? 0;
 
-  const steps = TIMELINE_STEPS.map((step, i) => {
+  const steps = TIMELINE_STEPS.map((step, i) =>{
     const done   = i < current;
     const active = i === current;
     return `
       <div class="timeline-step ${done ? 'done' : active ? 'active' : ''}">
-        <div class="timeline-dot">${done ? '✓' : step.icon}</div>
+        <div class="timeline-dot">${done ? '' : step.icon}</div>
         <div class="timeline-label">${step.label}</div>
       </div>`;
   }).join('');
@@ -400,7 +400,7 @@ function buildTimeline(status) {
 /* ---- Withdraw application ---- */
 async function withdrawApp(appId) {
   const user = getCurrentUser();
-  const idx = allApps.findIndex(a => String(a.id) === String(appId));
+  const idx = allApps.findIndex(a =>String(a.id) === String(appId));
   if (idx === -1) return;
 
   try {

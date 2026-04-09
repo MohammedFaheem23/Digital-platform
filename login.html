@@ -29,7 +29,7 @@
 
       <div class="auth-brand">
         <a href="home.html" class="nav-logo">
-          <div class="logo-icon">⚡</div>
+          <div class="logo-icon"></div>
           <span>SkillConnect</span>
         </a>
       </div>
@@ -40,14 +40,14 @@
 
         <div class="auth-features">
           <div class="auth-feature">
-            <div class="auth-feature-icon">🔍</div>
+            <div class="auth-feature-icon"></div>
             <div class="auth-feature-text">
               <strong>Find Work Instantly</strong>
               <span>Browse 1000s of job postings daily</span>
             </div>
           </div>
           <div class="auth-feature">
-            <div class="auth-feature-icon">💰</div>
+            <div class="auth-feature-icon"></div>
             <div class="auth-feature-text">
               <strong>Get Paid Faster</strong>
               <span>Secure & transparent payment system</span>
@@ -61,7 +61,7 @@
             </div>
           </div>
           <div class="auth-feature">
-            <div class="auth-feature-icon">📱</div>
+            <div class="auth-feature-icon"></div>
             <div class="auth-feature-text">
               <strong>Mobile Ready</strong>
               <span>Access everything from smartphone</span>
@@ -99,7 +99,7 @@
             Continue with Google
           </button>
           <button class="btn-social" onclick="socialLogin('phone')" id="phoneLoginBtn">
-            📱 Continue with Phone OTP
+             Continue with Phone OTP
           </button>
         </div>
 
@@ -126,7 +126,7 @@
           <div class="form-group">
             <label class="form-label" for="loginPassword">Password <span>*</span></label>
             <div class="input-with-icon">
-              <span class="input-icon">🔒</span>
+              <span class="input-icon"></span>
               <input
                 type="password"
                 id="loginPassword"
@@ -135,7 +135,7 @@
                 autocomplete="current-password"
                 required
               />
-              <span class="password-toggle" onclick="togglePassword('loginPassword', this)" title="Show/Hide password">👁️</span>
+              <span class="password-toggle" onclick="togglePassword('loginPassword', this)" title="Show/Hide password"></span>
             </div>
             <div class="form-error" id="passwordError">Password must be at least 6 characters.</div>
           </div>
@@ -165,7 +165,7 @@
 
         <!-- Demo Accounts -->
         <div style="margin-top:24px;padding:16px;background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.15);border-radius:12px;">
-          <p style="font-size:0.78rem;color:var(--accent);font-weight:700;margin-bottom:10px;">🎯 Quick Demo Login</p>
+          <p style="font-size:0.78rem;color:var(--accent);font-weight:700;margin-bottom:10px;">Quick Demo Login</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-sm" style="background:rgba(56,189,248,0.12);color:var(--accent);border:1px solid rgba(56,189,248,0.3);border-radius:8px;font-size:0.75rem;" onclick="demoLogin('worker')">Worker Demo</button>
             <button class="btn btn-sm" style="background:rgba(249,115,22,0.12);color:var(--primary);border:1px solid rgba(249,115,22,0.3);border-radius:8px;font-size:0.75rem;" onclick="demoLogin('employer')">Employer Demo</button>

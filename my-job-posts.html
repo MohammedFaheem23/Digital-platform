@@ -133,27 +133,27 @@
   <!-- ════ SIDEBAR ════ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <a href="home.html" class="nav-logo"><div class="logo-icon"></div><span>SkillConnect</span></a>
     </div>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Main</span>
-      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
-      <a href="manage-hires.html" class="sidebar-link"><span class="sidebar-icon">🤝</span> Manage Hires</a>
-      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon">👷</span> Find Workers</a>
-      <a href="my-job-posts.html" class="sidebar-link active"><span class="sidebar-icon">📋</span> My Job Posts</a>
+      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon"></span>Dashboard</a>
+      <a href="manage-hires.html" class="sidebar-link"><span class="sidebar-icon"></span>Manage Hires</a>
+      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon"></span>Find Workers</a>
+      <a href="my-job-posts.html" class="sidebar-link active"><span class="sidebar-icon"></span>My Job Posts</a>
 
       <span class="sidebar-section-label">Manage</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon">🏢</span> Company Profile</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Payments</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon">📄</span> Contracts</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon"></span>Company Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon"></span>Payments</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon"></span>Contracts</a>
 
       <span class="sidebar-section-label">Support</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon"></span>Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon"></span>Settings</a>
     </nav>
     <div class="sidebar-footer">
       <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
-        <span class="sidebar-icon">🚪</span> Log Out
+        <span class="sidebar-icon"></span>Log Out
       </button>
     </div>
   </aside>
@@ -197,10 +197,10 @@
       <!-- Filter tabs -->
       <div class="filter-tabs">
         <button class="filter-tab active" onclick="applyFilter('all',this)">All</button>
-        <button class="filter-tab" onclick="applyFilter('active',this)">✅ Active</button>
-        <button class="filter-tab" onclick="applyFilter('paused',this)">⏸️ Paused</button>
-        <button class="filter-tab" onclick="applyFilter('draft',this)">📝 Draft</button>
-        <button class="filter-tab" onclick="applyFilter('closed',this)">🔒 Closed</button>
+        <button class="filter-tab" onclick="applyFilter('active',this)">Active</button>
+        <button class="filter-tab" onclick="applyFilter('paused',this)">Paused</button>
+        <button class="filter-tab" onclick="applyFilter('draft',this)">Draft</button>
+        <button class="filter-tab" onclick="applyFilter('closed',this)">Closed</button>
       </div>
 
       <!-- Posts list -->
@@ -209,7 +209,7 @@
       <!-- CTA -->
       <div style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(234,88,12,0.05));border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
         <div>
-          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">🔍 Also want to hire directly?</div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">Also want to hire directly?</div>
           <div style="font-size:0.85rem;color:var(--text-muted);">Browse and contact skilled workers right now.</div>
         </div>
         <a href="hire.html" class="btn btn-primary">Find Workers →</a>
@@ -222,7 +222,7 @@
 <div id="postModal" style="display:none;" class="modal-backdrop" onclick="handleBackdropClick(event,'postModal')">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title" id="postModalTitle">📋 Post a New Job</div>
+      <div class="modal-title" id="postModalTitle">Post a New Job</div>
       <button class="modal-close" onclick="closeModal('postModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -238,17 +238,17 @@
           <label class="field-label">Trade / Category *</label>
           <select class="field-select" id="postTrade">
             <option value="">Select trade…</option>
-            <option value="Electrician">⚡ Electrician</option>
-            <option value="Plumber">🔧 Plumber</option>
-            <option value="Carpenter">🪚 Carpenter</option>
-            <option value="Welder">🔥 Welder</option>
-            <option value="Painter">🎨 Painter</option>
-            <option value="Mason">🧱 Mason</option>
-            <option value="AC Technician">❄️ AC Technician</option>
-            <option value="Driver">🚗 Driver</option>
-            <option value="Cleaner">🧹 Cleaner</option>
-            <option value="General Labour">🛠️ General Labour</option>
-            <option value="Other">🔩 Other</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Plumber">Plumber</option>
+            <option value="Carpenter">Carpenter</option>
+            <option value="Welder">Welder</option>
+            <option value="Painter">Painter</option>
+            <option value="Mason">Mason</option>
+            <option value="AC Technician">AC Technician</option>
+            <option value="Driver">Driver</option>
+            <option value="Cleaner">Cleaner</option>
+            <option value="General Labour">General Labour</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div class="field-group">
@@ -312,16 +312,16 @@
         <div class="field-group">
           <label class="field-label">Status</label>
           <select class="field-select" id="postStatus">
-            <option value="active">✅ Active (visible to workers)</option>
-            <option value="draft">📝 Draft (not visible yet)</option>
-            <option value="paused">⏸️ Paused</option>
+            <option value="active">Active (visible to workers)</option>
+            <option value="draft">Draft (not visible yet)</option>
+            <option value="paused">Paused</option>
           </select>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('postModal')" style="flex:1;">Cancel</button>
-      <button class="btn btn-primary" onclick="savePost()" style="flex:2;" id="savePostBtn">📋 Publish Job Post</button>
+      <button class="btn btn-primary" onclick="savePost()" style="flex:2;" id="savePostBtn">Publish Job Post</button>
     </div>
   </div>
 </div>
@@ -338,10 +338,10 @@
     </div>
     <div style="display:flex;gap:8px;padding:10px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;" id="applicantFilterRow">
       <button class="filter-tab active" onclick="filterApplicants('all',this)" style="padding:5px 14px;font-size:0.78rem;">All</button>
-      <button class="filter-tab" onclick="filterApplicants('pending',this)" style="padding:5px 14px;font-size:0.78rem;">⏳ Pending</button>
+      <button class="filter-tab" onclick="filterApplicants('pending',this)" style="padding:5px 14px;font-size:0.78rem;">Pending</button>
       <button class="filter-tab" onclick="filterApplicants('shortlisted',this)" style="padding:5px 14px;font-size:0.78rem;">⭐ Shortlisted</button>
-      <button class="filter-tab" onclick="filterApplicants('selected',this)" style="padding:5px 14px;font-size:0.78rem;">✅ Selected</button>
-      <button class="filter-tab" onclick="filterApplicants('rejected',this)" style="padding:5px 14px;font-size:0.78rem;">❌ Rejected</button>
+      <button class="filter-tab" onclick="filterApplicants('selected',this)" style="padding:5px 14px;font-size:0.78rem;">Selected</button>
+      <button class="filter-tab" onclick="filterApplicants('rejected',this)" style="padding:5px 14px;font-size:0.78rem;">Rejected</button>
     </div>
     <div class="modal-body" id="applicantsBody" style="padding-top:10px;"></div>
   </div>
@@ -351,7 +351,7 @@
 <div id="deleteModal" style="display:none;" class="modal-backdrop" onclick="handleBackdropClick(event,'deleteModal')">
   <div class="modal-box" style="max-width:380px;">
     <div class="modal-header">
-      <div class="modal-title">🗑️ Delete Job Post?</div>
+      <div class="modal-title">Delete Job Post?</div>
       <button class="modal-close" onclick="closeModal('deleteModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -373,9 +373,9 @@
 ===================================================== */
 
 const TRADE_ICONS = {
-  'Electrician':'⚡','Plumber':'🔧','Carpenter':'🪚','Welder':'🔥',
-  'Painter':'🎨','Mason':'🧱','AC Technician':'❄️','Driver':'🚗',
-  'Cleaner':'🧹','General Labour':'🛠️','Other':'🔩'
+  'Electrician':'','Plumber':'','Carpenter':'','Welder':'',
+  'Painter':'','Mason':'','AC Technician':'','Driver':'',
+  'Cleaner':'','General Labour':'','Other':''
 };
 const TRADE_BG = {
   'Electrician':'rgba(249,115,22,0.12)','Plumber':'rgba(56,189,248,0.12)',
@@ -413,7 +413,7 @@ async function init() {
 async function loadPosts() {
   try {
     const raw = await sbGetMyJobPosts(currentUser.id);
-    allPosts = raw.map(p => ({
+    allPosts = raw.map(p =>({
       id: p.id,
       title: p.title,
       trade: p.trade,
@@ -427,7 +427,7 @@ async function loadPosts() {
       deadline: p.deadline,
       status: p.status,
       createdAt: p.created_at,
-      applicants: p.applications ? p.applications.map(a => ({
+      applicants: p.applications ? p.applications.map(a =>({
         id: a.id,
         workerId: a.worker_id,
         name: a.worker?.name,
@@ -450,7 +450,7 @@ function savePosts() {
 
 /* ─── Stats ─── */
 function updateStats() {
-  const totalApps = allPosts.reduce((s,p) => s + (p.applicants||[]).length, 0);
+  const totalApps = allPosts.reduce((s,p) =>s + (p.applicants||[]).length, 0);
   document.getElementById('statTotal').textContent  = allPosts.length;
   document.getElementById('statActive').textContent = allPosts.filter(p=>p.status==='active').length;
   document.getElementById('statApps').textContent   = totalApps;
@@ -460,7 +460,7 @@ function updateStats() {
 /* ─── Filter ─── */
 function applyFilter(f, btn) {
   curFilter = f;
-  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-tab').forEach(b =>b.classList.remove('active'));
   btn.classList.add('active');
   render();
 }
@@ -469,14 +469,14 @@ function applyFilter(f, btn) {
 function render() {
   const container = document.getElementById('postsList');
   let list = allPosts;
-  if (curFilter !== 'all') list = allPosts.filter(p => p.status === curFilter);
-  const sorted = [...list].sort((a,b) => b.createdAt - a.createdAt);
+  if (curFilter !== 'all') list = allPosts.filter(p =>p.status === curFilter);
+  const sorted = [...list].sort((a,b) =>b.createdAt - a.createdAt);
 
   if (sorted.length === 0) {
     if (allPosts.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon"></div>
           <h3>No Job Posts Yet</h3>
           <p>Post your first job and start receiving applications from skilled workers in your area.</p>
           <button class="btn btn-primary" onclick="openPostModal()">+ Post Your First Job</button>
@@ -484,7 +484,7 @@ function render() {
     } else {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-icon"></div>
           <h3>No posts in this category</h3>
           <p>Try a different filter.</p>
         </div>`;
@@ -492,16 +492,16 @@ function render() {
     return;
   }
 
-  container.innerHTML = sorted.map(p => buildCard(p)).join('');
+  container.innerHTML = sorted.map(p =>buildCard(p)).join('');
 }
 
 /* ─── Build card ─── */
 function buildCard(p) {
-  const icon      = TRADE_ICONS[p.trade] || '📋';
+  const icon      = TRADE_ICONS[p.trade] || '';
   const bg        = TRADE_BG[p.trade]    || 'var(--border)';
   const accent    = STATUS_ACCENT[p.status] || '#9ca3af';
   const pillCls   = `pill-${p.status}`;
-  const pillLabel = { active:'✅ Active', paused:'⏸️ Paused', closed:'🔒 Closed', draft:'📝 Draft' }[p.status] || p.status;
+  const pillLabel = { active:' Active', paused:' Paused', closed:' Closed', draft:' Draft' }[p.status] || p.status;
 
   const posted = p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recently';
   const deadline = p.deadline ? `🗓️ Deadline: ${new Date(p.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}` : '';
@@ -515,27 +515,27 @@ function buildCard(p) {
       <div style="flex:1;min-width:0;">
         <div class="jp-title">${p.title}</div>
         <div class="jp-meta">
-          <span>🛠️ ${p.trade||'—'}</span>
-          <span>📍 ${p.location||'—'}</span>
-          ${p.pay?`<span>💰 ${p.pay}</span>`:''}
+          <span>${p.trade||'—'}</span>
+          <span>${p.location||'—'}</span>
+          ${p.pay?`<span>${p.pay}</span>`:''}
           <span>📅 Posted ${posted}</span>
           ${deadline?`<span>${deadline}</span>`:''}
           ${p.openings?`<span>👥 ${p.openings} opening${p.openings>1?'s':''}</span>`:''}
-          ${p.experience&&p.experience!='Any'?`<span>🎓 ${p.experience}</span>`:''}
+          ${p.experience&&p.experience!='Any'?`<span>${p.experience}</span>`:''}
         </div>
         ${p.skills?.length?`<div class="jp-tags">${p.skills.slice(0,6).map(s=>`<span class="jp-tag">${s}</span>`).join('')}${p.skills.length>6?`<span class="jp-tag">+${p.skills.length-6}</span>`:''}</div>`:''}
         ${p.desc?`<div class="jp-desc">${p.desc.length>180?p.desc.slice(0,180)+'…':p.desc}</div>`:''}
         <div class="jp-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${p.id}')">✏️ Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${p.id}')">Edit</button>
           ${p.status === 'active'
-            ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','paused')">⏸️ Pause</button>`
+            ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','paused')">Pause</button>`
             : p.status === 'paused'
-            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">▶️ Activate</button>`
+            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">Activate</button>`
             : p.status === 'draft'
-            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">🚀 Publish</button>`
+            ? `<button class="btn btn-primary btn-sm" onclick="changeStatus('${p.id}','active')">Publish</button>`
             : ''}
-          ${p.status !== 'closed' ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','closed')">🔒 Close</button>` : ''}
-          <button class="btn btn-ghost btn-sm" style="color:#f87171;" onclick="promptDelete('${p.id}','${p.title.replace(/'/g,"\\'")}')">🗑️</button>
+          ${p.status !== 'closed' ? `<button class="btn btn-ghost btn-sm" onclick="changeStatus('${p.id}','closed')">Close</button>` : ''}
+          <button class="btn btn-ghost btn-sm" style="color:#f87171;" onclick="promptDelete('${p.id}','${p.title.replace(/'/g,"\\'")}')"></button>
           <button class="applicant-chip" onclick="viewApplicants('${p.id}')">👥 ${apps} Applicant${apps!==1?'s':''}</button>
         </div>
       </div>
@@ -551,9 +551,9 @@ function buildCard(p) {
 function openPostModal(editId = null) {
   clearForm();
   if (editId) {
-    const p = allPosts.find(x => x.id === editId);
+    const p = allPosts.find(x =>x.id === editId);
     if (!p) return;
-    document.getElementById('postModalTitle').textContent = '✏️ Edit Job Post';
+    document.getElementById('postModalTitle').textContent = ' Edit Job Post';
     document.getElementById('savePostBtn').textContent    = '💾 Save Changes';
     document.getElementById('editPostId').value  = p.id;
     document.getElementById('postTitle').value   = p.title;
@@ -569,8 +569,8 @@ function openPostModal(editId = null) {
     skills = [...(p.skills||[])];
     renderSkillChips();
   } else {
-    document.getElementById('postModalTitle').textContent = '📋 Post a New Job';
-    document.getElementById('savePostBtn').textContent    = '🚀 Publish Job Post';
+    document.getElementById('postModalTitle').textContent = ' Post a New Job';
+    document.getElementById('savePostBtn').textContent    = ' Publish Job Post';
   }
   showModal('postModal');
 }
@@ -578,7 +578,7 @@ function openPostModal(editId = null) {
 function openEditModal(id) { openPostModal(id); }
 
 function clearForm() {
-  ['postTitle','postLocation','postPay','postOpenings','postDesc','postDeadline'].forEach(id => {
+  ['postTitle','postLocation','postPay','postOpenings','postDesc','postDeadline'].forEach(id =>{
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -612,8 +612,8 @@ function renderSkillChips() {
   const wrap  = document.getElementById('skillsWrap');
   const input = document.getElementById('skillInput');
   // Remove old chips
-  wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
-  skills.forEach((s, i) => {
+  wrap.querySelectorAll('.tag-chip').forEach(c =>c.remove());
+  skills.forEach((s, i) =>{
     const chip = document.createElement('span');
     chip.className = 'tag-chip';
     chip.innerHTML = `${s}<span class="rm" onclick="removeSkill(${i})">✕</span>`;
@@ -657,15 +657,15 @@ async function savePost() {
   try {
     if (editId) {
       await sbUpdateJobPost(editId, currentUser.id, payload);
-      showToast('✅ Job post updated!', 'success');
+      showToast('Job post updated!', 'success');
     } else {
       await sbCreateJobPost(currentUser.id, payload);
-      showToast('🚀 Job posted successfully! Workers can now apply.', 'success');
+      showToast('Job posted successfully! Workers can now apply.', 'success');
     }
   } catch(e) {
     console.error('Failed to save post:', e);
     const errorMsg = e.message || 'Check all required fields.';
-    showToast(`❌ Failed to save job post: ${errorMsg}`, 'error');
+    showToast(` Failed to save job post: ${errorMsg}`, 'error');
     return; // Stop here
   }
 
@@ -680,8 +680,8 @@ function flashField(id, msg) {
   if (!el) return;
   el.style.borderColor = '#ef4444';
   el.focus();
-  showToast(`⚠️ ${msg}`, 'error');
-  setTimeout(() => el.style.borderColor = '', 2000);
+  showToast(` ${msg}`, 'error');
+  setTimeout(() =>el.style.borderColor = '', 2000);
 }
 
 /* ─── Change status ─── */
@@ -691,10 +691,10 @@ async function changeStatus(id, status) {
     await loadPosts();
     updateStats();
     render();
-    const labels = { active:'✅ Activated', paused:'⏸️ Paused', closed:'🔒 Closed' };
+    const labels = { active:' Activated', paused:' Paused', closed:' Closed' };
     showToast(`${labels[status] || 'Updated'}`, 'success');
   } catch(e) {
-    showToast('❌ Failed to update status', 'error');
+    showToast('Failed to update status', 'error');
   }
 }
 
@@ -711,9 +711,9 @@ async function confirmDelete() {
     updateStats();
     render();
     closeModal('deleteModal');
-    showToast('🗑️ Job post deleted.', 'info');
+    showToast('Job post deleted.', 'info');
   } catch(e) {
-    showToast('❌ Failed to delete job post.', 'error');
+    showToast('Failed to delete job post.', 'error');
   }
   deletePendingId = null;
 }
@@ -726,20 +726,20 @@ function viewApplicants(postId) {
   _viewingPostId = postId;
   _appFilter     = 'all';
   // Reset filter tabs
-  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach((b,i) =>b.classList.toggle('active', i===0));
   renderApplicantsModal();
   showModal('applicantsModal');
 }
 
 function filterApplicants(filter, btn) {
   _appFilter = filter;
-  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#applicantFilterRow .filter-tab').forEach(b =>b.classList.remove('active'));
   btn.classList.add('active');
   renderApplicantsModal();
 }
 
 function renderApplicantsModal() {
-  const p = allPosts.find(x => x.id === _viewingPostId);
+  const p = allPosts.find(x =>x.id === _viewingPostId);
   if (!p) return;
 
   document.getElementById('applicantsTitle').innerHTML =
@@ -747,12 +747,12 @@ function renderApplicantsModal() {
 
   const body = document.getElementById('applicantsBody');
   let apps = p.applicants || [];
-  if (_appFilter !== 'all') apps = apps.filter(a => (a.status||'pending') === _appFilter);
+  if (_appFilter !== 'all') apps = apps.filter(a =>(a.status||'pending') === _appFilter);
 
   if ((p.applicants||[]).length === 0) {
     body.innerHTML = `
       <div style="text-align:center;padding:40px;color:var(--text-muted);">
-        <div style="font-size:2.5rem;margin-bottom:10px;">📭</div>
+        <div style="font-size:2.5rem;margin-bottom:10px;"></div>
         <p style="font-size:0.88rem;">No applicants yet. Workers will appear here when they apply through Browse Jobs.</p>
       </div>`;
     return;
@@ -764,14 +764,14 @@ function renderApplicantsModal() {
   }
 
   const STATUS_BADGE = {
-    pending:     '<span class="app-status-badge asb-pending">⏳ Pending</span>',
+    pending:     '<span class="app-status-badge asb-pending">Pending</span>',
     shortlisted: '<span class="app-status-badge asb-shortlisted">⭐ Shortlisted</span>',
-    selected:    '<span class="app-status-badge asb-selected">✅ Selected</span>',
-    rejected:    '<span class="app-status-badge asb-rejected">❌ Rejected</span>',
+    selected:    '<span class="app-status-badge asb-selected">Selected</span>',
+    rejected:    '<span class="app-status-badge asb-rejected">Rejected</span>',
   };
 
-  body.innerHTML = apps.map((a, idx) => {
-    const realIdx = (p.applicants||[]).findIndex(x => x.email === a.email);
+  body.innerHTML = apps.map((a, idx) =>{
+    const realIdx = (p.applicants||[]).findIndex(x =>x.email === a.email);
     const st = a.status || 'pending';
     const applied = a.appliedOn ? new Date(a.appliedOn).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recently';
     return `
@@ -784,15 +784,15 @@ function renderApplicantsModal() {
         </div>
         <div class="app-meta">
           ${a.phone ? `📞 ${a.phone}` : ''}
-          ${a.trade ? ` · 🛠️ ${a.trade}` : ''}
-          ${a.city  ? ` · 📍 ${a.city}` : ''}
+          ${a.trade ? ` ·  ${a.trade}` : ''}
+          ${a.city  ? ` ·  ${a.city}` : ''}
         </div>
         <div class="app-meta">📅 Applied: ${applied}</div>
       </div>
       <div class="app-actions">
-        ${st !== 'selected'    ? `<button class="app-btn app-btn-accept"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','selected')">✅ Accept</button>` : ''}
+        ${st !== 'selected'    ? `<button class="app-btn app-btn-accept"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','selected')">Accept</button>` : ''}
         ${st !== 'shortlisted' ? `<button class="app-btn app-btn-shortlist" onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','shortlisted')">⭐ Shortlist</button>` : ''}
-        ${st !== 'rejected'    ? `<button class="app-btn app-btn-reject"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','rejected')">❌ Reject</button>` : ''}
+        ${st !== 'rejected'    ? `<button class="app-btn app-btn-reject"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','rejected')">Reject</button>` : ''}
         ${st !== 'pending'     ? `<button class="app-btn app-btn-reset"     onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','pending')">↩ Reset</button>` : ''}
       </div>
     </div>`;
@@ -809,7 +809,7 @@ async function updateApplicantStatus(postId, appId, newStatus) {
     render();         
     updateStats();
 
-    const labels = { selected:'✅ Accepted', shortlisted:'⭐ Shortlisted', rejected:'❌ Rejected', pending:'↩ Reset to Pending' };
+    const labels = { selected:' Accepted', shortlisted:'⭐ Shortlisted', rejected:' Rejected', pending:'↩ Reset to Pending' };
     showToast(`${labels[newStatus]} updated`, 'success');
   } catch(e) {
     console.error('Failed to update application status', e);
@@ -824,7 +824,7 @@ async function updateApplicantStatus(postId, appId, newStatus) {
 function showModal(id)  { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; }
 function closeModal(id) {
   const m = document.getElementById(id);
-  if (m) { m.style.opacity = '0'; setTimeout(() => { m.style.display = 'none'; m.style.opacity = ''; }, 200); }
+  if (m) { m.style.opacity = '0'; setTimeout(() =>{ m.style.display = 'none'; m.style.opacity = ''; }, 200); }
   document.body.style.overflow = '';
 }
 function handleBackdropClick(e, id) { if (e.target.id === id) closeModal(id); }

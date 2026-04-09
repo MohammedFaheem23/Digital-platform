@@ -52,10 +52,10 @@ function renderWorkers() {
         <div class="wpc-info">
           <div class="wpc-name">${w.name}</div>
           <div class="wpc-trade">${w.trade}</div>
-          <div class="wpc-location">📍 ${w.location}</div>
+          <div class="wpc-location"> ${w.location}</div>
         </div>
       </div>
-      ${w.verified ? '<div class="wpc-verified">✓ Verified</div>' : ''}
+      ${w.verified ? '<div class="wpc-verified"> Verified</div>' : ''}
       <div class="wpc-rating">
         <span class="stars">${'★'.repeat(Math.floor(w.rating))}${w.rating % 1 ? '☆' : ''}</span>
         <span class="rating-num">${w.rating}</span>

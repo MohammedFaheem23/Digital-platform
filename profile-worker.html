@@ -131,31 +131,31 @@
   <!-- ════ SIDEBAR ════ -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <a href="home.html" class="nav-logo"><div class="logo-icon"></div><span>SkillConnect</span></a>
     </div>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Main</span>
-      <a href="dashboard-worker.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
-      <a href="jobs.html" class="sidebar-link"><span class="sidebar-icon">💼</span> Browse Jobs</a>
-      <a href="my-applications.html" class="sidebar-link"><span class="sidebar-icon">📋</span> My Applications</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;"><span class="sidebar-icon">📜</span> Job History</a>
+      <a href="dashboard-worker.html" class="sidebar-link"><span class="sidebar-icon"></span>Dashboard</a>
+      <a href="jobs.html" class="sidebar-link"><span class="sidebar-icon"></span>Browse Jobs</a>
+      <a href="my-applications.html" class="sidebar-link"><span class="sidebar-icon"></span>My Applications</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;"><span class="sidebar-icon"></span>Job History</a>
 
       <span class="sidebar-section-label">Profile</span>
-      <a href="profile-worker.html" class="sidebar-link active"><span class="sidebar-icon">👤</span> My Profile</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;"><span class="sidebar-icon">🛡️</span> Verification</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Skill Training — coming soon!','info');return false;"><span class="sidebar-icon">🎓</span> Skill Training</a>
+      <a href="profile-worker.html" class="sidebar-link active"><span class="sidebar-icon"></span>My Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;"><span class="sidebar-icon"></span>Verification</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Skill Training — coming soon!','info');return false;"><span class="sidebar-icon"></span>Skill Training</a>
 
       <span class="sidebar-section-label">Finance</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Earnings</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💳</span> Payments</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Earnings — coming soon!','info');return false;"><span class="sidebar-icon"></span>Earnings</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon"></span>Payments</a>
 
       <span class="sidebar-section-label">Support</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon"></span>Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon"></span>Settings</a>
     </nav>
     <div class="sidebar-footer">
       <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
-        <span class="sidebar-icon">🚪</span> Log Out
+        <span class="sidebar-icon"></span>Log Out
       </button>
     </div>
   </aside>
@@ -180,17 +180,17 @@
           <div class="avail-badge" id="heroBadge" style="background:#34d399;"></div>
           <!-- Upload Button -->
           <label for="avatarInput" style="position:absolute;bottom:0;right:0;width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;border:2px solid var(--bg-card);box-shadow:0 2px 8px rgba(0,0,0,0.2);z-index:10;">
-            <span style="font-size:0.8rem;">📷</span>
+            <span style="font-size:0.8rem;"></span>
             <input type="file" id="avatarInput" hidden accept="image/*" onchange="handleAvatarUpload(this)" />
           </label>
         </div>
         <div class="profile-info">
           <div class="profile-name" id="heroName">Loading…</div>
-          <div class="profile-trade" id="heroTrade">🛠️ —</div>
+          <div class="profile-trade" id="heroTrade">—</div>
           <div class="profile-tags" id="heroTags"></div>
         </div>
         <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
-          <div id="heroAvailPill" style="font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:20px;background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.3);">🟢 Available</div>
+          <div id="heroAvailPill" style="font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:20px;background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.3);">Available</div>
           <div style="font-size:0.78rem;color:var(--text-muted);">Member since <span id="heroSince">—</span></div>
         </div>
       </div>
@@ -200,7 +200,7 @@
         <div style="display:flex;align-items:center;gap:12px;">
           <div id="availDot" style="width:12px;height:12px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;"></div>
           <div>
-            <div style="font-weight:700;font-size:0.92rem;" id="availLabel">🟢 Available for Work</div>
+            <div style="font-weight:700;font-size:0.92rem;" id="availLabel">Available for Work</div>
             <div style="font-size:0.76rem;color:var(--text-muted);">Employers can find and contact you</div>
           </div>
         </div>
@@ -231,7 +231,7 @@
       <!-- Personal Info -->
       <div class="profile-section">
         <div class="section-head">
-          <div class="section-head-title">👤 Personal Information</div>
+          <div class="section-head-title">Personal Information</div>
         </div>
         <div class="section-body">
           <div class="field-row2">
@@ -275,7 +275,7 @@
       <!-- Professional Info -->
       <div class="profile-section">
         <div class="section-head">
-          <div class="section-head-title">🛠️ Professional Details</div>
+          <div class="section-head-title">Professional Details</div>
         </div>
         <div class="section-body">
           <div class="field-row2">
@@ -283,17 +283,17 @@
               <label class="field-label">Primary Trade *</label>
               <select class="field-select" id="pfTrade">
                 <option value="">Select your trade…</option>
-                <option value="Electrician">⚡ Electrician</option>
-                <option value="Plumber">🔧 Plumber</option>
-                <option value="Carpenter">🪚 Carpenter</option>
-                <option value="Welder">🔥 Welder</option>
-                <option value="Painter">🎨 Painter</option>
-                <option value="Mason">🧱 Mason</option>
-                <option value="AC Technician">❄️ AC Technician</option>
-                <option value="Driver">🚗 Driver</option>
-                <option value="Cleaner">🧹 Cleaner</option>
-                <option value="General Labour">🛠️ General Labour</option>
-                <option value="Other">🔩 Other</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Plumber">Plumber</option>
+                <option value="Carpenter">Carpenter</option>
+                <option value="Welder">Welder</option>
+                <option value="Painter">Painter</option>
+                <option value="Mason">Mason</option>
+                <option value="AC Technician">AC Technician</option>
+                <option value="Driver">Driver</option>
+                <option value="Cleaner">Cleaner</option>
+                <option value="General Labour">General Labour</option>
+                <option value="Other">Other</option>
               </select>
             </div>
             <div class="field-group">
@@ -413,7 +413,7 @@ function loadProfile() {
   }
 
   document.getElementById('heroName').textContent   = u.name || '—';
-  document.getElementById('heroTrade').textContent  = u.trade ? `🛠️ ${u.trade}` : '🛠️ Trade not set';
+  document.getElementById('heroTrade').textContent  = u.trade ? ` ${u.trade}` : ' Trade not set';
   document.getElementById('heroSince').textContent  = u.createdAt
     ? new Date(u.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'})
     : new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
@@ -447,7 +447,7 @@ async function handleAvatarUpload(input) {
   if (!file) return;
 
   // Validate size < 2MB
-  if (file.size > 2 * 1024 * 1024) {
+  if (file.size >2 * 1024 * 1024) {
     showToast('Image too large (max 2MB)', 'error');
     return;
   }
@@ -479,7 +479,7 @@ async function loadStats() {
   try { reviews = await sbGetWorkerReviews(currentUser.id); } catch(e) {}
   
   if (reviews.length) {
-    const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+    const avg = (reviews.reduce((s, r) =>s + r.rating, 0) / reviews.length).toFixed(1);
     document.getElementById('statRating').textContent  = avg + '★';
     document.getElementById('statReviews').textContent = reviews.length;
   }
@@ -492,7 +492,7 @@ async function loadReviews() {
   const sec = document.getElementById('reviewsSection');
   if (!reviews.length) return;
 
-  sec.innerHTML = reviews.map(r => `
+  sec.innerHTML = reviews.map(r =>`
     <div class="review-card">
       <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
       <div class="review-text">"${r.text || 'No comment left.'}"</div>
@@ -504,7 +504,7 @@ async function loadReviews() {
 function renderSkillChips() {
   const wrap = document.getElementById('skillChips');
   if (!wrap) return;
-  wrap.innerHTML = profileSkills.map((s, i) => `
+  wrap.innerHTML = profileSkills.map((s, i) =>`
     <span class="skill-chip-edit">
       ${s}<span class="rm" onclick="removeSkill(${i})">✕</span>
     </span>`).join('');
@@ -573,17 +573,17 @@ async function saveProfile() {
     
     // Refresh hero card
     document.getElementById('heroName').textContent  = updatedUser.name;
-    document.getElementById('heroTrade').textContent = updatedUser.trade ? `🛠️ ${updatedUser.trade}` : '🛠️ Trade not set';
+    document.getElementById('heroTrade').textContent = updatedUser.trade ? ` ${updatedUser.trade}` : ' Trade not set';
     document.getElementById('heroAvatar').textContent = updatedUser.name?.[0]?.toUpperCase() || '?';
     document.getElementById('userAva').textContent    = updatedUser.name?.[0]?.toUpperCase() || '?';
 
     const tags = [updatedUser.city, updatedUser.experience, updatedUser.jobType].filter(Boolean);
-    document.getElementById('heroTags').innerHTML = tags.map(t => `<span class="profile-tag">${t}</span>`).join('');
+    document.getElementById('heroTags').innerHTML = tags.map(t =>`<span class="profile-tag">${t}</span>`).join('');
 
-    showToast('✅ Profile saved successfully!', 'success');
+    showToast('Profile saved successfully!', 'success');
   } catch(e) {
     console.error(e);
-    showToast('❌ Failed to save profile.', 'error');
+    showToast('Failed to save profile.', 'error');
   }
 }
 
@@ -592,8 +592,8 @@ function flash(id, msg) {
   if (!el) return;
   el.style.borderColor = '#ef4444';
   el.focus();
-  showToast(`⚠️ ${msg}`, 'error');
-  setTimeout(() => el.style.borderColor = '', 2000);
+  showToast(` ${msg}`, 'error');
+  setTimeout(() =>el.style.borderColor = '', 2000);
 }
 
 /* ── Availability ── */
@@ -619,7 +619,7 @@ async function toggleAvail(isAvail) {
   }
   applyAvailUI(isAvail);
   showToast(
-    isAvail ? '🟢 You are now visible to employers!' : '⚫ Hidden from employers.',
+    isAvail ? ' You are now visible to employers!' : ' Hidden from employers.',
     isAvail ? 'success' : 'info'
   );
 }
@@ -635,19 +635,19 @@ function applyAvailUI(isAvail) {
 
   if (isAvail) {
     if (dot)    { dot.style.background = '#34d399'; dot.style.boxShadow = '0 0 8px #34d399'; }
-    if (label)  label.textContent = '🟢 Available for Work';
+    if (label)  label.textContent = ' Available for Work';
     if (slider) slider.style.background = '#16a34a';
     if (knob)   knob.style.left = '28px';
     if (row)    { row.style.borderColor = 'rgba(52,211,153,0.3)'; row.style.background = 'rgba(52,211,153,0.04)'; }
-    if (pill)   { pill.style.background = 'rgba(52,211,153,0.12)'; pill.style.color = '#34d399'; pill.style.borderColor = 'rgba(52,211,153,0.3)'; pill.textContent = '🟢 Available'; }
+    if (pill)   { pill.style.background = 'rgba(52,211,153,0.12)'; pill.style.color = '#34d399'; pill.style.borderColor = 'rgba(52,211,153,0.3)'; pill.textContent = ' Available'; }
     if (badge)  badge.style.background = '#34d399';
   } else {
     if (dot)    { dot.style.background = '#6b7280'; dot.style.boxShadow = 'none'; }
-    if (label)  label.textContent = '⚫ Not Available';
+    if (label)  label.textContent = ' Not Available';
     if (slider) slider.style.background = '#374151';
     if (knob)   knob.style.left = '4px';
     if (row)    { row.style.borderColor = 'rgba(255,255,255,0.06)'; row.style.background = '#1a1d26'; }
-    if (pill)   { pill.style.background = 'rgba(107,114,128,0.12)'; pill.style.color = '#9ca3af'; pill.style.borderColor = 'rgba(107,114,128,0.2)'; pill.textContent = '⚫ Unavailable'; }
+    if (pill)   { pill.style.background = 'rgba(107,114,128,0.12)'; pill.style.color = '#9ca3af'; pill.style.borderColor = 'rgba(107,114,128,0.2)'; pill.textContent = ' Unavailable'; }
     if (badge)  badge.style.background = '#6b7280';
   }
 }

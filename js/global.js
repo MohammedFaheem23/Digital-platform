@@ -39,10 +39,10 @@ function showToast(message, type = 'success', duration = 4000) {
     container.className = 'toast-container';
     document.body.appendChild(container);
   }
-  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  const icons = { success: '', error: '', info: '', warning: '' };
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
+  toast.innerHTML = `<span>${message}</span>`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.style.animation = 'fadeOut 0.3s ease forwards';
@@ -110,8 +110,8 @@ function setupThemeSwitcher() {
 
   const btn = document.createElement('button');
   const isLight = document.documentElement.classList.contains('light-mode');
-  btn.innerHTML = isLight ? '🌙' : '☀️';
-  btn.style.cssText = `background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:0.2s;margin-right:8px;`;
+  btn.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+  btn.style.cssText = `background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:24px;padding:0 16px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;font-weight:600;transition:0.2s;margin-right:8px;`;
   
   btn.onmouseover = () => { btn.style.background = 'var(--primary-glow)'; btn.style.borderColor = 'var(--primary)'; };
   btn.onmouseout  = () => { btn.style.background = 'transparent'; btn.style.borderColor = 'var(--border)'; };
@@ -120,7 +120,7 @@ function setupThemeSwitcher() {
     document.documentElement.classList.toggle('light-mode');
     const light = document.documentElement.classList.contains('light-mode');
     localStorage.setItem('theme', light ? 'light' : 'dark');
-    btn.innerHTML = light ? '🌙' : '☀️';
+    btn.textContent = light ? 'Dark Mode' : 'Light Mode';
   };
   navActions.insertBefore(btn, navActions.firstChild);
 }

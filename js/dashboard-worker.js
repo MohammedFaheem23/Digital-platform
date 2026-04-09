@@ -3,16 +3,16 @@
    ============================ */
 
 const ALL_JOBS_POOL = [
-  { title:'Senior Electrician Needed', company:'ABC Construction', location:'Delhi', pay:'₹900/day', type:'Full Time', icon:'⚡', trade:'electrician' },
+  { title:'Senior Electrician Needed', company:'ABC Construction', location:'Delhi', pay:'₹900/day', type:'Full Time', icon:'', trade:'electrician' },
   { title:'Home Wiring & Repair Work', company:'HomeServe Inc.', location:'Noida', pay:'₹1,200/day', type:'Freelance', icon:'🔌', trade:'electrician' },
   { title:'Solar Panel Technician', company:'SolarTech Ltd', location:'Pune', pay:'₹1,100/day', type:'Full Time', icon:'☀️', trade:'electrician' },
-  { title:'Bathroom Plumbing Fix', company:'HomeCare Services', location:'Bangalore', pay:'₹700/day', type:'Freelance', icon:'🔧', trade:'plumber' },
+  { title:'Bathroom Plumbing Fix', company:'HomeCare Services', location:'Bangalore', pay:'₹700/day', type:'Freelance', icon:'', trade:'plumber' },
   { title:'New Pipeline Installation', company:'GreenBuild Co.', location:'Chennai', pay:'₹1,000/day', type:'Contract', icon:'🚰', trade:'plumber' },
-  { title:'Custom Cabinet Work', company:'DreamHome Corp', location:'Bengaluru', pay:'₹900/day', type:'Freelance', icon:'🪚', trade:'carpenter' },
-  { title:'Steel Welding – Structural', company:'BuildMax Ltd', location:'Mumbai', pay:'₹1,100/day', type:'Full Time', icon:'🔥', trade:'welder' },
-  { title:'Interior House Painting', company:'ColorCraft Homes', location:'Kochi', pay:'₹600/day', type:'Freelance', icon:'🎨', trade:'painter' },
-  { title:'Brick Masonry – House Wall', company:'ClassicBuild Co.', location:'Lucknow', pay:'₹750/day', type:'Full Time', icon:'🧱', trade:'mason' },
-  { title:'General Labour Position', company:'WorkPlus Ltd', location:'Nearby Location', pay:'₹550/day', type:'Full Time', icon:'🛠️', trade:'other' },
+  { title:'Custom Cabinet Work', company:'DreamHome Corp', location:'Bengaluru', pay:'₹900/day', type:'Freelance', icon:'', trade:'carpenter' },
+  { title:'Steel Welding – Structural', company:'BuildMax Ltd', location:'Mumbai', pay:'₹1,100/day', type:'Full Time', icon:'', trade:'welder' },
+  { title:'Interior House Painting', company:'ColorCraft Homes', location:'Kochi', pay:'₹600/day', type:'Freelance', icon:'', trade:'painter' },
+  { title:'Brick Masonry – House Wall', company:'ClassicBuild Co.', location:'Lucknow', pay:'₹750/day', type:'Full Time', icon:'', trade:'mason' },
+  { title:'General Labour Position', company:'WorkPlus Ltd', location:'Nearby Location', pay:'₹550/day', type:'Full Time', icon:'', trade:'other' },
 ];
 
 const EARNINGS_DATA = [
@@ -45,7 +45,7 @@ async function initDashboard() {
   const hour      = new Date().getHours();
   const greeting  = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   const firstName = user?.name?.split(' ')[0] || 'there';
-  document.getElementById('greetingText').textContent = `${greeting}, ${firstName}! 👋`;
+  document.getElementById('greetingText').textContent = `${greeting}, ${firstName}! `;
 
   const completion = getProfileCompletion(user || {});
   const subEl = document.getElementById('greetingSubtext');
@@ -91,7 +91,7 @@ async function initDashboard() {
   const profileAlert = document.getElementById('profileAlert');
   if (profileAlert) {
     if (completion >= 100) profileAlert.style.display = 'none';
-    else profileAlert.innerHTML = `📝 Your profile is <strong style="color:var(--accent)">${completion}% complete</strong>. ${completion<50?'Complete it to get job matches!':'Almost there — finish for 3x more matches!'} <a href="profile-worker.html" style="color:var(--accent);font-weight:700;margin-left:auto;white-space:nowrap;">Complete Now →</a>`;
+    else profileAlert.innerHTML = ` Your profile is <strong style="color:var(--accent)">${completion}% complete</strong>. ${completion<50?'Complete it to get job matches!':'Almost there — finish for 3x more matches!'} <a href="profile-worker.html" style="color:var(--accent);font-weight:700;margin-left:auto;white-space:nowrap;">Complete Now →</a>`;
   }
 
   // Sidebar badge
@@ -113,7 +113,7 @@ function renderRecommendedJobs(user) {
   if (!container) return;
   const jobs = getRecommendedJobs(user);
   if (jobs.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);"><div style="font-size:2rem;margin-bottom:8px;">🔍</div><p>Complete your profile to see job recommendations.</p><a href="profile-worker.html" class="btn btn-primary btn-sm" style="margin-top:12px;">Complete Profile</a></div>`;
+    container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);"><div style="font-size:2rem;margin-bottom:8px;"></div><p>Complete your profile to see job recommendations.</p><a href="profile-worker.html" class="btn btn-primary btn-sm" style="margin-top:12px;">Complete Profile</a></div>`;
     return;
   }
   container.innerHTML = jobs.map(job => `
@@ -121,7 +121,7 @@ function renderRecommendedJobs(user) {
       <div class="job-item-icon" style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.2);">${job.icon}</div>
       <div class="job-item-info">
         <div class="job-item-title">${job.title}</div>
-        <div class="job-item-sub">📍 ${job.location} · ${job.company}</div>
+        <div class="job-item-sub"> ${job.location} · ${job.company}</div>
       </div>
       <div class="job-item-meta">
         <span class="job-item-pay">${job.pay}</span>
@@ -134,13 +134,13 @@ function renderApplicationsTable(apps) {
   const tbody = document.getElementById('applicationsTable');
   if (!tbody) return;
   if (!apps || apps.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);"><div style="font-size:2rem;margin-bottom:8px;">📋</div><p>No applications yet.</p><a href="jobs.html" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Jobs</a></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);"><div style="font-size:2rem;margin-bottom:8px;"></div><p>No applications yet.</p><a href="jobs.html" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Jobs</a></td></tr>`;
     return;
   }
   const statusMap = {
     pending:     { cls:'badge-warning', label:'Under Review' },
     shortlisted: { cls:'badge-info',   label:'Shortlisted ⭐' },
-    selected:    { cls:'badge-success',label:'Selected ✅' },
+    selected:    { cls:'badge-success',label:'Selected ' },
     rejected:    { cls:'badge-error',  label:'Not Selected' },
   };
   const recent = [...apps].slice(0,5);
@@ -152,7 +152,7 @@ function renderApplicationsTable(apps) {
     <tr style="cursor:pointer;" onclick="window.location.href='my-applications.html'">
       <td><strong>${job.title||'—'}</strong></td>
       <td>${job.employer?.company || job.employer?.name || '—'}</td>
-      <td>📍 ${job.location||'—'}</td>
+      <td> ${job.location||'—'}</td>
       <td style="font-weight:700;color:var(--primary);">${job.pay||'—'}</td>
       <td style="color:var(--text-muted);">${date}</td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
@@ -163,14 +163,14 @@ function renderApplicationsTable(apps) {
 function renderMessages(user) {
   const container = document.getElementById('recentMessages');
   if (!container) return;
-  container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);"><div style="font-size:1.5rem;margin-bottom:6px;">💬</div><p style="font-size:0.85rem;">No messages yet.</p></div>`;
+  container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);"><div style="font-size:1.5rem;margin-bottom:6px;"></div><p style="font-size:0.85rem;">No messages yet.</p></div>`;
 }
 
 function renderEarningsChart(user) {
   const chart  = document.getElementById('earningsChart');
   const labels = document.getElementById('earningsChartLabels');
   if (!chart || !labels) return;
-  chart.innerHTML  = `<div style="width:100%;text-align:center;color:var(--text-muted);font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:8px;"><span>📊</span><span>Your earnings chart will appear here once you complete jobs.</span></div>`;
+  chart.innerHTML  = `<div style="width:100%;text-align:center;color:var(--text-muted);font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:8px;"><span></span><span>Your earnings chart will appear here once you complete jobs.</span></div>`;
   labels.innerHTML = '';
 }
 
@@ -206,7 +206,7 @@ async function toggleAvailability() {
   }
 
   applyAvailabilityUI(isAvail);
-  showToast(isAvail ? '🟢 You are now visible to employers!' : '⚫ You are now hidden from employers.', isAvail ? 'success' : 'info');
+  showToast(isAvail ? ' You are now visible to employers!' : ' You are now hidden from employers.', isAvail ? 'success' : 'info');
 }
 
 function applyAvailabilityUI(isAvail) {
@@ -219,14 +219,14 @@ function applyAvailabilityUI(isAvail) {
 
   if (isAvail) {
     if (dot)    { dot.style.background = '#34d399'; dot.style.boxShadow = '0 0 8px #34d399'; }
-    if (label)  label.textContent = '🟢 Available for Work';
+    if (label)  label.textContent = ' Available for Work';
     if (slider) slider.style.background = '#16a34a';
     if (knob)   knob.style.left  = '28px';
     if (banner) { banner.style.borderColor = 'rgba(52,211,153,0.3)'; banner.style.background = 'rgba(52,211,153,0.05)'; }
     if (since)  since.textContent = 'Open to new opportunities';
   } else {
     if (dot)    { dot.style.background = '#6b7280'; dot.style.boxShadow = 'none'; }
-    if (label)  label.textContent = '⚫ Not Available';
+    if (label)  label.textContent = ' Not Available';
     if (slider) slider.style.background = '#374151';
     if (knob)   knob.style.left  = '4px';
     if (banner) { banner.style.borderColor = 'var(--border)'; banner.style.background = 'var(--bg-card)'; }

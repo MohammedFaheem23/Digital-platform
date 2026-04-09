@@ -3,18 +3,18 @@
    ============================ */
 
 const STATIC_JOBS = [
-  { id:'s1', title:'Senior Electrician – Residential Complex', company:'Skyline Builders', location:'Delhi', type:'Full Time', category:'Electrician', pay:1200, payLabel:'₹1,200/day', experience:'Senior', posted:'2 days ago', icon:'⚡', iconBg:'linear-gradient(135deg,#fbbf24,#f59e0b)', description:'Looking for an experienced residential electrician for a large apartment complex.', source:'static' },
-  { id:'s2', title:'Plumber for Hotel Renovation', company:'Grand Palace Hotels', location:'Mumbai', type:'Contract', category:'Plumber', pay:1500, payLabel:'₹1,500/day', experience:'Senior', posted:'1 day ago', icon:'🔧', iconBg:'linear-gradient(135deg,#38bdf8,#0ea5e9)', description:'Immediate requirement for a skilled plumber for hotel renovation.', source:'static' },
-  { id:'s3', title:'Carpenter – Office Furniture Fitting', company:'WorkSpace Solutions', location:'Bengaluru', type:'Freelance', category:'Carpenter', pay:900, payLabel:'₹900/day', experience:'Junior', posted:'3 days ago', icon:'🪚', iconBg:'linear-gradient(135deg,#a78bfa,#7c3aed)', description:'Need a skilled carpenter for office furniture installation.', source:'static' },
-  { id:'s4', title:'Welder for Steel Fabrication', company:'MetalWorks India', location:'Pune', type:'Full Time', category:'Welder', pay:1100, payLabel:'₹1,100/day', experience:'Expert', posted:'5 days ago', icon:'🔥', iconBg:'linear-gradient(135deg,#f87171,#ef4444)', description:'Permanent position for a skilled TIG/MIG welder.', source:'static' },
-  { id:'s5', title:'House Painter – 3 BHK Apartment', company:'Individual – Rohit Sharma', location:'Hyderabad', type:'Freelance', category:'Painter', pay:600, payLabel:'₹600/day', experience:'Fresher', posted:'1 day ago', icon:'🎨', iconBg:'linear-gradient(135deg,#34d399,#10b981)', description:'Need a house painter for a 3 BHK apartment.', source:'static' },
-  { id:'s6', title:'Mason for House Construction', company:'Sharma Construction', location:'Jaipur', type:'Full Time', category:'Mason', pay:800, payLabel:'₹800/day', experience:'Senior', posted:'4 days ago', icon:'🧱', iconBg:'linear-gradient(135deg,#fb923c,#ea580c)', description:'Looking for skilled mason for residential construction.', source:'static' },
+  { id:'s1', title:'Senior Electrician – Residential Complex', company:'Skyline Builders', location:'Delhi', type:'Full Time', category:'Electrician', pay:1200, payLabel:'₹1,200/day', experience:'Senior', posted:'2 days ago', icon:'EL', iconBg:'linear-gradient(135deg,#fbbf24,#f59e0b)', description:'Looking for an experienced residential electrician for a large apartment complex.', source:'static' },
+  { id:'s2', title:'Plumber for Hotel Renovation', company:'Grand Palace Hotels', location:'Mumbai', type:'Contract', category:'Plumber', pay:1500, payLabel:'₹1,500/day', experience:'Senior', posted:'1 day ago', icon:'PL', iconBg:'linear-gradient(135deg,#38bdf8,#0ea5e9)', description:'Immediate requirement for a skilled plumber for hotel renovation.', source:'static' },
+  { id:'s3', title:'Carpenter – Office Furniture Fitting', company:'WorkSpace Solutions', location:'Bengaluru', type:'Freelance', category:'Carpenter', pay:900, payLabel:'₹900/day', experience:'Junior', posted:'3 days ago', icon:'CR', iconBg:'linear-gradient(135deg,#a78bfa,#7c3aed)', description:'Need a skilled carpenter for office furniture installation.', source:'static' },
+  { id:'s4', title:'Welder for Steel Fabrication', company:'MetalWorks India', location:'Pune', type:'Full Time', category:'Welder', pay:1100, payLabel:'₹1,100/day', experience:'Expert', posted:'5 days ago', icon:'WL', iconBg:'linear-gradient(135deg,#f87171,#ef4444)', description:'Permanent position for a skilled TIG/MIG welder.', source:'static' },
+  { id:'s5', title:'House Painter – 3 BHK Apartment', company:'Individual – Rohit Sharma', location:'Hyderabad', type:'Freelance', category:'Painter', pay:600, payLabel:'₹600/day', experience:'Fresher', posted:'1 day ago', icon:'PT', iconBg:'linear-gradient(135deg,#34d399,#10b981)', description:'Need a house painter for a 3 BHK apartment.', source:'static' },
+  { id:'s6', title:'Mason for House Construction', company:'Sharma Construction', location:'Jaipur', type:'Full Time', category:'Mason', pay:800, payLabel:'₹800/day', experience:'Senior', posted:'4 days ago', icon:'MS', iconBg:'linear-gradient(135deg,#fb923c,#ea580c)', description:'Looking for skilled mason for residential construction.', source:'static' },
 ];
 
 const TRADE_ICONS = {
-  'Electrician':'⚡','Plumber':'🔧','Carpenter':'🪚','Welder':'🔥',
-  'Painter':'🎨','Mason':'🧱','AC Technician':'❄️','Driver':'🚗',
-  'Cleaner':'🧹','General Labour':'🛠️','Other':'🔩','HVAC':'❄️','Tiler':'🪵'
+  'Electrician':'EL','Plumber':'PL','Carpenter':'CR','Welder':'WL',
+  'Painter':'PT','Mason':'MS','AC Technician':'AC','Driver':'DR',
+  'Cleaner':'CL','General Labour':'GL','Other':'OT','HVAC':'HV','Tiler':'TL'
 };
 const TRADE_BG = {
   'Electrician':'linear-gradient(135deg,#fbbf24,#f59e0b)','Plumber':'linear-gradient(135deg,#38bdf8,#0ea5e9)',
@@ -57,7 +57,7 @@ async function buildJobsList() {
       payLabel:    p.pay      || 'Negotiable',
       experience:  p.experience || 'Any',
       posted:      p.created_at ? timeAgo(p.created_at) : 'Recently',
-      icon:        TRADE_ICONS[p.trade] || '📋',
+      icon:        TRADE_ICONS[p.trade] || '',
       iconBg:      TRADE_BG[p.trade]   || 'linear-gradient(135deg,#9ca3af,#6b7280)',
       description: p.description || p.desc || '',
       skills:      p.skills   || [],
@@ -108,7 +108,7 @@ function renderJobs() {
   if (count) count.textContent = `Showing ${visible.length} of ${filteredJobs.length} jobs`;
 
   if (filteredJobs.length === 0) {
-    grid.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:16px;">🔍</div><h3>No jobs found</h3><p>Try adjusting your filters.</p></div>`;
+    grid.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:16px;"></div><h3>No jobs found</h3><p>Try adjusting your filters.</p></div>`;
     return;
   }
 
@@ -124,22 +124,22 @@ function renderJobs() {
 
     return `
     <div class="job-card" style="position:relative;">
-      ${isNew ? `<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:20px;">✨ NEW POST</div>` : ''}
+      ${isNew ? `<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:20px;"> NEW POST</div>` : ''}
       <div class="job-card-header">
         <div style="display:flex;align-items:flex-start;gap:14px;flex:1;">
           <div class="job-company-logo" style="background:${job.iconBg}">${job.icon}</div>
           <div>
             <div class="job-title">${job.title}</div>
-            <div class="job-company">🏢 ${job.company}</div>
+            <div class="job-company"> ${job.company}</div>
           </div>
         </div>
         <span class="badge ${typeBadge[job.type]||'badge-info'} job-type-badge">${job.type}</span>
       </div>
       <div class="job-detail-tags">
-        <span class="job-tag">📍 ${job.location}</span>
-        <span class="job-tag">🎯 ${job.experience}</span>
-        <span class="job-tag">🛠️ ${job.category}</span>
-        <span class="job-tag">🕒 ${job.posted}</span>
+        <span class="job-tag"> ${job.location}</span>
+        <span class="job-tag"> ${job.experience}</span>
+        <span class="job-tag"> ${job.category}</span>
+        <span class="job-tag"> ${job.posted}</span>
         ${job.openings>1?`<span class="job-tag">👥 ${job.openings} openings</span>`:''}
         ${deadlineHtml}
       </div>
@@ -155,7 +155,7 @@ function renderJobs() {
           <button class="btn btn-primary btn-sm" id="applyBtn_${job.id}"
             onclick="applyJob('${job.id}')"
             ${alreadyApplied?'disabled style="opacity:.6;cursor:not-allowed;"':''}>
-            ${alreadyApplied?'✓ Applied':'Apply Now →'}
+            ${alreadyApplied?' Applied':'Apply Now →'}
           </button>
         </div>
       </div>
@@ -206,12 +206,12 @@ async function applyJob(id) {
       if (!user._appliedJobIds) user._appliedJobIds = [];
       user._appliedJobIds.push(String(id));
       setCurrentUser(user);
-      showToast(`✅ Applied to "${job.title}"! Track in My Applications.`, 'success');
-      if (btn) { btn.textContent = '✓ Applied'; btn.style.opacity='0.6'; }
+      showToast(` Applied to "${job.title}"! Track in My Applications.`, 'success');
+      if (btn) { btn.textContent = ' Applied'; btn.style.opacity='0.6'; }
     } catch(err) {
       if (err.message === 'already_applied') {
         showToast('You have already applied to this job!', 'info');
-        if (btn) { btn.textContent = '✓ Applied'; btn.style.opacity='0.6'; }
+        if (btn) { btn.textContent = ' Applied'; btn.style.opacity='0.6'; }
       } else {
         showToast('Failed to apply. Please try again.', 'error');
         if (btn) { btn.disabled=false; btn.textContent='Apply Now →'; }
@@ -219,15 +219,15 @@ async function applyJob(id) {
     }
   } else {
     // Static job — just show success with a warning
-    showToast(`✅ Applied to "${job.title}"! (Note: This is a sample template job and will not appear in your real Dashboard)`, 'info');
-    if (btn) { btn.textContent='✓ Applied'; btn.style.opacity='0.6'; }
+    showToast(` Applied to "${job.title}"! (Note: This is a sample template job and will not appear in your real Dashboard)`, 'info');
+    if (btn) { btn.textContent=' Applied'; btn.style.opacity='0.6'; }
   }
 }
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', async () => {
   const grid = document.getElementById('jobsGrid');
-  if (grid) grid.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted);grid-column:1/-1;">⏳ Loading jobs…</div>`;
+  if (grid) grid.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted);grid-column:1/-1;"> Loading jobs…</div>`;
 
   await buildJobsList();
 

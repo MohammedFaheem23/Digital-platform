@@ -8,10 +8,10 @@ function togglePassword(inputId, btn) {
   if (!input) return;
   if (input.type === 'password') {
     input.type = 'text';
-    btn.textContent = '🙈';
+    btn.textContent = 'Hide';
   } else {
     input.type = 'password';
-    btn.textContent = '👁️';
+    btn.textContent = 'Show';
   }
 }
 
@@ -29,10 +29,10 @@ function checkPasswordStrength(password) {
 
   const levels = [
     { class: '', label: 'Enter a password', color: '' },
-    { class: 'weak', label: '🔴 Weak', color: '#ef4444' },
-    { class: 'fair', label: '🟡 Fair', color: '#f59e0b' },
-    { class: 'good', label: '🔵 Good', color: '#3b82f6' },
-    { class: 'strong', label: '🟢 Strong', color: '#10b981' },
+    { class: 'weak', label: 'Weak', color: '#ef4444' },
+    { class: 'fair', label: 'Fair', color: '#f59e0b' },
+    { class: 'good', label: 'Good', color: '#3b82f6' },
+    { class: 'strong', label: 'Strong', color: '#10b981' },
   ];
 
   fill.className = 'strength-fill ' + (levels[score]?.class || '');
@@ -58,7 +58,7 @@ function goToStep(step) {
     const line = document.getElementById('stepLine' + i);
     if (!dot) continue;
     dot.classList.remove('active', 'completed');
-    if (i < step)      { dot.classList.add('completed'); dot.textContent = '✓'; }
+    if (i < step)      { dot.classList.add('completed'); dot.textContent = ''; }
     else if (i === step){ dot.classList.add('active');    dot.textContent = i;  }
     else                { dot.textContent = i; }
     if (line) line.classList.toggle('active', i < step);
@@ -103,7 +103,7 @@ document.querySelectorAll('input[name="role"]').forEach(r => r.addEventListener(
 function showAlert(message, type, alertId) {
   const alert = document.getElementById(alertId);
   if (!alert) return;
-  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const icons = { success: '', error: '', info: '' };
   alert.className = `alert alert-${type}`;
   alert.innerHTML = `${icons[type] || ''} ${message}`;
   alert.style.display = 'flex';
@@ -126,7 +126,7 @@ async function demoLogin(role) {
   try {
     const user = await sbLogin(creds.email, creds.password);
     setCurrentUser(user);
-    showToast(`Welcome back, ${user.name}! 👋`, 'success');
+    showToast(`Welcome back, ${user.name}! `, 'success');
     setTimeout(() => {
       window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
     }, 800);
@@ -140,7 +140,7 @@ async function demoLogin(role) {
 
       const user = await sbRegister({ ...demoData, email: creds.email, password: creds.password });
       setCurrentUser(user);
-      showToast(`Welcome, ${user.name}! 🎉`, 'success');
+      showToast(`Welcome, ${user.name}! `, 'success');
       setTimeout(() => {
         window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
       }, 800);
@@ -187,7 +187,7 @@ async function handleLogin(e) {
     
     let msg = 'Invalid email or password. Please try again.';
     if (err.message?.includes('Email not confirmed')) {
-      msg = '📧 Please confirm your email address before signing in. Check your inbox for the link.';
+      msg = 'Please confirm your email address before signing in. Check your inbox for the link.';
     } else if (err.message) {
       msg = err.message;
     }
@@ -236,12 +236,12 @@ async function handleRegister(e) {
       btn.disabled = false;
       btnText.style.display = 'inline';
       spinner.style.display = 'none';
-      showAlert('📧 Registration successful! Please check your email to confirm your account before logging in.', 'success', 'registerAlert');
+      showAlert('Registration successful! Please check your email to confirm your account before logging in.', 'success', 'registerAlert');
       return;
     }
 
     setCurrentUser(userResult);
-    showToast(`Welcome to SkillConnect, ${userResult.name}! 🎉`, 'success');
+    showToast(`Welcome to SkillConnect, ${userResult.name}!`, 'success');
     setTimeout(() => {
       window.location.href = role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
     }, 1000);

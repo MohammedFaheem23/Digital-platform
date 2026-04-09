@@ -25,62 +25,62 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
         <a href="home.html" class="nav-logo">
-          <div class="logo-icon">⚡</div>
+          <div class="logo-icon"></div>
           <span>SkillConnect</span>
         </a>
       </div>
       <nav class="sidebar-nav">
         <span class="sidebar-section-label">Main</span>
         <a href="dashboard-worker.html" class="sidebar-link active">
-          <span class="sidebar-icon">📊</span> Dashboard
+          <span class="sidebar-icon"></span>Dashboard
         </a>
         <a href="jobs.html" class="sidebar-link">
-          <span class="sidebar-icon">💼</span> Browse Jobs
+          <span class="sidebar-icon"></span>Browse Jobs
         </a>
         <a href="my-applications.html" class="sidebar-link">
-          <span class="sidebar-icon">📋</span> My Applications
+          <span class="sidebar-icon"></span>My Applications
           <span class="sidebar-badge" id="appsSidebarBadge" style="display:none;"></span>
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Job History — coming soon!','info');return false;">
-          <span class="sidebar-icon">📜</span> Job History
+          <span class="sidebar-icon"></span>Job History
         </a>
 
         <span class="sidebar-section-label">Profile</span>
         <a href="profile-worker.html" class="sidebar-link">
-          <span class="sidebar-icon">👤</span> My Profile
+          <span class="sidebar-icon"></span>My Profile
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Verification — coming soon!','info');return false;">
-          <span class="sidebar-icon">🛡️</span> Verification
+          <span class="sidebar-icon"></span>Verification
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Reviews — coming soon!','info');return false;">
-          <span class="sidebar-icon">⭐</span> My Reviews
+          <span class="sidebar-icon">⭐</span>My Reviews
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Skill Training — coming soon!','info');return false;">
-          <span class="sidebar-icon">🎓</span> Skill Training
+          <span class="sidebar-icon"></span>Skill Training
         </a>
 
         <span class="sidebar-section-label">Finance</span>
         <a href="#" class="sidebar-link" onclick="showToast('Earnings dashboard — coming soon!','info');return false;">
-          <span class="sidebar-icon">💰</span> Earnings
+          <span class="sidebar-icon"></span>Earnings
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;">
-          <span class="sidebar-icon">💳</span> Payments
+          <span class="sidebar-icon"></span>Payments
         </a>
 
         <span class="sidebar-section-label">Support</span>
         <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;">
-          <span class="sidebar-icon">💬</span> Messages
+          <span class="sidebar-icon"></span>Messages
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Notifications — coming soon!','info');return false;">
-          <span class="sidebar-icon">🔔</span> Notifications
+          <span class="sidebar-icon"></span>Notifications
         </a>
         <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;">
-          <span class="sidebar-icon">⚙️</span> Settings
+          <span class="sidebar-icon"></span>Settings
         </a>
       </nav>
       <div class="sidebar-footer">
         <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;" id="sidebarLogout">
-          <span class="sidebar-icon">🚪</span> Log Out
+          <span class="sidebar-icon"></span>Log Out
         </button>
       </div>
     </aside>
@@ -92,10 +92,10 @@
         <div class="topbar-title" id="dashboardTitle">My Dashboard</div>
         <div class="topbar-actions">
           <button class="topbar-icon-btn" title="Notifications" id="notifBtn">
-            🔔
+            
             <div class="notif-dot"></div>
           </button>
-          <button class="topbar-icon-btn" title="Messages" id="msgBtn">💬</button>
+          <button class="topbar-icon-btn" title="Messages" id="msgBtn"></button>
           <a href="profile-worker.html" class="user-avatar-btn" id="userAvatarBtn" style="text-decoration:none;">
             <div class="user-ava" id="userAva">?</div>
             <span class="user-ava-name" id="userName">User</span>
@@ -107,7 +107,7 @@
       <div class="dashboard-content">
         <!-- Greeting -->
         <div class="dashboard-greeting">
-          <h1 id="greetingText">Loading... 👋</h1>
+          <h1 id="greetingText">Loading... </h1>
           <p id="greetingSubtext">We're personalizing your dashboard...</p>
         </div>
 
@@ -120,7 +120,7 @@
           <div style="display:flex;align-items:center;gap:14px;">
             <div id="availDot" style="width:12px;height:12px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;flex-shrink:0;transition:.3s;"></div>
             <div>
-              <div style="font-weight:700;font-size:0.95rem;" id="availLabel">🟢 Available for Work</div>
+              <div style="font-weight:700;font-size:0.95rem;" id="availLabel">Available for Work</div>
               <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">Employers can contact you for new jobs</div>
             </div>
           </div>
@@ -138,14 +138,14 @@
                 "></span>
               </span>
             </div>
-            <a href="profile-worker.html" class="btn btn-ghost btn-sm">✏️ Edit Profile</a>
+            <a href="profile-worker.html" class="btn btn-ghost btn-sm">Edit Profile</a>
           </div>
         </div>
 
         <!-- Stats -->
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(249,115,22,0.12)">💼</div>
+            <div class="stat-card-icon" style="background:rgba(249,115,22,0.12)"></div>
             <div class="stat-card-body">
               <div class="stat-card-value">0</div>
               <div class="stat-card-label">Jobs Applied</div>
@@ -153,7 +153,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(16,185,129,0.12)">✅</div>
+            <div class="stat-card-icon" style="background:rgba(16,185,129,0.12)"></div>
             <div class="stat-card-body">
               <div class="stat-card-value">0</div>
               <div class="stat-card-label">Jobs Completed</div>
@@ -161,7 +161,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(56,189,248,0.12)">💰</div>
+            <div class="stat-card-icon" style="background:rgba(56,189,248,0.12)"></div>
             <div class="stat-card-body">
               <div class="stat-card-value" id="totalEarnings">₹0</div>
               <div class="stat-card-label">Total Earned</div>
@@ -169,7 +169,7 @@
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(245,158,11,0.12)">⭐</div>
+            <div class="stat-card-icon" style="background:rgba(245,158,11,0.12)"></div>
             <div class="stat-card-body">
               <div class="stat-card-value">—</div>
               <div class="stat-card-label">Rating</div>
@@ -180,7 +180,7 @@
 
         <!-- Profile Completion Alert -->
         <div class="alert alert-info" style="margin-bottom:24px;" id="profileAlert">
-          📝 Your profile is <strong style="color:var(--accent)">loading...</strong>.
+           Your profile is <strong style="color:var(--accent)">loading...</strong>.
           <a href="#" style="color:var(--accent);font-weight:700;margin-left:auto;white-space:nowrap;">Complete Now →</a>
         </div>
 
@@ -189,7 +189,7 @@
           <!-- Recent Job Matches -->
           <div class="widget">
             <div class="widget-header">
-              <span class="widget-title">🎯 Recommended Jobs For You</span>
+              <span class="widget-title">Recommended Jobs For You</span>
               <a href="jobs.html" class="widget-action">View All</a>
             </div>
             <div class="widget-body">
@@ -201,7 +201,7 @@
           <div>
             <div class="widget" style="margin-bottom:16px;">
               <div class="widget-header">
-                <span class="widget-title">📊 This Month</span>
+                <span class="widget-title">This Month</span>
               </div>
               <div class="widget-body">
                 <div style="display:flex;flex-direction:column;gap:12px;">
@@ -227,7 +227,7 @@
 
             <div class="widget">
               <div class="widget-header">
-                <span class="widget-title">💬 Recent Messages</span>
+                <span class="widget-title">Recent Messages</span>
                 <a href="#" class="widget-action">View All</a>
               </div>
               <div class="widget-body">
@@ -240,7 +240,7 @@
         <!-- Recent Applications -->
         <div class="widget dashboard-full" style="margin-bottom:24px;">
           <div class="widget-header">
-            <span class="widget-title">📋 Recent Applications</span>
+            <span class="widget-title">Recent Applications</span>
             <a href="my-applications.html" class="widget-action">Manage All</a>
           </div>
           <div class="widget-body" style="padding:0;">
@@ -263,7 +263,7 @@
         <!-- Earnings Chart Placeholder -->
         <div class="widget dashboard-full">
           <div class="widget-header">
-            <span class="widget-title">💰 Earnings Overview</span>
+            <span class="widget-title">Earnings Overview</span>
             <select style="background:var(--border);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text-secondary);font-size:0.8rem;cursor:pointer;">
               <option>Last 6 months</option>
               <option>This year</option>

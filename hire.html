@@ -29,7 +29,7 @@
 <body>
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <a href="home.html" class="nav-logo"><div class="logo-icon"></div><span>SkillConnect</span></a>
       <ul class="nav-links" id="navLinks">
         <li><a href="home.html" class="nav-link">Home</a></li>
         <li><a href="jobs.html" class="nav-link">Find Jobs</a></li>
@@ -47,11 +47,11 @@
 
   <section class="page-hero">
     <div class="container page-hero-content">
-      <span class="section-tag">👷 Find Talent</span>
+      <span class="section-tag">Find Talent</span>
       <h1>Hire Verified <span class="gradient-text">Skilled Workers</span></h1>
       <p>Connect instantly with background-verified tradesmen for any project, big or small.</p>
       <div class="search-box" style="max-width:600px;margin-top:24px;border-radius:50px;padding:6px 6px 6px 20px;">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"></span>
         <input type="text" id="workerSearch" placeholder="Search by skill, name, or trade..." class="search-input" oninput="filterWorkers()" />
         <select class="search-select" id="workerCityFilter" onchange="filterWorkers()">
           <option value="">All Cities</option>
@@ -74,20 +74,20 @@
           <div class="filter-group">
             <div class="filter-title">Trade</div>
             <div class="filter-options">
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Electrician" onchange="filterWorkers()"><span>⚡ Electrician</span></label>
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Plumber" onchange="filterWorkers()"><span>🔧 Plumber</span></label>
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Carpenter" onchange="filterWorkers()"><span>🪚 Carpenter</span></label>
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Welder" onchange="filterWorkers()"><span>🔥 Welder</span></label>
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Painter" onchange="filterWorkers()"><span>🎨 Painter</span></label>
-              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Mason" onchange="filterWorkers()"><span>🧱 Mason</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Electrician" onchange="filterWorkers()"><span>Electrician</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Plumber" onchange="filterWorkers()"><span>Plumber</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Carpenter" onchange="filterWorkers()"><span>Carpenter</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Welder" onchange="filterWorkers()"><span>Welder</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Painter" onchange="filterWorkers()"><span>Painter</span></label>
+              <label class="filter-option"><input type="checkbox" class="wf-trade" value="Mason" onchange="filterWorkers()"><span>Mason</span></label>
             </div>
           </div>
           <div class="filter-group">
             <div class="filter-title">Availability</div>
             <div class="filter-options">
               <label class="filter-option"><input type="radio" name="avail" class="wf-avail" value="" onchange="filterWorkers()" checked><span>All</span></label>
-              <label class="filter-option"><input type="radio" name="avail" class="wf-avail" value="Available" onchange="filterWorkers()"><span>🟢 Available Now</span></label>
-              <label class="filter-option"><input type="radio" name="avail" class="wf-avail" value="Busy" onchange="filterWorkers()"><span>🔴 On Job</span></label>
+              <label class="filter-option"><input type="radio" name="avail" class="wf-avail" value="Available" onchange="filterWorkers()"><span>Available Now</span></label>
+              <label class="filter-option"><input type="radio" name="avail" class="wf-avail" value="Busy" onchange="filterWorkers()"><span>On Job</span></label>
             </div>
           </div>
           <div class="filter-group">
@@ -100,7 +100,7 @@
           </div>
           <div class="filter-group">
             <div class="filter-title">Verified Only</div>
-            <label class="filter-option"><input type="checkbox" id="verifiedOnly" onchange="filterWorkers()"><span>🛡️ Show Verified Only</span></label>
+            <label class="filter-option"><input type="checkbox" id="verifiedOnly" onchange="filterWorkers()"><span>Show Verified Only</span></label>
           </div>
           <button class="btn btn-primary btn-full" onclick="filterWorkers()">Apply Filters</button>
         </div>

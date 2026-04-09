@@ -137,27 +137,27 @@
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="home.html" class="nav-logo"><div class="logo-icon">⚡</div><span>SkillConnect</span></a>
+      <a href="home.html" class="nav-logo"><div class="logo-icon"></div><span>SkillConnect</span></a>
     </div>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Main</span>
-      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
-      <a href="manage-hires.html" class="sidebar-link active"><span class="sidebar-icon">🤝</span> Manage Hires<span class="sidebar-badge" id="activeBadge" style="display:none;"></span></a>
-      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon">👷</span> Find Workers</a>
-      <a href="my-job-posts.html" class="sidebar-link"><span class="sidebar-icon">📋</span> My Job Posts</a>
+      <a href="dashboard-employer.html" class="sidebar-link"><span class="sidebar-icon"></span>Dashboard</a>
+      <a href="manage-hires.html" class="sidebar-link active"><span class="sidebar-icon"></span>Manage Hires<span class="sidebar-badge" id="activeBadge" style="display:none;"></span></a>
+      <a href="hire.html" class="sidebar-link"><span class="sidebar-icon"></span>Find Workers</a>
+      <a href="my-job-posts.html" class="sidebar-link"><span class="sidebar-icon"></span>My Job Posts</a>
 
       <span class="sidebar-section-label">Manage</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon">🏢</span> Company Profile</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon">💰</span> Payments</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon">📄</span> Contracts</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Company Profile — coming soon!','info');return false;"><span class="sidebar-icon"></span>Company Profile</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Payments — coming soon!','info');return false;"><span class="sidebar-icon"></span>Payments</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Contracts — coming soon!','info');return false;"><span class="sidebar-icon"></span>Contracts</a>
 
       <span class="sidebar-section-label">Support</span>
-      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon">💬</span> Messages</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon">⚙️</span> Settings</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Messages — coming soon!','info');return false;"><span class="sidebar-icon"></span>Messages</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Settings — coming soon!','info');return false;"><span class="sidebar-icon"></span>Settings</a>
     </nav>
     <div class="sidebar-footer">
       <button class="sidebar-link" onclick="logout()" style="width:100%;background:none;cursor:pointer;">
-        <span class="sidebar-icon">🚪</span> Log Out
+        <span class="sidebar-icon"></span>Log Out
       </button>
     </div>
   </aside>
@@ -204,9 +204,9 @@
         <button class="filter-tab active" onclick="filterHirings('all',this)">All</button>
         <button class="filter-tab" onclick="filterHirings('contacted',this)">📞 Contacted</button>
         <button class="filter-tab" onclick="filterHirings('shortlisted',this)">⭐ Shortlisted</button>
-        <button class="filter-tab" onclick="filterHirings('hired',this)">✅ Hired</button>
-        <button class="filter-tab" onclick="filterHirings('completed',this)">🏆 Completed</button>
-        <button class="filter-tab" onclick="filterHirings('rejected',this)">❌ Rejected</button>
+        <button class="filter-tab" onclick="filterHirings('hired',this)">Hired</button>
+        <button class="filter-tab" onclick="filterHirings('completed',this)">Completed</button>
+        <button class="filter-tab" onclick="filterHirings('rejected',this)">Rejected</button>
       </div>
 
       <!-- Hirings List -->
@@ -215,7 +215,7 @@
       <!-- CTA Banner -->
       <div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.05));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:8px;">
         <div>
-          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">👷 Need more workers?</div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">Need more workers?</div>
           <div style="font-size:0.85rem;color:var(--text-muted);">Browse 500+ verified skilled workers ready to start today.</div>
         </div>
         <a href="hire.html" class="btn btn-primary">Find Workers →</a>
@@ -235,9 +235,9 @@
 const STATUS_CFG = {
   contacted:   { label:'Contacted',  icon:'📞', cls:'s-contacted',   accent:'#38bdf8' },
   shortlisted: { label:'Shortlisted',icon:'⭐', cls:'s-shortlisted', accent:'#fbbf24' },
-  hired:       { label:'Hired ✅',   icon:'✅', cls:'s-hired',       accent:'#34d399' },
-  completed:   { label:'Completed',  icon:'🏆', cls:'s-completed',   accent:'#c084fc' },
-  rejected:    { label:'Rejected',   icon:'❌', cls:'s-rejected',    accent:'#f87171' },
+  hired:       { label:'Hired ',   icon:'', cls:'s-hired',       accent:'#34d399' },
+  completed:   { label:'Completed',  icon:'', cls:'s-completed',   accent:'#c084fc' },
+  rejected:    { label:'Rejected',   icon:'', cls:'s-rejected',    accent:'#f87171' },
 };
 
 const WORKER_DETAILS = {
@@ -265,7 +265,7 @@ async function loadHirings() {
 
   try {
     const raw = await sbGetMyHireRequests(user.id);
-    allHirings = raw.map(h => ({
+    allHirings = raw.map(h =>({
       id: h.id,
       workerId: h.worker_id,
       workerName: h.worker?.name || 'Unknown',
@@ -289,19 +289,19 @@ async function loadHirings() {
 /* ---- Stats ---- */
 function updateStats() {
   document.getElementById('statTotal').textContent       = allHirings.length;
-  document.getElementById('statContacted').textContent   = allHirings.filter(h => h.status === 'contacted').length;
-  document.getElementById('statShortlisted').textContent = allHirings.filter(h => h.status === 'shortlisted').length;
-  document.getElementById('statHired').textContent       = allHirings.filter(h => h.status === 'hired').length;
+  document.getElementById('statContacted').textContent   = allHirings.filter(h =>h.status === 'contacted').length;
+  document.getElementById('statShortlisted').textContent = allHirings.filter(h =>h.status === 'shortlisted').length;
+  document.getElementById('statHired').textContent       = allHirings.filter(h =>h.status === 'hired').length;
 
-  const active = allHirings.filter(h => ['contacted','shortlisted'].includes(h.status)).length;
+  const active = allHirings.filter(h =>['contacted','shortlisted'].includes(h.status)).length;
   const badge = document.getElementById('activeBadge');
-  if (badge) { badge.textContent = active; badge.style.display = active > 0 ? '' : 'none'; }
+  if (badge) { badge.textContent = active; badge.style.display = active >0 ? '' : 'none'; }
 }
 
 /* ---- Filter ---- */
 function filterHirings(filter, btn) {
   currentFilter = filter;
-  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-tab').forEach(b =>b.classList.remove('active'));
   btn.classList.add('active');
   renderHirings();
 }
@@ -310,13 +310,13 @@ function filterHirings(filter, btn) {
 function renderHirings() {
   const container = document.getElementById('hiringsList');
   let list = allHirings;
-  if (currentFilter !== 'all') list = allHirings.filter(h => h.status === currentFilter);
+  if (currentFilter !== 'all') list = allHirings.filter(h =>h.status === currentFilter);
 
   if (list.length === 0) {
     if (allHirings.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">🤝</div>
+          <div class="empty-state-icon"></div>
           <h3>No Hire Requests Yet</h3>
           <p>Browse skilled workers and send hire requests — they'll appear here for you to manage and track.</p>
           <a href="hire.html" class="btn btn-primary">Browse Workers & Hire</a>
@@ -324,7 +324,7 @@ function renderHirings() {
     } else {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-icon"></div>
           <h3>No hirings in this category</h3>
           <p>Try a different filter above.</p>
         </div>`;
@@ -333,17 +333,17 @@ function renderHirings() {
   }
 
   // Group: Active first, then completed/rejected
-  const active    = list.filter(h => ['contacted','shortlisted','hired'].includes(h.status));
-  const concluded = list.filter(h => ['completed','rejected'].includes(h.status));
+  const active    = list.filter(h =>['contacted','shortlisted','hired'].includes(h.status));
+  const concluded = list.filter(h =>['completed','rejected'].includes(h.status));
 
   let html = '';
-  if (active.length > 0) {
+  if (active.length >0) {
     html += `<div class="section-heading">Active (${active.length})</div>`;
-    html += active.map(h => buildCard(h)).join('');
+    html += active.map(h =>buildCard(h)).join('');
   }
-  if (concluded.length > 0) {
+  if (concluded.length >0) {
     html += `<div class="section-heading">Concluded (${concluded.length})</div>`;
-    html += concluded.map(h => buildCard(h)).join('');
+    html += concluded.map(h =>buildCard(h)).join('');
   }
   container.innerHTML = html;
 }
@@ -362,12 +362,12 @@ function buildCard(h) {
     <div class="hire-info">
       <div class="hire-name">
         ${w.name || h.workerName || 'Worker'}
-        ${w.verified ? '<span class="hire-verified">✓ Verified</span>' : ''}
+        ${w.verified ? '<span class="hire-verified">Verified</span>' : ''}
       </div>
       <div class="hire-meta">
-        <span>🛠️ ${w.trade || '—'}</span>
-        <span>📍 ${w.city || '—'}</span>
-        <span>💰 ₹${(w.jobs||0)*800>/0/?'':''}${w.jobs ? Math.round(w.jobs*0.8)+'+ jobs done' : '—'}</span>
+        <span>${w.trade || '—'}</span>
+        <span>${w.city || '—'}</span>
+        <span>₹${(w.jobs||0)*800>/0/?'':''}${w.jobs ? Math.round(w.jobs*0.8)+'+ jobs done' : '—'}</span>
         ${h.budget ? `<span>🏷️ Budget: ${h.budget}</span>` : ''}
         ${h.date && h.date !== 'Flexible' ? `<span>📅 Start: ${h.date}</span>` : ''}
       </div>
@@ -377,8 +377,8 @@ function buildCard(h) {
         <span style="color:var(--text-muted);">(${w.reviews||0} reviews)</span>
       </div>
       ${w.skills?.length ? `<div class="skill-row" style="margin-top:8px;">${w.skills.map(sk=>`<span class="skill-chip-sm">${sk}</span>`).join('')}</div>` : ''}
-      <div class="hire-job-desc">📝 ${h.desc || 'No job description provided.'}</div>
-      ${h.address ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">📍 Jobsite: ${h.address}</div>` : ''}
+      <div class="hire-job-desc">${h.desc || 'No job description provided.'}</div>
+      ${h.address ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">Jobsite: ${h.address}</div>` : ''}
       <div class="hire-actions">
         ${buildActions(h, w)}
       </div>
@@ -391,9 +391,9 @@ function buildCard(h) {
         <option value="" disabled selected>Change Status…</option>
         <option value="contacted">📞 Mark Contacted</option>
         <option value="shortlisted">⭐ Shortlist</option>
-        <option value="hired">✅ Mark Hired</option>
-        <option value="completed">🏆 Mark Completed</option>
-        <option value="rejected">❌ Reject</option>
+        <option value="hired">Mark Hired</option>
+        <option value="completed">Mark Completed</option>
+        <option value="rejected">Reject</option>
       </select>
     </div>
   </div>`;
@@ -406,14 +406,14 @@ function buildActions(h, w) {
     btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','shortlisted')">⭐ Shortlist</button>`);
     btns.push(`<button class="btn btn-ghost btn-sm" onclick="changeStatus('${h.id}','rejected')">Reject</button>`);
   } else if (h.status === 'shortlisted') {
-    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','hired')">✅ Confirm Hire</button>`);
+    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','hired')">Confirm Hire</button>`);
     btns.push(`<button class="btn btn-ghost btn-sm" onclick="changeStatus('${h.id}','rejected')">Reject</button>`);
   } else if (h.status === 'hired') {
-    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','completed')">🏆 Mark Completed</button>`);
+    btns.push(`<button class="btn btn-primary btn-sm" onclick="changeStatus('${h.id}','completed')">Mark Completed</button>`);
     if(w.phone) btns.push(`<a href="tel:${w.phone.replace(/\s/g,'')}" class="btn btn-ghost btn-sm">📞 Call Worker</a>`);
   } else if (h.status === 'completed') {
     const hasReview = !!h.review;
-    btns.push(`<button class="btn ${hasReview?'btn-ghost':'btn-primary'} btn-sm" onclick="openRatingModal('${h.id}')">${hasReview ? '✏️ Edit Review' : '⭐ Leave Review'}</button>`);
+    btns.push(`<button class="btn ${hasReview?'btn-ghost':'btn-primary'} btn-sm" onclick="openRatingModal('${h.id}')">${hasReview ? ' Edit Review' : '⭐ Leave Review'}</button>`);
     if (hasReview) btns.push(`<span style="font-size:0.8rem;color:#fbbf24;align-self:center;">${'★'.repeat(h.review.rating)}${'☆'.repeat(5-h.review.rating)} ${h.review.rating}.0</span>`);
     btns.push(`<button class="btn btn-ghost btn-sm" onclick="rehireWorker('${h.workerId}')">🔄 Re-hire</button>`);
   } else if (h.status === 'rejected') {
@@ -425,7 +425,7 @@ function buildActions(h, w) {
 /* ---- Change status ---- */
 async function changeStatus(hireId, newStatus) {
   const user = getCurrentUser();
-  const idx = allHirings.findIndex(h => String(h.id) === String(hireId));
+  const idx = allHirings.findIndex(h =>String(h.id) === String(hireId));
   if (idx === -1) return;
 
   try {
@@ -462,7 +462,7 @@ function openRatingModal(hireId) {
   _ratingHireId  = hireId;
   _selectedStars = 0;
 
-  const h = allHirings.find(x => x.id == hireId);
+  const h = allHirings.find(x =>x.id == hireId);
   if (!h) return;
   const w = WORKER_DETAILS[h.workerId] || {};
   const existing = h.review || null;
@@ -480,7 +480,7 @@ function openRatingModal(hireId) {
           <div style="width:48px;height:48px;border-radius:50%;background:${w.gradient||'var(--primary)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:#fff;flex-shrink:0;">${w.initial||'?'}</div>
           <div>
             <div style="font-size:1.05rem;font-weight:700;">${w.name||h.workerName||'Worker'}</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);">🛠️ ${w.trade||'—'}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">${w.trade||'—'}</div>
           </div>
           <button onclick="closeRatingModal()" style="margin-left:auto;background:var(--border);border:none;color:var(--text-secondary);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;">✕</button>
         </div>
@@ -516,12 +516,12 @@ function openRatingModal(hireId) {
       </div>
     </div>`;
 
-  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeRatingModal(); });
+  backdrop.addEventListener('click', e =>{ if (e.target === backdrop) closeRatingModal(); });
   document.body.appendChild(backdrop);
 }
 
 function hoverStars(n) {
-  if (_selectedStars > 0) return;
+  if (_selectedStars >0) return;
   for (let i=1;i<=5;i++) document.getElementById('star'+i)?.classList.toggle('selected', i<=n);
   document.getElementById('starLabel').textContent = STAR_LABELS[n];
 }
@@ -552,13 +552,13 @@ function toggleAspect(btn, text) {
 async function submitReview() {
   if (!_selectedStars) {
     const lbl = document.getElementById('starLabel');
-    lbl.textContent = '⚠️ Please select a star rating!';
+    lbl.textContent = ' Please select a star rating!';
     lbl.style.color = '#f87171';
     return;
   }
   const text = document.getElementById('reviewText')?.value.trim() || '';
   const user = getCurrentUser();
-  const idx  = allHirings.findIndex(h => String(h.id) === String(_ratingHireId));
+  const idx  = allHirings.findIndex(h =>String(h.id) === String(_ratingHireId));
   if (idx === -1) return;
 
   const reviewEntry = {
