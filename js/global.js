@@ -7,6 +7,15 @@ const navbar    = document.getElementById('navbar');
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
 
+// Flicker fix for Auth buttons
+const authStyle = document.createElement('style');
+authStyle.textContent = `.auth-pending { opacity: 0 !important; visibility: hidden !important; pointer-events: none; transition: opacity 0.3s ease; }`;
+document.head.appendChild(authStyle);
+document.querySelectorAll('#loginBtn, #signupBtn').forEach(b => b.classList.add('auth-pending'));
+
+// Theme Init
+if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode');
+
 window.addEventListener('scroll', () => {
   if (window.scrollY > 20) navbar?.classList.add('scrolled');
   else                      navbar?.classList.remove('scrolled');
@@ -70,11 +79,44 @@ function updateNavbarAuth() {
     }
   });
 
-  if (!user || !loginBtn) return;
-  loginBtn.textContent = user.name?.split(' ')[0] || 'Profile';
-  loginBtn.href  = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
-  signupBtn.textContent = 'Dashboard';
-  signupBtn.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+  if (!user) {
+    if (loginBtn) { loginBtn.textContent = 'Sign In'; loginBtn.href = 'login.html'; loginBtn.classList.remove('auth-pending'); }
+    if (signupBtn) { signupBtn.textContent = 'Register Free'; signupBtn.href = 'register.html'; signupBtn.classList.remove('auth-pending'); }
+    return; 
+  }
+  
+  if (loginBtn) { 
+    loginBtn.textContent = user.name?.split(' ')[0] || 'Profile';
+    loginBtn.href  = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+    loginBtn.classList.remove('auth-pending');
+  }
+  if (signupBtn) {
+    signupBtn.textContent = 'Dashboard';
+    signupBtn.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+    signupBtn.classList.remove('auth-pending');
+  }
+}
+
+// ---- Theme Switcher ----
+function setupThemeSwitcher() {
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+
+  const btn = document.createElement('button');
+  const isLight = document.documentElement.classList.contains('light-mode');
+  btn.innerHTML = isLight ? '🌙' : '☀️';
+  btn.style.cssText = `background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:0.2s;margin-right:8px;`;
+  
+  btn.onmouseover = () => { btn.style.background = 'var(--primary-glow)'; btn.style.borderColor = 'var(--primary)'; };
+  btn.onmouseout  = () => { btn.style.background = 'transparent'; btn.style.borderColor = 'var(--border)'; };
+  
+  btn.onclick = () => {
+    document.documentElement.classList.toggle('light-mode');
+    const light = document.documentElement.classList.contains('light-mode');
+    localStorage.setItem('theme', light ? 'light' : 'dark');
+    btn.innerHTML = light ? '🌙' : '☀️';
+  };
+  navActions.insertBefore(btn, navActions.firstChild);
 }
 
 // ---- Animate numbers ----
@@ -122,8 +164,9 @@ document.head.appendChild(style);
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', async () => {
+  setupThemeSwitcher();
   // Wait for the async session restore (supabase.js IIFE)
-  await new Promise(r => setTimeout(r, 500));
+  await new Promise(r => setTimeout(r, 450));
   updateNavbarAuth();
   setupScrollAnimations();
 });
