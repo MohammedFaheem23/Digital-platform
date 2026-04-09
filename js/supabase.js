@@ -2,8 +2,8 @@
    SkillConnect – Supabase Client
    ============================ */
 
-const SUPABASE_URL  = window.env?.SUPABASE_URL || 'https://yhpvchnoqnkcazoivrsu.supabase.co';
-const SUPABASE_ANON = window.env?.SUPABASE_ANON || 'REPLACED_BY_ENV_VAR';
+const SUPABASE_URL  = 'https://yhpvchnoqnkcazoivrsu.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlocHZjaG5vcW5rY2F6b2l2cnN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTgzOTgsImV4cCI6MjA5MTI5NDM5OH0.T959p7P212H_jwKZNKALzbexDQ-VCSaKVMB5GpflXX4';
 
 // Load Supabase client (CDN-loaded via <script> in each HTML before this file)
 const { createClient } = supabase;
