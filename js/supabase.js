@@ -74,13 +74,38 @@ async function sbGetCurrentUser() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) return null;
 
-  const { data: profile, error } = await db
+  let { data: profile, error } = await db
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
     .single();
-  if (error) return null;
+    
+  if (error || !profile) {
+    // If a user logs in via Google/OAuth and has no profile, auto-create a default one
+    const newProfile = {
+      id: session.user.id,
+      name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+      email: session.user.email,
+      role: 'worker', // default to worker, they can switch or update later
+      available: true,
+      avatar: session.user.user_metadata?.avatar_url || 'U',
+    };
+    await db.from('profiles').insert(newProfile);
+    profile = newProfile;
+  }
   return profile;
+}
+
+/** Sign in with Google */
+async function sbLoginWithGoogle() {
+  const { data, error } = await db.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/dashboard.html',
+    }
+  });
+  if (error) throw error;
+  return data;
 }
 
 /* ─────────────────────────────────────────

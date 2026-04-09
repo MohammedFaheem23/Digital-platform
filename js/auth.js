@@ -242,8 +242,16 @@ async function handleRegister(e) {
 }
 
 // ---- Social Login ----
-function socialLogin(provider) {
-  showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} login coming soon!`, 'info');
+async function socialLogin(provider) {
+  if (provider === 'google') {
+    try {
+      await sbLoginWithGoogle();
+    } catch (e) {
+      showAlert('Google login failed. Please try again.', 'error', 'loginAlert');
+    }
+  } else {
+    showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} login coming soon!`, 'info');
+  }
 }
 
 // ---- Redirect if already logged in ----
