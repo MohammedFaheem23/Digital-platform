@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+  <!-- Theme Guard: Prevent black flicker in light mode -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SkillConnect – Digital Platform for Skilled Labour</title>
