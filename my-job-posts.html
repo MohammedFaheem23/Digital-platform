@@ -422,7 +422,7 @@ async function loadPosts() {
       pay: p.pay,
       experience: p.experience,
       openings: p.openings,
-      desc: p.desc,
+      desc: p.description || p.desc || '',
       skills: p.skills || [],
       deadline: p.deadline,
       status: p.status,
@@ -648,10 +648,10 @@ async function savePost() {
     pay:        document.getElementById('postPay').value.trim() || null,
     experience: document.getElementById('postExp').value,
     openings:   parseInt(document.getElementById('postOpenings').value) || 1,
-    desc,
-    skills:     [...skills],
-    deadline:   document.getElementById('postDeadline').value || null,
-    status:     document.getElementById('postStatus').value
+    description: desc,
+    skills:      [...skills],
+    deadline:    document.getElementById('postDeadline').value || null,
+    status:      document.getElementById('postStatus').value
   };
 
   try {
@@ -663,8 +663,10 @@ async function savePost() {
       showToast('🚀 Job posted successfully! Workers can now apply.', 'success');
     }
   } catch(e) {
-    console.error('Failed to save post', e);
-    showToast('❌ Failed to save job post.', 'error');
+    console.error('Failed to save post:', e);
+    const errorMsg = e.message || 'Check all required fields.';
+    showToast(`❌ Failed to save job post: ${errorMsg}`, 'error');
+    return; // Stop here
   }
 
   await loadPosts();

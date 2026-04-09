@@ -59,7 +59,7 @@ async function buildJobsList() {
       posted:      p.created_at ? timeAgo(p.created_at) : 'Recently',
       icon:        TRADE_ICONS[p.trade] || '📋',
       iconBg:      TRADE_BG[p.trade]   || 'linear-gradient(135deg,#9ca3af,#6b7280)',
-      description: p.desc     || '',
+      description: p.description || p.desc || '',
       skills:      p.skills   || [],
       openings:    p.openings || 1,
       deadline:    p.deadline || null,
