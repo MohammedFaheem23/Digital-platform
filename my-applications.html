@@ -210,7 +210,9 @@
   </main>
 </div>
 
-<script src="js/global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/global.js"></script>
 <script>
 /* ===================================================
    My Applications Page Logic
@@ -236,7 +238,8 @@ let allApps = [];
 let currentFilter = 'all';
 
 /* ---- Load applications from localStorage ---- */
-function loadApplications() {
+async function loadApplications() {
+  await new Promise(r => setTimeout(r, 500)); // wait for session
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 
@@ -244,14 +247,25 @@ function loadApplications() {
   document.getElementById('userAva').textContent = user.avatar || user.name?.[0]?.toUpperCase() || 'U';
   document.getElementById('userName').textContent = user.name?.split(' ')[0] || 'User';
 
-  // Load from user object or localStorage key
-  allApps = user.applications || JSON.parse(localStorage.getItem(`sc_apps_${user.email}`) || '[]');
-
-  // Simulate status progression for demo realism — randomise if app is old enough
-  allApps = allApps.map((app, i) => {
-    if (!app.status) app.status = 'pending';
-    return app;
-  });
+  try {
+    const apps = await sbGetMyApplications(user.id);
+    allApps = apps.map(app => ({
+      id: app.id,
+      status: app.status || 'pending',
+      created_at: app.created_at,
+      title: app.job?.title || 'Unknown Job',
+      employer: app.job?.employer?.company || app.job?.employer?.name || 'Unknown Employer',
+      location: app.job?.location || 'Unknown Location',
+      pay: app.job?.pay || 'Negotiable',
+      type: app.job?.type || 'Full Time',
+      icon: app.job?.trade === 'Electrician' ? '⚡' : 
+            app.job?.trade === 'Plumber' ? '🔧' : 
+            app.job?.trade === 'Carpenter' ? '🪚' : '💼'
+    }));
+  } catch(e) {
+    console.error('Failed to load applications', e);
+    allApps = [];
+  }
 
   updateStats();
   renderApps();
@@ -371,25 +385,21 @@ function buildTimeline(status) {
 }
 
 /* ---- Withdraw application ---- */
-function withdrawApp(appId) {
+async function withdrawApp(appId) {
   const user = getCurrentUser();
-  const idx = allApps.findIndex(a => a.id == appId);
+  const idx = allApps.findIndex(a => String(a.id) === String(appId));
   if (idx === -1) return;
 
-  allApps[idx].status = 'withdrawn';
-
-  // Persist
-  if (user) {
-    const updated = { ...user, applications: allApps };
-    setCurrentUser(updated);
-    const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
-    const ui = allUsers.findIndex(u => u.email === user.email);
-    if (ui > -1) { allUsers[ui] = updated; localStorage.setItem('sc_users', JSON.stringify(allUsers)); }
+  try {
+    await sbUpdateApplicationStatus(appId, 'withdrawn');
+    allApps[idx].status = 'withdrawn';
+    showToast('Application withdrawn.', 'info');
+    updateStats();
+    renderApps();
+  } catch(e) {
+    console.error('Failed to withdraw application', e);
+    showToast('Failed to withdraw application.', 'error');
   }
-
-  showToast('Application withdrawn.', 'info');
-  updateStats();
-  renderApps();
 }
 
 /* ---- Init ---- */

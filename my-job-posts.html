@@ -355,7 +355,9 @@
   </div>
 </div>
 
-<script src="js/global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/global.js"></script>
 <script>
 /* =====================================================
    MY JOB POSTS – Full CRUD
@@ -382,14 +384,15 @@ let deletePendingId = null;
 let currentUser = null;
 
 /* ─── Init ─── */
-function init() {
+async function init() {
+  await new Promise(r => setTimeout(r, 500)); // Wait for session restore
   currentUser = getCurrentUser();
   if (!currentUser) { window.location.href = 'login.html'; return; }
 
   document.getElementById('userAva').textContent   = currentUser.avatar || currentUser.name?.[0]?.toUpperCase() || 'E';
   document.getElementById('userName').textContent  = currentUser.name?.split(' ')[0] || 'User';
 
-  loadPosts();
+  await loadPosts();
   updateStats();
   render();
 
@@ -398,11 +401,42 @@ function init() {
 }
 
 /* ─── Load / Save ─── */
-function loadPosts() {
-  allPosts = JSON.parse(localStorage.getItem(`sc_job_posts_${currentUser.email}`) || '[]');
+async function loadPosts() {
+  try {
+    const raw = await sbGetMyJobPosts(currentUser.id);
+    allPosts = raw.map(p => ({
+      id: p.id,
+      title: p.title,
+      trade: p.trade,
+      type: p.type,
+      location: p.location,
+      pay: p.pay,
+      experience: p.experience,
+      openings: p.openings,
+      desc: p.desc,
+      skills: p.skills || [],
+      deadline: p.deadline,
+      status: p.status,
+      createdAt: p.created_at,
+      applicants: p.applications ? p.applications.map(a => ({
+        id: a.id,
+        workerId: a.worker_id,
+        name: a.worker?.name,
+        email: a.worker?.email, // Keep email as identifier for legacy mode if needed
+        phone: a.worker?.phone,
+        trade: a.worker?.trade,
+        city: a.worker?.city,
+        status: a.status,
+        appliedOn: a.created_at
+      })) : []
+    }));
+  } catch(e) {
+    console.error('Failed to load posts', e);
+    allPosts = [];
+  }
 }
 function savePosts() {
-  localStorage.setItem(`sc_job_posts_${currentUser.email}`, JSON.stringify(allPosts));
+  // Deprecated: using loadPosts() to refresh from db instead
 }
 
 /* ─── Stats ─── */
@@ -584,7 +618,7 @@ function removeSkill(idx) {
 }
 
 /* ─── Save / Update ─── */
-function savePost() {
+async function savePost() {
   const title    = document.getElementById('postTitle').value.trim();
   const trade    = document.getElementById('postTrade').value;
   const location = document.getElementById('postLocation').value.trim();
@@ -596,41 +630,38 @@ function savePost() {
   if (!desc)     { flashField('postDesc',    'Please add a job description'); return; }
 
   const editId = document.getElementById('editPostId').value;
-  const now    = Date.now();
-
-  // Also add a dummy applicant pool (so it shows correctly from jobs.html views)
+  
   const payload = {
-    id:         editId || String(now),
     title,
     trade,
     type:       document.getElementById('postType').value,
     location,
-    pay:        document.getElementById('postPay').value.trim(),
+    pay:        document.getElementById('postPay').value.trim() || null,
     experience: document.getElementById('postExp').value,
     openings:   parseInt(document.getElementById('postOpenings').value) || 1,
     desc,
     skills:     [...skills],
-    deadline:   document.getElementById('postDeadline').value,
-    status:     document.getElementById('postStatus').value,
-    createdAt:  editId ? (allPosts.find(p=>p.id===editId)?.createdAt || now) : now,
-    updatedAt:  now,
-    postedBy:   currentUser.name || currentUser.email,
-    company:    currentUser.company || currentUser.name,
-    applicants: editId ? (allPosts.find(p=>p.id===editId)?.applicants || []) : [],
+    deadline:   document.getElementById('postDeadline').value || null,
+    status:     document.getElementById('postStatus').value
   };
 
-  if (editId) {
-    const idx = allPosts.findIndex(p => p.id === editId);
-    if (idx >= 0) allPosts[idx] = payload;
-  } else {
-    allPosts.unshift(payload);
+  try {
+    if (editId) {
+      await sbUpdateJobPost(editId, currentUser.id, payload);
+      showToast('✅ Job post updated!', 'success');
+    } else {
+      await sbCreateJobPost(currentUser.id, payload);
+      showToast('🚀 Job posted successfully! Workers can now apply.', 'success');
+    }
+  } catch(e) {
+    console.error('Failed to save post', e);
+    showToast('❌ Failed to save job post.', 'error');
   }
 
-  savePosts();
+  await loadPosts();
   updateStats();
   render();
   closeModal('postModal');
-  showToast(editId ? '✅ Job post updated!' : '🚀 Job posted successfully! Workers can now apply.', 'success');
 }
 
 function flashField(id, msg) {
@@ -643,16 +674,17 @@ function flashField(id, msg) {
 }
 
 /* ─── Change status ─── */
-function changeStatus(id, status) {
-  const p = allPosts.find(x => x.id === id);
-  if (!p) return;
-  p.status = status;
-  p.updatedAt = Date.now();
-  savePosts();
-  updateStats();
-  render();
-  const labels = { active:'✅ Activated', paused:'⏸️ Paused', closed:'🔒 Closed' };
-  showToast(`${labels[status]||'Updated'}: ${p.title}`, 'success');
+async function changeStatus(id, status) {
+  try {
+    await sbUpdateJobPost(id, currentUser.id, { status });
+    await loadPosts();
+    updateStats();
+    render();
+    const labels = { active:'✅ Activated', paused:'⏸️ Paused', closed:'🔒 Closed' };
+    showToast(`${labels[status] || 'Updated'}`, 'success');
+  } catch(e) {
+    showToast('❌ Failed to update status', 'error');
+  }
 }
 
 /* ─── Delete ─── */
@@ -661,13 +693,17 @@ function promptDelete(id, title) {
   document.getElementById('deletePostTitle').textContent = '"' + title + '"';
   showModal('deleteModal');
 }
-function confirmDelete() {
-  allPosts = allPosts.filter(p => p.id !== deletePendingId);
-  savePosts();
-  updateStats();
-  render();
-  closeModal('deleteModal');
-  showToast('🗑️ Job post deleted.', 'info');
+async function confirmDelete() {
+  try {
+    await sbDeleteJobPost(deletePendingId, currentUser.id);
+    await loadPosts();
+    updateStats();
+    render();
+    closeModal('deleteModal');
+    showToast('🗑️ Job post deleted.', 'info');
+  } catch(e) {
+    showToast('❌ Failed to delete job post.', 'error');
+  }
   deletePendingId = null;
 }
 
@@ -743,59 +779,32 @@ function renderApplicantsModal() {
         <div class="app-meta">📅 Applied: ${applied}</div>
       </div>
       <div class="app-actions">
-        ${st !== 'selected'    ? `<button class="app-btn app-btn-accept"    onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','selected')">✅ Accept</button>` : ''}
-        ${st !== 'shortlisted' ? `<button class="app-btn app-btn-shortlist" onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','shortlisted')">⭐ Shortlist</button>` : ''}
-        ${st !== 'rejected'    ? `<button class="app-btn app-btn-reject"    onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','rejected')">❌ Reject</button>` : ''}
-        ${st !== 'pending'     ? `<button class="app-btn app-btn-reset"     onclick="updateApplicantStatus('${_viewingPostId}','${a.email}','pending')">↩ Reset</button>` : ''}
+        ${st !== 'selected'    ? `<button class="app-btn app-btn-accept"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','selected')">✅ Accept</button>` : ''}
+        ${st !== 'shortlisted' ? `<button class="app-btn app-btn-shortlist" onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','shortlisted')">⭐ Shortlist</button>` : ''}
+        ${st !== 'rejected'    ? `<button class="app-btn app-btn-reject"    onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','rejected')">❌ Reject</button>` : ''}
+        ${st !== 'pending'     ? `<button class="app-btn app-btn-reset"     onclick="updateApplicantStatus('${_viewingPostId}','${a.id}','pending')">↩ Reset</button>` : ''}
       </div>
     </div>`;
   }).join('');
 }
 
 /* ─── Update applicant status (saves to post + syncs to worker profile) ─── */
-function updateApplicantStatus(postId, workerEmail, newStatus) {
-  const pIdx = allPosts.findIndex(x => x.id === postId);
-  if (pIdx === -1) return;
+async function updateApplicantStatus(postId, appId, newStatus) {
+  try {
+    await sbUpdateApplicationStatus(appId, newStatus);
+    
+    // Refresh state
+    await loadPosts();
+    render();         
+    updateStats();
 
-  const aIdx = allPosts[pIdx].applicants.findIndex(a => a.email === workerEmail);
-  if (aIdx === -1) return;
-
-  allPosts[pIdx].applicants[aIdx].status = newStatus;
-  allPosts[pIdx].applicants[aIdx].updatedAt = new Date().toISOString();
-  savePosts();
-  render();         // refresh post cards (applicant count doesn't change but status does)
-  updateStats();
-
-  // ── Sync to worker's own applications in sc_users ──
-  const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
-  const workerIdx = allUsers.findIndex(u => u.email === workerEmail);
-  if (workerIdx > -1) {
-    const worker = allUsers[workerIdx];
-    const apps = worker.applications || [];
-    // match by employer-post job id (stored as 'ep_' + postId)
-    const jobId = 'ep_' + postId;
-    const appI = apps.findIndex(a => String(a.jobId) === jobId);
-    if (appI > -1) {
-      apps[appI].status = newStatus;
-      apps[appI].updatedAt = new Date().toISOString();
-    }
-    allUsers[workerIdx].applications = apps;
-    localStorage.setItem('sc_users', JSON.stringify(allUsers));
-
-    // Also update sc_user if the current user IS that worker (edge case)
-    try {
-      const cu = JSON.parse(localStorage.getItem('sc_user') || 'null');
-      if (cu && cu.email === workerEmail) {
-        cu.applications = apps;
-        localStorage.setItem('sc_user', JSON.stringify(cu));
-      }
-    } catch(e){}
+    const labels = { selected:'✅ Accepted', shortlisted:'⭐ Shortlisted', rejected:'❌ Rejected', pending:'↩ Reset to Pending' };
+    showToast(`${labels[newStatus]} updated`, 'success');
+  } catch(e) {
+    console.error('Failed to update application status', e);
+    showToast('Failed to update status', 'error');
   }
-
-  const labels = { selected:'✅ Accepted', shortlisted:'⭐ Shortlisted', rejected:'❌ Rejected', pending:'↩ Reset to Pending' };
-  const workerName = allPosts[pIdx].applicants[aIdx].name || workerEmail;
-  showToast(`${labels[newStatus]} — ${workerName}`, 'success');
-
+  
   // Re-render the modal rows in-place
   renderApplicantsModal();
 }

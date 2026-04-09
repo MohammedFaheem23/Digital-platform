@@ -347,7 +347,9 @@
   </main>
 </div>
 
-<script src="js/global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/global.js"></script>
 <script>
 /* =====================================================
    WORKER PROFILE PAGE
@@ -357,14 +359,15 @@ let currentUser = null;
 let profileSkills = [];
 
 /* ── Init ── */
-function init() {
+async function init() {
+  await new Promise(r => setTimeout(r, 500)); // wait for session
   currentUser = getCurrentUser();
   if (!currentUser) { window.location.href = 'login.html'; return; }
 
   loadProfile();
-  loadStats();
-  loadReviews();
-  initAvailUI();
+  await loadStats();
+  await loadReviews();
+  await initAvailUI();
 }
 
 /* ── Load profile fields ── */
@@ -413,11 +416,14 @@ function setValue(id, val) {
 }
 
 /* ── Stats ── */
-function loadStats() {
-  const apps = currentUser?.applications || [];
+async function loadStats() {
+  let apps = [];
+  try { apps = await sbGetMyApplications(currentUser.id); } catch(e) {}
   document.getElementById('statApps').textContent = apps.length;
 
-  const reviews = JSON.parse(localStorage.getItem(`sc_worker_reviews_${currentUser.email}`) || '[]');
+  let reviews = [];
+  try { reviews = await sbGetWorkerReviews(currentUser.id); } catch(e) {}
+  
   if (reviews.length) {
     const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
     document.getElementById('statRating').textContent  = avg + '★';
@@ -426,8 +432,9 @@ function loadStats() {
 }
 
 /* ── Reviews ── */
-function loadReviews() {
-  const reviews = JSON.parse(localStorage.getItem(`sc_worker_reviews_${currentUser.email}`) || '[]');
+async function loadReviews() {
+  let reviews = [];
+  try { reviews = await sbGetWorkerReviews(currentUser.id); } catch(e) {}
   const sec = document.getElementById('reviewsSection');
   if (!reviews.length) return;
 
@@ -471,7 +478,7 @@ function removeSkill(idx) {
 }
 
 /* ── Save ── */
-function saveProfile() {
+async function saveProfile() {
   const name = document.getElementById('pfName')?.value.trim();
   const city = document.getElementById('pfCity')?.value.trim();
   if (!name) { flash('pfName', 'Full name is required'); return; }
@@ -492,28 +499,38 @@ function saveProfile() {
     updatedAt:   new Date().toISOString(),
   };
 
-  // Update sc_user
-  setCurrentUser(updated);
-  currentUser = updated;
+  try {
+    const updatedUser = await sbUpdateProfile(currentUser.id, {
+      name: name,
+      phone: document.getElementById('pfPhone')?.value.trim() || null,
+      city: city,
+      dob: document.getElementById('pfDob')?.value || null,
+      gender: document.getElementById('pfGender')?.value || null,
+      trade: document.getElementById('pfTrade')?.value || null,
+      experience: document.getElementById('pfExp')?.value || null,
+      expectedPay: document.getElementById('pfPay')?.value.trim() || null,
+      jobType: document.getElementById('pfJobType')?.value || null,
+      bio: document.getElementById('pfBio')?.value.trim() || null,
+      skills: [...profileSkills]
+    });
+    
+    setCurrentUser(updatedUser);
+    currentUser = updatedUser;
+    
+    // Refresh hero card
+    document.getElementById('heroName').textContent  = updatedUser.name;
+    document.getElementById('heroTrade').textContent = updatedUser.trade ? `🛠️ ${updatedUser.trade}` : '🛠️ Trade not set';
+    document.getElementById('heroAvatar').textContent = updatedUser.name?.[0]?.toUpperCase() || '?';
+    document.getElementById('userAva').textContent    = updatedUser.name?.[0]?.toUpperCase() || '?';
 
-  // Update sc_users list
-  const allUsers = JSON.parse(localStorage.getItem('sc_users') || '[]');
-  const idx = allUsers.findIndex(u => u.email === updated.email);
-  if (idx > -1) {
-    allUsers[idx] = { ...allUsers[idx], ...updated };
-    localStorage.setItem('sc_users', JSON.stringify(allUsers));
+    const tags = [updatedUser.city, updatedUser.experience, updatedUser.jobType].filter(Boolean);
+    document.getElementById('heroTags').innerHTML = tags.map(t => `<span class="profile-tag">${t}</span>`).join('');
+
+    showToast('✅ Profile saved successfully!', 'success');
+  } catch(e) {
+    console.error(e);
+    showToast('❌ Failed to save profile.', 'error');
   }
-
-  // Refresh hero card
-  document.getElementById('heroName').textContent  = updated.name;
-  document.getElementById('heroTrade').textContent = updated.trade ? `🛠️ ${updated.trade}` : '🛠️ Trade not set';
-  document.getElementById('heroAvatar').textContent = updated.name?.[0]?.toUpperCase() || '?';
-  document.getElementById('userAva').textContent    = updated.name?.[0]?.toUpperCase() || '?';
-
-  const tags = [updated.city, updated.experience, updated.jobType].filter(Boolean);
-  document.getElementById('heroTags').innerHTML = tags.map(t => `<span class="profile-tag">${t}</span>`).join('');
-
-  showToast('✅ Profile saved successfully!', 'success');
 }
 
 function flash(id, msg) {
@@ -526,16 +543,26 @@ function flash(id, msg) {
 }
 
 /* ── Availability ── */
-function initAvailUI() {
-  const key     = `sc_availability_${currentUser.email}`;
-  const stored  = localStorage.getItem(key);
-  const isAvail = stored === null ? true : stored === 'true';
+async function initAvailUI() {
+  let isAvail = true;
+  try {
+    const { data } = await db.from('profiles').select('available').eq('id', currentUser.id).single();
+    isAvail = data?.available !== false;
+  } catch (e) {
+    const key = `sc_availability_${currentUser.id}`;
+    const stored = localStorage.getItem(key);
+    isAvail = stored === null ? true : stored === 'true';
+  }
   document.getElementById('availToggle').checked = isAvail;
   applyAvailUI(isAvail);
 }
 
-function toggleAvail(isAvail) {
-  localStorage.setItem(`sc_availability_${currentUser.email}`, String(isAvail));
+async function toggleAvail(isAvail) {
+  try {
+    await sbSetAvailability(currentUser.id, isAvail);
+  } catch(e) {
+    console.error('Failed to update availability', e);
+  }
   applyAvailUI(isAvail);
   showToast(
     isAvail ? '🟢 You are now visible to employers!' : '⚫ Hidden from employers.',

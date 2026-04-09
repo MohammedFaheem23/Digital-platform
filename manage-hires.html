@@ -215,7 +215,9 @@
   </main>
 </div>
 
-<script src="js/global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/global.js"></script>
 <script>
 /* ===================================================
    Manage Hires – Employer hiring management
@@ -244,15 +246,32 @@ let allHirings = [];
 let currentFilter = 'all';
 
 /* ---- Load ---- */
-function loadHirings() {
+async function loadHirings() {
+  await new Promise(r => setTimeout(r, 500)); // wait for session
   const user = getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 
   document.getElementById('userAva').textContent = user.avatar || user.name?.[0]?.toUpperCase() || 'E';
   document.getElementById('userName').textContent = user.name?.split(' ')[0] || 'User';
 
-  // Load from localStorage — keyed by user email
-  allHirings = JSON.parse(localStorage.getItem(`sc_hirings_${user.email}`) || '[]');
+  try {
+    const raw = await sbGetMyHireRequests(user.id);
+    allHirings = raw.map(h => ({
+      id: h.id,
+      workerId: h.worker_id,
+      workerName: h.worker?.name || 'Unknown',
+      status: h.status || 'contacted',
+      sentAt: h.created_at,
+      desc: h.desc || '',
+      address: h.address || '',
+      date: h.date || 'Flexible',
+      budget: h.budget || '',
+      review: null // we could fetch reviews separately if needed, but simplistic for now
+    }));
+  } catch(e) {
+    console.error('Failed to load hire requests', e);
+    allHirings = [];
+  }
 
   updateStats();
   renderHirings();
@@ -395,20 +414,24 @@ function buildActions(h, w) {
 }
 
 /* ---- Change status ---- */
-function changeStatus(hireId, newStatus) {
+async function changeStatus(hireId, newStatus) {
   const user = getCurrentUser();
-  const idx = allHirings.findIndex(h => h.id == hireId);
+  const idx = allHirings.findIndex(h => String(h.id) === String(hireId));
   if (idx === -1) return;
 
-  allHirings[idx].status = newStatus;
-  allHirings[idx].updatedAt = new Date().toISOString();
+  try {
+    await sbUpdateHireStatus(hireId, newStatus);
+    allHirings[idx].status = newStatus;
+    allHirings[idx].updatedAt = new Date().toISOString();
 
-  saveHirings(user);
-
-  const s = STATUS_CFG[newStatus];
-  showToast(`Status updated to "${s.label}" ${s.icon}`, 'success');
-  updateStats();
-  renderHirings();
+    const s = STATUS_CFG[newStatus];
+    showToast(`Status updated to "${s.label}" ${s.icon}`, 'success');
+    updateStats();
+    renderHirings();
+  } catch (e) {
+    console.error('Failed to update status', e);
+    showToast('Failed to update status.', 'error');
+  }
 }
 
 /* ---- Re-hire shortcut ---- */
@@ -417,10 +440,7 @@ function rehireWorker(workerId) {
 }
 
 /* ---- Save to localStorage ---- */
-function saveHirings(user) {
-  if (!user) return;
-  localStorage.setItem(`sc_hirings_${user.email}`, JSON.stringify(allHirings));
-}
+// Deprecated: Using Supabase
 
 /* ========================================================
    RATING / REVIEW MODAL
@@ -520,7 +540,7 @@ function toggleAspect(btn, text) {
   }
 }
 
-function submitReview() {
+async function submitReview() {
   if (!_selectedStars) {
     const lbl = document.getElementById('starLabel');
     lbl.textContent = '⚠️ Please select a star rating!';
@@ -529,34 +549,35 @@ function submitReview() {
   }
   const text = document.getElementById('reviewText')?.value.trim() || '';
   const user = getCurrentUser();
-  const idx  = allHirings.findIndex(h => h.id == _ratingHireId);
+  const idx  = allHirings.findIndex(h => String(h.id) === String(_ratingHireId));
   if (idx === -1) return;
 
   const reviewEntry = {
-    rating:       _selectedStars,
-    text,
-    reviewedAt:   new Date().toISOString(),
-    reviewerName: user?.name || 'Employer',
+    worker_id: allHirings[idx].workerId,
+    employer_id: user.id,
+    rating: _selectedStars,
+    text: text,
+    hire_id: _ratingHireId
   };
 
-  // Save on hiring record
-  allHirings[idx].review = reviewEntry;
-  saveHirings(user);
-
-  // Save globally per worker (for future worker-side reviews page)
-  const wid = allHirings[idx].workerId;
-  if (wid) {
-    const key = `sc_worker_reviews_${wid}`;
-    const reviews = JSON.parse(localStorage.getItem(key) || '[]');
-    const ei = reviews.findIndex(r => r.hireId == _ratingHireId);
-    const entry = { ...reviewEntry, hireId: _ratingHireId };
-    if (ei >= 0) reviews[ei] = entry; else reviews.push(entry);
-    localStorage.setItem(key, JSON.stringify(reviews));
+  try {
+    await sbSubmitReview(reviewEntry);
+    
+    // Save on local hiring record for UI
+    allHirings[idx].review = {
+      rating: _selectedStars,
+      text,
+      reviewedAt: new Date().toISOString(),
+      reviewerName: user.name
+    };
+    
+    closeRatingModal();
+    showToast(`⭐ ${_selectedStars}-star review submitted! Thank you.`, 'success');
+    renderHirings();
+  } catch (e) {
+    console.error('Failed to submit review', e);
+    showToast('Failed to submit review.', 'error');
   }
-
-  closeRatingModal();
-  showToast(`⭐ ${_selectedStars}-star review submitted! Thank you.`, 'success');
-  renderHirings();
 }
 
 function closeRatingModal() {

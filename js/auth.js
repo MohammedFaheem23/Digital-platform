@@ -1,5 +1,5 @@
 /* ============================
-   Auth JavaScript
+   Auth JavaScript – Supabase
    ============================ */
 
 // ---- Password Toggle ----
@@ -47,38 +47,33 @@ function nextStep(step) {
   if (!validateStep(currentStep)) return;
   goToStep(step);
 }
-
-function prevStep(step) {
-  goToStep(step);
-}
+function prevStep(step) { goToStep(step); }
 
 function goToStep(step) {
   document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
   document.getElementById('step' + step)?.classList.add('active');
 
   for (let i = 1; i <= 3; i++) {
-    const dot = document.getElementById('stepDot' + i);
+    const dot  = document.getElementById('stepDot' + i);
     const line = document.getElementById('stepLine' + i);
     if (!dot) continue;
     dot.classList.remove('active', 'completed');
-    if (i < step) dot.classList.add('completed'), dot.textContent = '✓';
-    else if (i === step) dot.classList.add('active'), dot.textContent = i;
-    else dot.textContent = i;
-    if (line) {
-      line.classList.toggle('active', i < step);
-    }
+    if (i < step)      { dot.classList.add('completed'); dot.textContent = '✓'; }
+    else if (i === step){ dot.classList.add('active');    dot.textContent = i;  }
+    else                { dot.textContent = i; }
+    if (line) line.classList.toggle('active', i < step);
   }
   currentStep = step;
 }
 
 function validateStep(step) {
   if (step === 1) {
-    const name = document.getElementById('regName')?.value.trim();
+    const name  = document.getElementById('regName')?.value.trim();
     const phone = document.getElementById('regPhone')?.value.trim();
     const email = document.getElementById('regEmail')?.value.trim();
-    if (!name || name.length < 2) { showAlert('Please enter your full name.', 'error', 'registerAlert'); return false; }
-    if (!phone || phone.length < 10) { showAlert('Please enter a valid phone number.', 'error', 'registerAlert'); return false; }
-    if (!email || !email.includes('@')) { showAlert('Please enter a valid email address.', 'error', 'registerAlert'); return false; }
+    if (!name  || name.length < 2)   { showAlert('Please enter your full name.', 'error', 'registerAlert'); return false; }
+    if (!phone || phone.length < 10)  { showAlert('Please enter a valid phone number.', 'error', 'registerAlert'); return false; }
+    if (!email || !email.includes('@')){ showAlert('Please enter a valid email address.', 'error', 'registerAlert'); return false; }
     hideAlert('registerAlert');
   }
   if (step === 2) {
@@ -91,20 +86,18 @@ function validateStep(step) {
 
 function updateRoleView() {
   const role = document.querySelector('input[name="role"]:checked')?.value;
-  const workerFields = document.getElementById('workerFields');
+  const workerFields   = document.getElementById('workerFields');
   const employerFields = document.getElementById('employerFields');
   if (role === 'employer') {
-    workerFields && (workerFields.style.display = 'none');
+    workerFields   && (workerFields.style.display   = 'none');
     employerFields && (employerFields.style.display = 'block');
   } else {
-    workerFields && (workerFields.style.display = 'block');
+    workerFields   && (workerFields.style.display   = 'block');
     employerFields && (employerFields.style.display = 'none');
   }
 }
 
-document.querySelectorAll('input[name="role"]').forEach(r => {
-  r.addEventListener('change', updateRoleView);
-});
+document.querySelectorAll('input[name="role"]').forEach(r => r.addEventListener('change', updateRoleView));
 
 // ---- Show/Hide Alert ----
 function showAlert(message, type, alertId) {
@@ -116,160 +109,136 @@ function showAlert(message, type, alertId) {
   alert.style.display = 'flex';
   setTimeout(() => hideAlert(alertId), 5000);
 }
-
 function hideAlert(alertId) {
   const alert = document.getElementById(alertId);
   if (alert) alert.style.display = 'none';
 }
 
 // ---- Demo Login ----
-function demoLogin(role) {
+async function demoLogin(role) {
   const demos = {
-    worker: { name: 'Rajesh Sharma', email: 'demo.worker@skillconnect.in', role: 'worker', trade: 'Electrician', city: 'Delhi' },
-    employer: { name: 'Priya Mehta Corp', email: 'demo.employer@skillconnect.in', role: 'employer', company: 'ABC Constructions', city: 'Mumbai' }
+    worker:   { email: 'demo.worker@skillconnect.in',   password: 'Demo@1234' },
+    employer: { email: 'demo.employer@skillconnect.in',  password: 'Demo@1234' },
   };
-  const user = demos[role];
-  if (!user) return;
-  setCurrentUser(user);
-  showToast(`Welcome back, ${user.name}! 👋`, 'success');
-  setTimeout(() => {
-    const redirect = localStorage.getItem('redirectAfterLogin');
-    if (redirect) {
-      localStorage.removeItem('redirectAfterLogin');
-      window.location.href = redirect;
-    } else {
-      window.location.href = role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+  const creds = demos[role];
+  if (!creds) return;
+
+  try {
+    const user = await sbLogin(creds.email, creds.password);
+    setCurrentUser(user);
+    showToast(`Welcome back, ${user.name}! 👋`, 'success');
+    setTimeout(() => {
+      window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+    }, 800);
+  } catch (err) {
+    // Demo account may not exist – auto-create it
+    showToast('Setting up demo account…', 'info');
+    try {
+      const demoData = role === 'worker'
+        ? { name:'Demo Worker', phone:'9999900000', role:'worker', trade:'Electrician', city:'Delhi', experience:'5 yrs', rate:'₹800/hr', company:'' }
+        : { name:'Demo Employer', phone:'9999911111', role:'employer', trade:'', city:'Mumbai', experience:'', rate:'', company:'Demo Corp' };
+
+      const user = await sbRegister({ ...demoData, email: creds.email, password: creds.password });
+      setCurrentUser(user);
+      showToast(`Welcome, ${user.name}! 🎉`, 'success');
+      setTimeout(() => {
+        window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
+      }, 800);
+    } catch (e) {
+      showToast('Demo login failed. Please register manually.', 'error');
     }
-  }, 800);
+  }
 }
 
 // ---- Handle Login ----
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
 
-  const email = document.getElementById('loginEmail')?.value.trim();
+  const email    = document.getElementById('loginEmail')?.value.trim();
   const password = document.getElementById('loginPassword')?.value;
-  const btn = document.getElementById('loginSubmitBtn');
-  const btnText = document.getElementById('loginBtnText');
-  const spinner = document.getElementById('loginSpinner');
+  const btn      = document.getElementById('loginSubmitBtn');
+  const btnText  = document.getElementById('loginBtnText');
+  const spinner  = document.getElementById('loginSpinner');
 
-  // Validation
   let valid = true;
-  if (!email || !email.includes('@')) {
-    document.getElementById('emailError')?.classList.add('show');
-    valid = false;
-  } else {
-    document.getElementById('emailError')?.classList.remove('show');
-  }
-  if (!password || password.length < 6) {
-    document.getElementById('passwordError')?.classList.add('show');
-    valid = false;
-  } else {
-    document.getElementById('passwordError')?.classList.remove('show');
-  }
+  if (!email || !email.includes('@')) { document.getElementById('emailError')?.classList.add('show');    valid = false; }
+  else                                 { document.getElementById('emailError')?.classList.remove('show'); }
+  if (!password || password.length < 6){ document.getElementById('passwordError')?.classList.add('show');    valid = false; }
+  else                                  { document.getElementById('passwordError')?.classList.remove('show'); }
   if (!valid) return;
 
-  // Show loading
   btn.disabled = true;
   btnText.style.display = 'none';
   spinner.style.display = 'inline-block';
 
-  // Simulate API call
-  setTimeout(() => {
-    // Check stored users
-    const users = JSON.parse(localStorage.getItem('sc_users') || '[]');
-    const user = users.find(u => u.email === email);
-
-    if (user && user.password === btoa(password)) {
-      const { password: _, ...safeUser } = user;
-      setCurrentUser(safeUser);
-      showAlert('Login successful! Redirecting...', 'success', 'loginAlert');
-      setTimeout(() => {
-        const redirect = localStorage.getItem('redirectAfterLogin');
-        if (redirect) {
-          localStorage.removeItem('redirectAfterLogin');
-          window.location.href = redirect;
-        } else {
-          window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
-        }
-      }, 800);
-    } else {
-      btn.disabled = false;
-      btnText.style.display = 'inline';
-      spinner.style.display = 'none';
-      showAlert('Invalid email or password. Try the demo buttons below!', 'error', 'loginAlert');
-    }
-  }, 1500);
+  try {
+    const user = await sbLogin(email, password);
+    setCurrentUser(user);
+    showAlert('Login successful! Redirecting…', 'success', 'loginAlert');
+    setTimeout(() => {
+      const redirect = localStorage.getItem('redirectAfterLogin');
+      if (redirect) { localStorage.removeItem('redirectAfterLogin'); window.location.href = redirect; }
+      else { window.location.href = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html'; }
+    }, 800);
+  } catch (err) {
+    btn.disabled = false;
+    btnText.style.display = 'inline';
+    spinner.style.display = 'none';
+    showAlert('Invalid email or password. Please try again.', 'error', 'loginAlert');
+  }
 }
 
 // ---- Handle Register ----
-function handleRegister(e) {
+async function handleRegister(e) {
   e.preventDefault();
 
   if (!validateStep(2)) { prevStep(2); return; }
 
-  const password = document.getElementById('regPassword')?.value;
+  const password   = document.getElementById('regPassword')?.value;
   const confirmPwd = document.getElementById('regConfirmPwd')?.value;
-  const terms = document.getElementById('termsAgreed')?.checked;
+  const terms      = document.getElementById('termsAgreed')?.checked;
 
-  if (password !== confirmPwd) {
-    document.getElementById('confirmPwdError')?.classList.add('show');
-    return;
-  }
-  if (!terms) {
-    showAlert('Please agree to the Terms of Service to continue.', 'error', 'registerAlert');
-    return;
-  }
-  if (password.length < 6) {
-    showAlert('Password must be at least 6 characters.', 'error', 'registerAlert');
-    return;
-  }
+  if (password !== confirmPwd) { document.getElementById('confirmPwdError')?.classList.add('show'); return; }
+  if (!terms)    { showAlert('Please agree to the Terms of Service.', 'error', 'registerAlert'); return; }
+  if (password.length < 6) { showAlert('Password must be at least 6 characters.', 'error', 'registerAlert'); return; }
 
   const role = document.querySelector('input[name="role"]:checked')?.value;
-  const newUser = {
-    id: Date.now().toString(),
-    name: document.getElementById('regName')?.value.trim(),
-    phone: document.getElementById('regPhone')?.value.trim(),
-    email: document.getElementById('regEmail')?.value.trim(),
-    password: btoa(password), // simple encoding (not production-safe)
-    role,
-    trade: document.getElementById('regTrade')?.value,
-    experience: document.getElementById('regExperience')?.value,
-    rate: document.getElementById('regRate')?.value,
-    company: document.getElementById('regCompany')?.value,
-    city: document.getElementById('regCity')?.value.trim(),
-    createdAt: new Date().toISOString(),
-    verified: false,
-    avatar: (document.getElementById('regName')?.value.trim()[0] || 'U').toUpperCase()
-  };
-
-  const btn = document.getElementById('registerSubmitBtn');
-  const btnText = document.getElementById('registerBtnText');
-  const spinner = document.getElementById('registerSpinner');
+  const btn      = document.getElementById('registerSubmitBtn');
+  const btnText  = document.getElementById('registerBtnText');
+  const spinner  = document.getElementById('registerSpinner');
 
   btn.disabled = true;
   btnText.style.display = 'none';
   spinner.style.display = 'inline-block';
 
-  setTimeout(() => {
-    const users = JSON.parse(localStorage.getItem('sc_users') || '[]');
-    if (users.find(u => u.email === newUser.email)) {
-      btn.disabled = false;
-      btnText.style.display = 'inline';
-      spinner.style.display = 'none';
-      showAlert('An account with this email already exists. Try logging in.', 'error', 'registerAlert');
-      return;
-    }
-    users.push(newUser);
-    localStorage.setItem('sc_users', JSON.stringify(users));
+  try {
+    const user = await sbRegister({
+      name:       document.getElementById('regName')?.value.trim(),
+      phone:      document.getElementById('regPhone')?.value.trim(),
+      email:      document.getElementById('regEmail')?.value.trim(),
+      password,
+      role,
+      trade:      document.getElementById('regTrade')?.value || null,
+      experience: document.getElementById('regExperience')?.value || null,
+      rate:       document.getElementById('regRate')?.value || null,
+      company:    document.getElementById('regCompany')?.value || null,
+      city:       document.getElementById('regCity')?.value.trim(),
+    });
 
-    const { password: _, ...safeUser } = newUser;
-    setCurrentUser(safeUser);
-    showToast(`Welcome to SkillConnect, ${newUser.name}! 🎉`, 'success');
+    setCurrentUser(user);
+    showToast(`Welcome to SkillConnect, ${user.name}! 🎉`, 'success');
     setTimeout(() => {
       window.location.href = role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';
     }, 1000);
-  }, 1500);
+  } catch (err) {
+    btn.disabled = false;
+    btnText.style.display = 'inline';
+    spinner.style.display = 'none';
+    const msg = err.message?.includes('already registered')
+      ? 'An account with this email already exists. Try logging in.'
+      : err.message || 'Registration failed. Please try again.';
+    showAlert(msg, 'error', 'registerAlert');
+  }
 }
 
 // ---- Social Login ----
@@ -278,8 +247,10 @@ function socialLogin(provider) {
 }
 
 // ---- Redirect if already logged in ----
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   updateRoleView();
+  // Wait for the async session restore in supabase.js
+  await new Promise(r => setTimeout(r, 400));
   const user = getCurrentUser();
   if (user && (window.location.pathname.includes('login') || window.location.pathname.includes('register'))) {
     const dest = user.role === 'employer' ? 'dashboard-employer.html' : 'dashboard-worker.html';

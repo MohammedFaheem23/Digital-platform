@@ -150,6 +150,8 @@
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
   <script src="js/global.js"></script>
   <script>
     const WORKER_DETAILS = {
@@ -171,7 +173,8 @@
       rejected:    { label:'Rejected',   cls:'badge-error',   icon:'❌' },
     };
 
-    function initEmployerDashboard() {
+    async function initEmployerDashboard() {
+      await new Promise(r => setTimeout(r, 500)); // Wait for session restore
       const user = getCurrentUser();
       if (!user) { window.location.href = 'login.html'; return; }
 
@@ -181,7 +184,12 @@
       document.getElementById('userName').textContent = first;
 
       // Load hirings
-      const hirings = JSON.parse(localStorage.getItem(`sc_hirings_${user.email}`) || '[]');
+      let hirings = [];
+      try {
+        hirings = await sbGetMyHireRequests(user.id);
+      } catch (e) {
+        console.error('Failed to load hirings', e);
+      }
 
       // Stats
       const total       = hirings.length;
@@ -218,9 +226,9 @@
       } else {
         const recent = [...hirings].reverse().slice(0, 4);
         hiringWidget.innerHTML = recent.map(h => {
-          const w = WORKER_DETAILS[h.workerId] || {};
+          const w = WORKER_DETAILS[h.worker_id] || {};
           const s = STATUS_LABELS[h.status] || STATUS_LABELS.contacted;
-          const date = h.sentAt ? new Date(h.sentAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recently';
+          const date = h.created_at ? new Date(h.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : 'Recently';
           return `
           <div class="job-item" style="cursor:pointer;" onclick="window.location.href='manage-hires.html'">
             <div style="width:42px;height:42px;border-radius:50%;background:${w.gradient||'var(--primary)'};display:flex;align-items:center;justify-content:center;font-weight:700;color:white;flex-shrink:0;">${w.initial||'?'}</div>
